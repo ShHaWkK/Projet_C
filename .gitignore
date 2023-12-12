@@ -50,3 +50,10 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+cmake-build-debug/.cmake/api/v1/reply/codemodel-v2-181d044917c8a4028d8d.json
+*.json
+cmake-build-debug/.ninja_deps
+cmake-build-debug/build.ninja
+cmake-build-debug/CMakeCache.txt
+*.cmake
+*.txt
