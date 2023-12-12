@@ -6,6 +6,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake_modules)
 ###### SDL ############
 
 set(SDL2_PATH "C:/C_libraries/SDL2-devel-2.28.5-mingw/x86_64-w64-mingw32")
+set(SDL2_INCLUDE_DIR "C:/C_libraries/SDL2-devel-2.28.5-mingw/x86_64-w64-mingw32/include" )
+set(SDL2_LIBRARY " C:/C_libraries/SDL2-devel-2.28.5-mingw/x86_64-w64-mingw32/lib" )
+
 
 ###### SDL MIXER #######
 
@@ -34,8 +37,8 @@ include_directories(${SDL2_INCLUDE_DIR}
         ${SDL2_MIXER_INCLUDE_DIRS})
 
 )
-
 add_executable(Projet_C main.c)
+
 target_link_libraries(Projet_C
         ${SDL2_LIBRARIES}
         ${SDL2_MIXER_LIBRARIES}
