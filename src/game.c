@@ -1,8 +1,8 @@
 #include "game.h"
 #include "ui.h"
 #include <SDL.h>
-#include <stdio.h>
 #include <SDL_ttf.h>
+#include <stdio.h>
 
 static SDL_Window* window = NULL;
 static SDL_Renderer* renderer = NULL;
@@ -32,23 +32,22 @@ void Game_Init() {
         exit(1);
     }
 
-    UI_Init(renderer, font);
+    UI_Init(renderer, font, 800, 600);
 }
 
 void Game_Run() {
-    SDL_Event e;
     int running = 1;
+    SDL_Event e;
 
     while (running) {
         while (SDL_PollEvent(&e)) {
             if (e.type == SDL_QUIT) {
                 running = 0;
-            } else {
-                UI_HandleEvent(&e, &running);
             }
+            UI_HandleEvent(&e, &running);
         }
 
-        SDL_SetRenderDrawColor(renderer, 0x17, 0x17, 0x17, 0xFF);  // Dark grey background
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
         UI_Render(renderer);
