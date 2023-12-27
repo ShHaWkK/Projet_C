@@ -29,12 +29,12 @@ static void QuitGame(int* running) {
 static void OpenSettings(int* running) {
     Mix_PlayChannel(-1, buttonClickSound, 0);  // Play sound effect
     printf("Opening settings...\n");
-    // Insert code to handle opening settings
+    // settings
 }
 
 void UI_Init(SDL_Renderer* renderer, TTF_Font* font, int windowWidth, int windowHeight, Mix_Chunk* soundEffect) {
     uiRenderer = renderer;
-    buttonClickSound = soundEffect;  // Set the button click sound effect
+    buttonClickSound = soundEffect;  //  click sound effect
 
     // Set up the start button
     startButton.rect = (SDL_Rect){(windowWidth - 200) / 2, windowHeight / 2 - 75, 200, 50};

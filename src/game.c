@@ -11,6 +11,7 @@ static TTF_Font* font = NULL;
 static Mix_Music* bgMusic = NULL;
 
 void Game_Init() {
+
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
         fprintf(stderr, "SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
         exit(1);
@@ -49,7 +50,7 @@ void Game_Init() {
     Mix_PlayMusic(bgMusic, -1);
     Mix_Chunk* soundEffect = Mix_LoadWAV("assets/sounds/click.wav"); // Load your sound effect
     int windowWidth = 800;
-    int windowHeight = 600; 
+    int windowHeight = 600;
 
     UI_Init(renderer, font, windowWidth, windowHeight, soundEffect);
 
