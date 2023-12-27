@@ -8,6 +8,45 @@ static SDL_Window* window = NULL;
 static SDL_Renderer* renderer = NULL;
 static TTF_Font* font = NULL;
 static Mix_Music* bgMusic = NULL;
+GameState currentGameState = MENU;
+GameState previousGameState = MENU;
+
+// Prototype des fonctions
+void InitializeGameWorld();
+void InitializeCharacters();
+void UpdateGameWorld();
+void UpdateCharacters();
+
+GameWorld gameWorld;
+
+
+
+void ChangeGameState(GameState newState) {
+    previousGameState = currentGameState;
+    currentGameState = newState;
+    // Ajoutez ici toute autre logique nécessaire lors du changement d'état
+}
+
+void InitializeNewGameSession() {
+    // Implémentez ici la logique pour initialiser une nouvelle session de jeu
+}
+void InitializeGameWorld() {
+    gameWorld.day = 1; // Commence au jour 1
+    // Initialisation d'autres éléments du monde ici
+}
+
+void UpdateGameWorld() {
+    // Mettre à jour le monde du jeu
+    // Par exemple, gérer les cycles jour/nuit, les événements aléatoires...
+}
+
+
+
+void RenderGameUI(SDL_Renderer* renderer) {
+    // Implémenter le rendu de l'interface de jeu ici
+    // Afficher les personnages, les ressources, le monde...
+}
+
 
 void Game_Init() {
     // Initialisation du système de logs
@@ -66,6 +105,8 @@ void Game_Init() {
     AssignTask(&player, "Collect Wood");
     IncreaseHunger(&player);
     CompleteTask(&player);
+
+    currentGameState = MENU;
 }
 
 void Game_Run() {
@@ -84,11 +125,22 @@ void Game_Run() {
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
-        UI_Render(renderer);
+        switch (currentGameState) {
+            case MENU:
+                UI_Render(renderer);
+                break;
+            case GAME_RUNNING:
+                UpdateGameWorld();
+                UpdateCharacters();
+                RenderGameUI(renderer);
+                break;
+                // Gérer les autres états si nécessaire
+        }
 
         SDL_RenderPresent(renderer);
     }
 }
+
 
 void Game_Shutdown() {
     UI_Shutdown();

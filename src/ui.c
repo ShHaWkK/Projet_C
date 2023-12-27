@@ -1,12 +1,15 @@
 #include "ui.h"
 #include "include.h"
+#include "game.h"
 
 // Define your Button structure and other UI functions here
 static Button startButton;
 static Button quitButton;
 static Button settingsButton;
 static SDL_Renderer* uiRenderer = NULL;
-static Mix_Chunk* buttonClickSound = NULL;  // Sound effect for button click
+static Mix_Chunk* buttonClickSound = NULL; // Sound effect for button click
+static Button backButton;
+
 
 static SDL_Texture* CreateButtonTexture(TTF_Font* font, const char* text, SDL_Color color) {
     SDL_Surface* surface = TTF_RenderText_Solid(font, text, color);
@@ -15,11 +18,15 @@ static SDL_Texture* CreateButtonTexture(TTF_Font* font, const char* text, SDL_Co
     return texture;
 }
 
-static void StartNewSession(int* running) {
+
+void StartNewSession(int* running) {
     Mix_PlayChannel(-1, buttonClickSound, 0);  // Play sound effect
     printf("Starting a new session...\n");
-    // Insert code to start a new session
+    ChangeGameState(GAME_RUNNING);
+    InitializeNewGameSession();
+
 }
+
 
 static void QuitGame(int* running) {
     Mix_PlayChannel(-1, buttonClickSound, 0);  // Play sound effect
@@ -53,43 +60,71 @@ void UI_Init(SDL_Renderer* renderer, TTF_Font* font, int windowWidth, int window
     settingsButton.texture = CreateButtonTexture(font, "Settings", (SDL_Color){255, 255, 255});
     settingsButton.hoverTexture = CreateButtonTexture(font, "Settings", (SDL_Color){255, 0, 0});
     settingsButton.onClick = OpenSettings;
+
+    //return
+    backButton.rect = (SDL_Rect){10, 10, 50, 30}; // Position et taille
+    backButton.texture = CreateButtonTexture(font, "<", (SDL_Color){255, 255, 255});
+    backButton.hoverTexture = CreateButtonTexture(font, "<", (SDL_Color){255, 0, 0});
+    backButton.onClick = GoBack;
+
 }
 
 void UI_HandleEvent(SDL_Event* e, int* running) {
     // Handle events for the buttons
     int mouseX, mouseY;
-    if (e->type == SDL_MOUSEMOTION) {
+    if (e->type == SDL_MOUSEMOTION || e->type == SDL_MOUSEBUTTONDOWN) {
         SDL_GetMouseState(&mouseX, &mouseY);
+        // Debug print
+        printf("Mouse Position - X: %d, Y: %d\n", mouseX, mouseY);
+
         startButton.isHovered = SDL_PointInRect(&((SDL_Point){mouseX, mouseY}), &startButton.rect);
         quitButton.isHovered = SDL_PointInRect(&((SDL_Point){mouseX, mouseY}), &quitButton.rect);
         settingsButton.isHovered = SDL_PointInRect(&((SDL_Point){mouseX, mouseY}), &settingsButton.rect);
-    } else if (e->type == SDL_MOUSEBUTTONDOWN) {
-        if (startButton.isHovered && startButton.onClick) {
-            startButton.onClick(running);
+        backButton.isHovered = SDL_PointInRect(&((SDL_Point){mouseX, mouseY}), &backButton.rect);
+        if (e->type == SDL_MOUSEBUTTONDOWN && backButton.isHovered && backButton.onClick) {
+            backButton.onClick(running);
         }
-        if (quitButton.isHovered && quitButton.onClick) {
-            quitButton.onClick(running);
-        }
-        if (settingsButton.isHovered && settingsButton.onClick) {
-            settingsButton.onClick(running);
+        if (e->type == SDL_MOUSEBUTTONDOWN) {
+            // Debug print
+            printf("Mouse Button Down - X: %d, Y: %d\n", mouseX, mouseY);
+            if (startButton.isHovered && startButton.onClick) {
+                startButton.onClick(running);
+            } else if (quitButton.isHovered && quitButton.onClick) {
+                quitButton.onClick(running);
+            } else if (settingsButton.isHovered && settingsButton.onClick) {
+                settingsButton.onClick(running);
+            }
         }
     }
 }
 
 void UI_Render(SDL_Renderer* renderer) {
-    // Render the start button
-    SDL_Texture* currentTexture = startButton.isHovered ? startButton.hoverTexture : startButton.texture;
-    SDL_RenderCopy(renderer, currentTexture, NULL, &startButton.rect);
+    SDL_Texture* currentTexture;
 
-    // Render the quit button
-    currentTexture = quitButton.isHovered ? quitButton.hoverTexture : quitButton.texture;
-    SDL_RenderCopy(renderer, currentTexture, NULL, &quitButton.rect);
+    // Render the start, quit, and settings buttons only if in the MENU state
+    if (currentGameState == MENU) {
+        currentTexture = startButton.isHovered ? startButton.hoverTexture : startButton.texture;
+        SDL_RenderCopy(renderer, currentTexture, NULL, &startButton.rect);
 
-    // Render the settings button
-    currentTexture = settingsButton.isHovered ? settingsButton.hoverTexture : settingsButton.texture;
-    SDL_RenderCopy(renderer, currentTexture, NULL, &settingsButton.rect);
+        currentTexture = quitButton.isHovered ? quitButton.hoverTexture : quitButton.texture;
+        SDL_RenderCopy(renderer, currentTexture, NULL, &quitButton.rect);
+
+        currentTexture = settingsButton.isHovered ? settingsButton.hoverTexture : settingsButton.texture;
+        SDL_RenderCopy(renderer, currentTexture, NULL, &settingsButton.rect);
+    }
+
+    // Render the back button only if in a game session state (not MENU)
+    if (currentGameState != MENU) {
+        currentTexture = backButton.isHovered ? backButton.hoverTexture : backButton.texture;
+        SDL_RenderCopy(renderer, currentTexture, NULL, &backButton.rect);
+    }
 }
 
+
+
+void GoBack(int* running) {
+    ChangeGameState(previousGameState);
+}
 void UI_Shutdown() {
     // Free button textures and any other UI resources here
     SDL_DestroyTexture(startButton.texture);

@@ -15,12 +15,9 @@ typedef struct {
 } Button;
 
 void UI_Init(SDL_Renderer* renderer, TTF_Font* font, int windowWidth, int windowHeight, Mix_Chunk* soundEffect);
-
-
 void UI_HandleEvent(SDL_Event* e, int* running);
-
 void UI_Render(SDL_Renderer* renderer);
-
 void UI_Shutdown();
-
+void StartNewSession(int* running);
+void GoBack(int* running);
 #endif // UI_H

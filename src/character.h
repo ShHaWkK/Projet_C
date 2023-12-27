@@ -15,5 +15,9 @@ void AssignTask(Character* character, const char* task);
 void IncreaseHunger(Character* character);
 void CompleteTask(Character* character);
 void PrintCharacterInfo(const Character* character);
+void InitializeCharacters();
+void UpdateCharacters();
+
+extern Character player;
 
 #endif // CHARACTER_H
