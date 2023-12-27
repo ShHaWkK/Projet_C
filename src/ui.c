@@ -6,6 +6,7 @@ static Button startButton;
 static Button quitButton;
 static Button settingsButton;
 static SDL_Renderer* uiRenderer = NULL;
+static Mix_Chunk* buttonClickSound = NULL;  // Sound effect for button click
 
 static SDL_Texture* CreateButtonTexture(TTF_Font* font, const char* text, SDL_Color color) {
     SDL_Surface* surface = TTF_RenderText_Solid(font, text, color);
@@ -15,21 +16,25 @@ static SDL_Texture* CreateButtonTexture(TTF_Font* font, const char* text, SDL_Co
 }
 
 static void StartNewSession(int* running) {
+    Mix_PlayChannel(-1, buttonClickSound, 0);  // Play sound effect
     printf("Starting a new session...\n");
     // Insert code to start a new session
 }
 
 static void QuitGame(int* running) {
+    Mix_PlayChannel(-1, buttonClickSound, 0);  // Play sound effect
     *running = 0;
 }
 
 static void OpenSettings(int* running) {
+    Mix_PlayChannel(-1, buttonClickSound, 0);  // Play sound effect
     printf("Opening settings...\n");
     // Insert code to handle opening settings
 }
 
-void UI_Init(SDL_Renderer* renderer, TTF_Font* font, int windowWidth, int windowHeight) {
+void UI_Init(SDL_Renderer* renderer, TTF_Font* font, int windowWidth, int windowHeight, Mix_Chunk* soundEffect) {
     uiRenderer = renderer;
+    buttonClickSound = soundEffect;  // Set the button click sound effect
 
     // Set up the start button
     startButton.rect = (SDL_Rect){(windowWidth - 200) / 2, windowHeight / 2 - 75, 200, 50};
