@@ -1,7 +1,8 @@
+#include "include.h"
 #include "game.h"
 #include "ui.h"
 #include "character.h"
-#include "include.h"
+#include "Log.h"
 
 static SDL_Window* window = NULL;
 static SDL_Renderer* renderer = NULL;
@@ -9,38 +10,43 @@ static TTF_Font* font = NULL;
 static Mix_Music* bgMusic = NULL;
 
 void Game_Init() {
+    // Initialisation du système de logs
+    Log_Init("game.log");
+
+    // Log de l'initialisation du jeu
+    Log(LOG_INFO, "Initialisation du jeu...");
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
-        fprintf(stderr, "SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+        Log(LOG_ERROR, "SDL could not initialize!");
         exit(1);
     }
 
     window = SDL_CreateWindow("Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, 0);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (!renderer) {
-        fprintf(stderr, "Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
+        Log(LOG_ERROR, "Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
         exit(1);
     }
 
     if (TTF_Init() == -1) {
-        fprintf(stderr, "TTF_Init: %s\n", TTF_GetError());
+        Log(LOG_ERROR, "TTF_Init: %s\n", TTF_GetError());
         exit(1);
     }
 
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
-        fprintf(stderr, "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
+        Log(LOG_ERROR, "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
         exit(1);
     }
 
     font = TTF_OpenFont("fonts/Roboto-Black.ttf", 28);
     if (!font) {
-        fprintf(stderr, "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
+        Log(LOG_ERROR, "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
         exit(1);
     }
 
     bgMusic = Mix_LoadMUS("assets/sounds/Helldivers.mp3");
     if (!bgMusic) {
-        fprintf(stderr, "Failed to load background music! SDL_mixer Error: %s\n", Mix_GetError());
+        Log(LOG_ERROR, "Failed to load background music! SDL_mixer Error: %s\n", Mix_GetError());
         exit(1);
     }
 
@@ -52,8 +58,8 @@ void Game_Init() {
 
     UI_Init(renderer, font, windowWidth, windowHeight, soundEffect);
 
-
-    UI_Init(renderer, font, windowWidth, windowHeight, soundEffect);
+    // Log de la fin de l'initialisation du jeu
+    Log(LOG_INFO, "Jeu initialisé avec succès.");
 
     /***********************************************************************/
     Character player = CreateCharacter("Player 1");
@@ -61,7 +67,6 @@ void Game_Init() {
     IncreaseHunger(&player);
     CompleteTask(&player);
 }
-
 
 void Game_Run() {
     int running = 1;
@@ -98,4 +103,9 @@ void Game_Shutdown() {
     SDL_DestroyWindow(window);
     TTF_Quit();
     SDL_Quit();
+
+    // Fermeture du système de logs
+    Log_Close();
+
+    Log(LOG_INFO, "Jeu fermé.");
 }

@@ -1,5 +1,5 @@
 #include "ui.h"
-#include <stdio.h>
+#include "include.h"
 
 // Define your Button structure and other UI functions here
 static Button startButton;

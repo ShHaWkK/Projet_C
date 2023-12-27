@@ -5,5 +5,8 @@
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
+#include <time.h>
 
 #endif // INCLUDE_H
