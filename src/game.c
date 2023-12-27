@@ -47,10 +47,9 @@ void Game_Init() {
 
     // Play the background music
     Mix_PlayMusic(bgMusic, -1);
-    // Assuming these variables are defined and initialized correctly in your Game_Init function
     Mix_Chunk* soundEffect = Mix_LoadWAV("assets/sounds/click.wav"); // Load your sound effect
-    int windowWidth = 800;  // Example window width
-    int windowHeight = 600; // Example window height
+    int windowWidth = 800;
+    int windowHeight = 600; 
 
     UI_Init(renderer, font, windowWidth, windowHeight, soundEffect);
 
