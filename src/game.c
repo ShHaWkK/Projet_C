@@ -1,9 +1,7 @@
 #include "game.h"
 #include "ui.h"
-#include <stdio.h>
-#include <SDL.h>
-#include <SDL_ttf.h>
-#include <SDL_mixer.h>
+#include "character.h"
+#include "include.h"
 
 static SDL_Window* window = NULL;
 static SDL_Renderer* renderer = NULL;
@@ -57,7 +55,13 @@ void Game_Init() {
 
     UI_Init(renderer, font, windowWidth, windowHeight, soundEffect);
 
+    /***********************************************************************/
+    Character player = CreateCharacter("Player 1");
+    AssignTask(&player, "Collect Wood");
+    IncreaseHunger(&player);
+    CompleteTask(&player);
 }
+
 
 void Game_Run() {
     int running = 1;
