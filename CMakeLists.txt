@@ -14,6 +14,9 @@ find_package(SDL2_ttf REQUIRED)
 
 include_directories(${SDL2_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIR})
 
-add_executable(Projet_C main.c)
-
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY} ${SDL2_TTF_LIBRARIES})
+file(COPY fonts DESTINATION ${CMAKE_BINARY_DIR})
+add_executable(Projet_C main.c
+        fonts/arial.ttf
+        fonts/Roboto-Black.ttf
+        )
+target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY} ${SDL2_TTF_LIBRARY})
