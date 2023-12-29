@@ -12,7 +12,9 @@ set(SDL2_TTF_LIBRARY "C:/C_libraries/SDL2_ttf-2.20.2/x86_64-w64-mingw32/lib/libS
 set(SDL2_MIXER_PATH "C:/C_libraries/SDL2_mixer-2.6.3/x86_64-w64-mingw32")
 set(SDL2_MIXER_INCLUDE_DIR "C:/C_libraries/SDL2_mixer-2.6.3/x86_64-w64-mingw32/include")
 set(SDL2_MIXER_LIBRARIES "C:/C_libraries/SDL2_mixer-2.6.3/x86_64-w64-mingw32/lib/libSDL2_mixer.dll.a")
-
+#link_directories(/"")
+include_directories(C:/C_libraries/sqlite-dll-win-x64-3440200)
+link_directories(C:/C_libraries/sqlite-dll-win-x64-3440200)
 ### Find Packages ##
 find_package(SDL2 REQUIRED)
 find_package(SDL2_ttf REQUIRED)
@@ -37,4 +39,4 @@ add_executable(${PROJECT_NAME}
         src/game
         assets/
         )
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY} ${SDL2_TTF_LIBRARY} ${SDL2_MIXER_LIBRARIES} )
+target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY} ${SDL2_TTF_LIBRARY} ${SDL2_MIXER_LIBRARIES} sqlite3 )
