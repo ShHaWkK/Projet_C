@@ -8,5 +8,6 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <time.h>
+#include <sqlite3.h>
 
 #endif // INCLUDE_H

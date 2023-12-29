@@ -1,13 +1,23 @@
 // character.h
+#include <sqlite3.h>
+#include "include.h"
+
 #ifndef CHARACTER_H
 #define CHARACTER_H
 
 typedef struct {
+    int id;
     char name[50];
     int health;
     int hunger;
     int tasks_completed;
+    int morale;
 } Character;
+
+int character_create_table(sqlite3 *db);
+int character_insert(sqlite3 *db, Character *character);
+int character_update(sqlite3 *db, Character *character);
+int character_delete(sqlite3 *db, int character_id);
 
 // Prototypes des fonctions pour la gestion des personnages
 Character CreateCharacter(const char* name);

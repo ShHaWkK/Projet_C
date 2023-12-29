@@ -3,13 +3,20 @@
 #include "ui.h"
 #include "character.h"
 #include "Log.h"
+#include "config.h"
+#include "database.h"
 
 static SDL_Window* window = NULL;
 static SDL_Renderer* renderer = NULL;
-static TTF_Font* font = NULL;
+TTF_Font* font = NULL;
 static Mix_Music* bgMusic = NULL;
 GameState currentGameState = MENU;
 GameState previousGameState = MENU;
+
+static Mix_Chunk* buttonClickSound = NULL;
+char playerName[256] = "";
+char playerSurname[256] = "";
+int inputActive = 0;
 
 // Prototype des fonctions
 void InitializeGameWorld();
@@ -20,10 +27,20 @@ void UpdateCharacters();
 GameWorld gameWorld;
 
 
+void StartNewSession(int* running) {
+    Log(LOG_INFO, "Start new session initiated.");
+    ChangeGameState(GAME_STATE_CHARACTER_CREATION);
+    inputActive = 1;
+    SDL_StartTextInput(); // Commencez à prendre la saisie de texte
+}
 
 void ChangeGameState(GameState newState) {
     previousGameState = currentGameState;
     currentGameState = newState;
+    if (currentGameState == GAME_STATE_CHARACTER_CREATION && newState != GAME_STATE_CHARACTER_CREATION) {
+        inputActive = 0;
+        SDL_StopTextInput();
+    }
     // Ajoutez ici toute autre logique nécessaire lors du changement d'état
 }
 
@@ -40,6 +57,11 @@ void UpdateGameWorld() {
     // Par exemple, gérer les cycles jour/nuit, les événements aléatoires...
 }
 
+void Game_HandleCharacterNameInput(const char* name) {
+    Character player = CreateCharacter(name); // Create a new character with the entered name
+    // Additional logic to set up the player character
+    ChangeGameState(GAME_RUNNING); // Change the game state to running
+}
 
 
 void RenderGameUI(SDL_Renderer* renderer) {
@@ -117,11 +139,13 @@ void Game_Run() {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 running = 0;
+            } else if (event.type == SDL_TEXTINPUT && inputActive) {
+                // Concaténer le texte saisi avec le nom ou le prénom
+                strcat(playerName, event.text.text); // À adapter pour gérer nom et prénom séparément
             } else {
                 UI_HandleEvent(&event, &running);
             }
         }
-
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
@@ -134,6 +158,10 @@ void Game_Run() {
                 UpdateCharacters();
                 RenderGameUI(renderer);
                 break;
+            case GAME_STATE_CHARACTER_CREATION:
+                RenderCharacterCreationUI(renderer, font);
+                break;
+
                 // Gérer les autres états si nécessaire
         }
 

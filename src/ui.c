@@ -1,6 +1,7 @@
 #include "ui.h"
 #include "include.h"
 #include "game.h"
+#include "Log.h"
 
 // Define your Button structure and other UI functions here
 static Button startButton;
@@ -18,17 +19,8 @@ static SDL_Texture* CreateButtonTexture(TTF_Font* font, const char* text, SDL_Co
     return texture;
 }
 
-
-void StartNewSession(int* running) {
-    Mix_PlayChannel(-1, buttonClickSound, 0);  // Play sound effect
-    printf("Starting a new session...\n");
-    ChangeGameState(GAME_RUNNING);
-    InitializeNewGameSession();
-
-}
-
-
 static void QuitGame(int* running) {
+    Log(LOG_INFO, "Quit game initiated.");
     Mix_PlayChannel(-1, buttonClickSound, 0);  // Play sound effect
     *running = 0;
 }
@@ -73,6 +65,7 @@ void UI_HandleEvent(SDL_Event* e, int* running) {
     // Handle events for the buttons
     int mouseX, mouseY;
     if (e->type == SDL_MOUSEMOTION || e->type == SDL_MOUSEBUTTONDOWN) {
+        Log(LOG_INFO, "Back button clicked.");
         SDL_GetMouseState(&mouseX, &mouseY);
         // Debug print
         printf("Mouse Position - X: %d, Y: %d\n", mouseX, mouseY);
@@ -85,6 +78,9 @@ void UI_HandleEvent(SDL_Event* e, int* running) {
             backButton.onClick(running);
         }
         if (e->type == SDL_MOUSEBUTTONDOWN) {
+            if (startButton.isHovered && startButton.onClick) {
+                StartNewSession(running); // Call the StartNewSession defined in game.c
+            }
             // Debug print
             printf("Mouse Button Down - X: %d, Y: %d\n", mouseX, mouseY);
             if (startButton.isHovered && startButton.onClick) {
@@ -94,7 +90,9 @@ void UI_HandleEvent(SDL_Event* e, int* running) {
             } else if (settingsButton.isHovered && settingsButton.onClick) {
                 settingsButton.onClick(running);
             }
+
         }
+
     }
 }
 
@@ -119,9 +117,22 @@ void UI_Render(SDL_Renderer* renderer) {
         SDL_RenderCopy(renderer, currentTexture, NULL, &backButton.rect);
     }
 }
+void RenderCharacterCreationUI(SDL_Renderer* renderer, TTF_Font* font) {    // Code pour afficher l'arrière-plan de l'écran de création de personnage
 
+    // Afficher le champ de saisie du nom
+    SDL_Rect nameRect = { .x = 100, .y = 100, .w = 200, .h = 30 };
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // Blanc
+    SDL_RenderFillRect(renderer, &nameRect);
 
+    // Afficher le texte saisi par l'utilisateur pour le nom
+    SDL_Surface* surface = TTF_RenderText_Solid(font, playerName, (SDL_Color){0, 0, 0});
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_RenderCopy(renderer, texture, NULL, &nameRect);
+    SDL_FreeSurface(surface);
+    SDL_DestroyTexture(texture);
 
+    // Répétez le processus pour le prénom...
+}
 void GoBack(int* running) {
     ChangeGameState(previousGameState);
 }
