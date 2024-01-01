@@ -9,5 +9,6 @@
 #include <stdarg.h>
 #include <time.h>
 #include <sqlite3.h>
+#include <string.h>
 
 #endif // INCLUDE_H
