@@ -5,6 +5,7 @@
 #include "../include/audio.h"
 #include "../include/text_input.h"
 
+
 char playerName[256] = "";
 char playerSurname[256] = "";
 int isNameSelected = 0;
@@ -38,7 +39,7 @@ static void OpenSettings(int* running) {
 }
 void RenderTextLabel(SDL_Renderer* renderer, TTF_Font* font, const char* text, SDL_Color color, SDL_Rect rect) {
     // Render the label text
-    SDL_Surface* textSurface = TTF_RenderText_Solid(font, text, color);
+    SDL_Surface* textSurface = TTF_RenderText_Blended(font, text, color);
     SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
     SDL_RenderCopy(renderer, textTexture, NULL, &rect);
     SDL_FreeSurface(textSurface);
@@ -51,6 +52,11 @@ void UI_Init(SDL_Renderer* renderer, TTF_Font* font, int windowWidth, int window
     buttonClickSound = soundEffect;  //  click sound effect
     SDL_Texture* submitButtonTexture;
     SDL_Texture* submitButtonHoverTexture;
+
+    submitButton.rect.x = windowWidth / 2 - BUTTON_WIDTH / 2; // Centré horizontalement
+    submitButton.rect.y = windowHeight - MARGIN - BUTTON_HEIGHT; // Positionné en bas avec une marge
+    submitButton.rect.w = BUTTON_WIDTH;
+    submitButton.rect.h = BUTTON_HEIGHT;
 
     // Set up the start button
     startButton.rect = (SDL_Rect){(windowWidth - 200) / 2, windowHeight / 2 - 75, 200, 50};
@@ -102,12 +108,16 @@ void UI_HandleEvent(SDL_Event* e, int* running) {
             backButton.onClick(running);
         }
         if (e->type == SDL_MOUSEBUTTONDOWN) {
+
             if (startButton.isHovered && startButton.onClick) {
                 startButton.onClick(running);
+
             } else if (quitButton.isHovered && quitButton.onClick) {
                 quitButton.onClick(running);
             } else if (settingsButton.isHovered && settingsButton.onClick) {
                 settingsButton.onClick(running);
+            }else if (backButton.isHovered && backButton.onClick) {
+                backButton.onClick(running);
             }
 
             if (SDL_PointInRect(&(SDL_Point) {mouseX, mouseY}, &nameInputRect)) {
@@ -163,10 +173,21 @@ void UI_Render(SDL_Renderer* renderer, TTF_Font* font) {
 
 // ------------Screen create users (personnage) ------------
 void RenderCharacterCreationUI(SDL_Renderer* renderer, TTF_Font* font) {
-    SDL_Rect nameLabelRect = {100, 50, 100, 30};
-    SDL_Rect surnameLabelRect = {50, 150, 100, 30};
+    SDL_Rect nameLabelRect = {MARGIN, MARGIN, LABEL_WIDTH, LABEL_HEIGHT};
+    SDL_Rect surnameLabelRect = {MARGIN, 2 * MARGIN + INPUT_HEIGHT + SPACING, LABEL_WIDTH, LABEL_HEIGHT};
 
+    // Positionnez les champs de saisie à côté des étiquettes
+    nameInputRect.x = MARGIN + LABEL_WIDTH + SPACING;
+    nameInputRect.y = MARGIN;
+    nameInputRect.w = INPUT_WIDTH;
+    nameInputRect.h = INPUT_HEIGHT;
 
+    surnameInputRect.x = MARGIN + LABEL_WIDTH + SPACING;
+    surnameInputRect.y = 2 * MARGIN + INPUT_HEIGHT + SPACING;
+    surnameInputRect.w = INPUT_WIDTH;
+    surnameInputRect.h = INPUT_HEIGHT;
+
+    // Dessinez les étiquettes et les champs de saisie
     RenderTextLabel(renderer, font, "Name :", (SDL_Color){255, 255, 255}, nameLabelRect);
     RenderTextLabel(renderer, font, "Surname :", (SDL_Color){255, 255, 255}, surnameLabelRect);
 

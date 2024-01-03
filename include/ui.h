@@ -1,5 +1,13 @@
 #ifndef UI_H
 #define UI_H
+#define MARGIN 50
+#define INPUT_WIDTH 200
+#define INPUT_HEIGHT 30
+#define BUTTON_WIDTH 200
+#define BUTTON_HEIGHT 50
+#define LABEL_WIDTH 100
+#define LABEL_HEIGHT 30
+#define SPACING 10
 
 #include "include.h"
 
@@ -50,5 +58,6 @@ void HandleButtonClick(Button *button, int *running);
 void RenderTextInputField(SDL_Renderer* renderer, TTF_Font* font, SDL_Rect* rect, const char* text, int isSelected);
 
 //----------------------------------------
+
 
 #endif // UI_H
