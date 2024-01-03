@@ -1,10 +1,16 @@
-#include "include.h"
-#include "game.h"
-#include "ui.h"
-#include "character.h"
-#include "Log.h"
-#include "config.h"
-#include "database.h"
+//-------------include----------
+
+#include "../include/include.h"
+#include "../include/game.h"
+#include "../include/ui.h"
+#include "../include/character.h"
+#include "../include/Log.h"
+#include "../include/config.h"
+#include "../include/database.h"
+#include "../include/audio.h"
+#include "../include/text_input.h"
+
+//-------------------------------
 
 static SDL_Window* window = NULL;
 static SDL_Renderer* renderer = NULL;
@@ -12,37 +18,55 @@ TTF_Font* font = NULL;
 static Mix_Music* bgMusic = NULL;
 GameState currentGameState = MENU;
 GameState previousGameState = MENU;
+static Mix_Chunk* soundEffect = NULL;
+ActiveInputField currentInputField = INPUT_FIELD_NONE;
 
-static Mix_Chunk* buttonClickSound = NULL;
-char playerName[256] = "";
-char playerSurname[256] = "";
-int inputActive = 0;
-
-// Prototype des fonctions
+//-------------- Prototype des fonctions ----------
 void InitializeGameWorld();
 void InitializeCharacters();
 void UpdateGameWorld();
 void UpdateCharacters();
+static void RenderGameUI(SDL_Renderer* renderer);
 
 GameWorld gameWorld;
 
+void GameState_Menu_Update();
+void GameState_Menu_Render(SDL_Renderer* renderer);
+void GameState_GameRunning_Update();
+void GameState_GameRunning_Render(SDL_Renderer* renderer);
+void GameState_CharacterCreation_Update();
+void GameState_CharacterCreation_Render(SDL_Renderer* renderer);
+//----------------------------------------------------------------
+extern int nameCursorPosition;
+extern int surnameCursorPosition;
 
+
+/*********************************************************************************/
 void StartNewSession(int* running) {
-    Log(LOG_INFO, "Start new session initiated.");
+    Log(LOG_INFO, "Démarrage d'une nouvelle session.");
     ChangeGameState(GAME_STATE_CHARACTER_CREATION);
     inputActive = 1;
-    SDL_StartTextInput(); // Commencez à prendre la saisie de texte
+    SDL_StartTextInput();
+    Log(LOG_INFO, "SDL_StartTextInput appelé.");
 }
 
-void ChangeGameState(GameState newState) {
+
+void ChangeGameState(GameState newState)
+{
+    Log(LOG_INFO, "Changement d'état de %d à %d", currentGameState, newState);
     previousGameState = currentGameState;
     currentGameState = newState;
-    if (currentGameState == GAME_STATE_CHARACTER_CREATION && newState != GAME_STATE_CHARACTER_CREATION) {
+
+    if (previousGameState == GAME_STATE_CHARACTER_CREATION && currentGameState != GAME_STATE_CHARACTER_CREATION)
+    {
         inputActive = 0;
         SDL_StopTextInput();
+        Log(LOG_INFO, "SDL_StopTextInput appelé.");
     }
-    // Ajoutez ici toute autre logique nécessaire lors du changement d'état
 }
+
+
+/*********************************************************************************************/
 
 void InitializeNewGameSession() {
     // Implémentez ici la logique pour initialiser une nouvelle session de jeu
@@ -52,10 +76,12 @@ void InitializeGameWorld() {
     // Initialisation d'autres éléments du monde ici
 }
 
+/*
 void UpdateGameWorld() {
     // Mettre à jour le monde du jeu
     // Par exemple, gérer les cycles jour/nuit, les événements aléatoires...
 }
+*/
 
 void Game_HandleCharacterNameInput(const char* name) {
     Character player = CreateCharacter(name); // Create a new character with the entered name
@@ -65,10 +91,12 @@ void Game_HandleCharacterNameInput(const char* name) {
 
 
 void RenderGameUI(SDL_Renderer* renderer) {
+    Log(LOG_INFO, "Rendu de l'interface de jeu.");
     // Implémenter le rendu de l'interface de jeu ici
     // Afficher les personnages, les ressources, le monde...
 }
 
+/***************************************************************************************************/
 
 void Game_Init() {
     // Initialisation du système de logs
@@ -105,15 +133,9 @@ void Game_Init() {
         exit(1);
     }
 
-    bgMusic = Mix_LoadMUS("assets/sounds/Helldivers.mp3");
-    if (!bgMusic) {
-        Log(LOG_ERROR, "Failed to load background music! SDL_mixer Error: %s\n", Mix_GetError());
-        exit(1);
-    }
+    Audio_Init("assets/sounds/Helldivers.mp3", "assets/sounds/click.wav");
+    Audio_PlayMusic();
 
-    // Play the background music
-    Mix_PlayMusic(bgMusic, -1);
-    Mix_Chunk* soundEffect = Mix_LoadWAV("assets/sounds/click.wav"); // Load your sound effect
     int windowWidth = 800;
     int windowHeight = 600;
 
@@ -121,8 +143,6 @@ void Game_Init() {
 
     // Log de la fin de l'initialisation du jeu
     Log(LOG_INFO, "Jeu initialisé avec succès.");
-
-    /***********************************************************************/
     Character player = CreateCharacter("Player 1");
     AssignTask(&player, "Collect Wood");
     IncreaseHunger(&player);
@@ -131,37 +151,63 @@ void Game_Init() {
     currentGameState = MENU;
 }
 
-void Game_Run() {
+//--------------------Function Game_Run ---------------------//
+
+void Game_Run()
+{
     int running = 1;
     SDL_Event event;
 
     while (running) {
         while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
-                running = 0;
-            } else if (event.type == SDL_TEXTINPUT && inputActive) {
-                // Concaténer le texte saisi avec le nom ou le prénom
-                strcat(playerName, event.text.text); // À adapter pour gérer nom et prénom séparément
-            } else {
-                UI_HandleEvent(&event, &running);
+            Log(LOG_INFO, "Événement détecté: Type %d", event.type);
+
+            switch (event.type) {
+                case SDL_QUIT:
+                    Log(LOG_INFO, "Événement SDL_QUIT détecté.");
+                    running = 0;
+                    break;
+                case SDL_KEYDOWN:
+                    Log(LOG_INFO, "Événement SDL_KEYDOWN détecté.");
+                    if (isNameSelected) {
+                        // Gestion des entrées clavier pour le champ du nom
+                        handleKeyboardEvent(&event, playerName, &nameCursorPosition);
+                    } else if (isSurnameSelected) {
+                        // Gestion des entrées clavier pour le champ du prénom
+                        handleKeyboardEvent(&event, playerSurname, &surnameCursorPosition);
+                    }
+                    break;
+                case SDL_TEXTINPUT:
+                    Log(LOG_INFO, "Événement SDL_TEXTINPUT détecté.");
+                    if (isNameSelected) {
+                        // Gestion de la saisie de texte pour le champ du nom
+                        handleTextInputEvent(&event, playerName, &nameCursorPosition);
+                    } else if (isSurnameSelected) {
+                        // Gestion de la saisie de texte pour le champ du prénom
+                        handleTextInputEvent(&event, playerSurname, &surnameCursorPosition);
+                    }
+                    break;
+                default:
+                    UI_HandleEvent(&event, &running);
+                    break;
             }
         }
+
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
         switch (currentGameState) {
             case MENU:
-                UI_Render(renderer);
+                UI_Render(renderer, font);
                 break;
             case GAME_RUNNING:
-                UpdateGameWorld();
+                // UpdateGameWorld();
                 UpdateCharacters();
                 RenderGameUI(renderer);
                 break;
             case GAME_STATE_CHARACTER_CREATION:
                 RenderCharacterCreationUI(renderer, font);
                 break;
-
                 // Gérer les autres états si nécessaire
         }
 

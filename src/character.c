@@ -1,10 +1,10 @@
 // character.c
 
-#include "character.h"
+#include "../include/character.h"
 #include <stdio.h>
 #include <string.h>
-#include "database.h"
-#include "Log.h"
+#include "../include/database.h"
+#include "../include/Log.h"
 
 Character player;
 Character CreateCharacter(const char* name) {

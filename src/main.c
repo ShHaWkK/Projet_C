@@ -1,5 +1,5 @@
-#include "game.h"
-#include "Log.h"
+#include "../include/game.h"
+#include "../include/Log.h"
 
 int main(int argc, char* argv[]) {
     Log_Init("game.log");

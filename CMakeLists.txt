@@ -31,13 +31,17 @@ add_executable(${PROJECT_NAME}
         src/ui.c
         src/Log.c
         src/character.c
+        src/audio.c
         src/database.c
-        src/game.h
-        src/ui.h
-        src/character.h
-        src/include.h
-        src/database.h
-        src/Log.h
+        src/text_input.c
+        include/game.h
+        include/ui.h
+        include/audio.h
+        include/character.h
+        include/include.h
+        include/database.h
+        include/Log.h
+        include/text_input.h
         assets/
         )
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY} ${SDL2_TTF_LIBRARY} ${SDL2_MIXER_LIBRARIES} sqlite3 )

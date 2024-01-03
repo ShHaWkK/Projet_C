@@ -1,6 +1,7 @@
 // database.c
-#include "database.h"
-#include "include.h"
+#include "../include/database.h"
+#include "../include/include.h"
+#include "../include/Log.h"
 
 int db_open(const char *filename, sqlite3 **db) {
     return sqlite3_open(filename, db);
@@ -19,14 +20,32 @@ int db_execute(sqlite3 *db, const char *sql) {
     return rc;
 }
 
-int db_begin_transaction(sqlite3 *db) {
-    return db_execute(db, "BEGIN TRANSACTION;");
+// Démarre une transaction
+int db_begin_transaction(sqlite3* db) {
+    Log(LOG_INFO, "Début de la transaction");
+    int result = db_execute(db, "BEGIN TRANSACTION;");
+    if (result != 0) {
+        Log(LOG_ERROR, "Erreur lors du début de la transaction: %s", sqlite3_errmsg(db));
+    }
+    return result;
 }
 
-int db_commit_transaction(sqlite3 *db) {
-    return db_execute(db, "COMMIT TRANSACTION;");
+// Valide une transaction
+int db_commit_transaction(sqlite3* db) {
+    Log(LOG_INFO, "Validation de la transaction");
+    int result = db_execute(db, "COMMIT;");
+    if (result != 0) {
+        Log(LOG_ERROR, "Erreur lors de la validation de la transaction: %s", sqlite3_errmsg(db));
+    }
+    return result;
 }
 
-int db_rollback_transaction(sqlite3 *db) {
-    return db_execute(db, "ROLLBACK TRANSACTION;");
+// Annule une transaction
+int db_rollback_transaction(sqlite3* db) {
+    Log(LOG_INFO, "Annulation de la transaction");
+    int result = db_execute(db, "ROLLBACK;");
+    if (result != 0) {
+        Log(LOG_ERROR, "Erreur lors de l'annulation de la transaction: %s", sqlite3_errmsg(db));
+    }
+    return result;
 }

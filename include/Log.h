@@ -1,6 +1,7 @@
 #ifndef LOG_H
 #define LOG_H
 
+#include "include.h"
 // Enumération pour les niveaux de log
 typedef enum {
     LOG_INFO,
@@ -17,4 +18,11 @@ void Log(LogLevel level, const char* format, ...);
 // Fonction pour fermer le système de log
 void Log_Close();
 
-#endif
+
+void Log_SetLevel(LogLevel level);
+extern LogLevel currentLogLevel;
+#define LOG(level, format, ...) \
+    if (level >= currentLogLevel) Log(level, "[%s:%d] " format, __FILE__, __LINE__, ##__VA_ARGS__)
+
+
+#endif // LOG_H

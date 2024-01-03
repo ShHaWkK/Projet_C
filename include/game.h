@@ -47,6 +47,7 @@ void ChangeGameState(GameState newState);
 void InitializeNewGameSession();
 void Game_HandleCharacterNameInput(const char* name);
 void RenderCharacterCreationUI(SDL_Renderer* renderer, TTF_Font* font);
-void handleKeyboardEvent(SDL_Event* e);
-void handleTextInputEvent(SDL_Event* e);
+//
+
+
 #endif // GAME_H
