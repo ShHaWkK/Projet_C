@@ -38,7 +38,7 @@ extern int isNameSelected;
 extern int isSurnameSelected;
 extern SDL_Rect nameInputRect;
 extern SDL_Rect surnameInputRect;
-
+extern Button submitButton;
 // ------------Prototype UI ------------//
 
 // Prototypes des fonctions de l'UI
@@ -50,6 +50,7 @@ void RenderCharacterCreationUI(SDL_Renderer* renderer, TTF_Font* font);
 void RenderText(SDL_Renderer* renderer, TTF_Font* font, const char* text, SDL_Color textColor, SDL_Rect* rect);
 void StartNewSession(int* running);
 void GoBack(int* running);
+void SubmitForm(int* running);
 void RenderTextLabel(SDL_Renderer* renderer, TTF_Font* font, const char* text, SDL_Color color, SDL_Rect rect);
 
 // ------------Add Prototype  ------------//

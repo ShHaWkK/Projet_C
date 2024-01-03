@@ -43,5 +43,6 @@ add_executable(${PROJECT_NAME}
         include/Log.h
         include/text_input.h
         assets/
+        survivor_colony.db
         )
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY} ${SDL2_TTF_LIBRARY} ${SDL2_MIXER_LIBRARIES} sqlite3 )
