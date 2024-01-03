@@ -11,6 +11,8 @@ typedef struct {
     void (*onClick)(int* running);
 } Button;
 
+extern Button submitButton;
+
 
 // Define your Button structure and other UI functions here
 static Button startButton;
@@ -40,6 +42,7 @@ void RenderCharacterCreationUI(SDL_Renderer* renderer, TTF_Font* font);
 void RenderText(SDL_Renderer* renderer, TTF_Font* font, const char* text, SDL_Color textColor, SDL_Rect* rect);
 void StartNewSession(int* running);
 void GoBack(int* running);
+void RenderTextLabel(SDL_Renderer* renderer, TTF_Font* font, const char* text, SDL_Color color, SDL_Rect rect);
 
 // ------------Add Prototype  ------------
 void HandleButtonHover(Button *button, int mouseX, int mouseY);
