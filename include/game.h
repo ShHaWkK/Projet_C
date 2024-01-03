@@ -3,6 +3,8 @@
 
 #include "include.h"
 
+//--------  --------//
+
 typedef enum {
     MENU,
     GAME_RUNNING,
@@ -12,6 +14,7 @@ typedef enum {
     QUIT
 } GameState;
 
+//--------  --------//
 typedef enum {
     INPUT_FIELD_NONE,
     INPUT_FIELD_NAME,
@@ -20,12 +23,12 @@ typedef enum {
 
 extern ActiveInputField currentInputField;
 
+//--------  --------//
 typedef struct {
     int day;
-    // Add other attributes for the game world here
 } GameWorld;
 
-// Global variables declarations
+//-------- Global variables declarations --------//
 extern GameState currentGameState;
 extern GameState previousGameState;
 extern GameWorld gameWorld; // The game world
@@ -38,7 +41,8 @@ extern SDL_Rect surnameInputRect;
 extern ActiveInputField currentInputField;
 extern int inputActive;
 
-// Function prototypes
+//--------  Function prototypes --------//
+
 void Game_Init();
 void Game_Run();
 void Game_Shutdown();
@@ -47,7 +51,6 @@ void ChangeGameState(GameState newState);
 void InitializeNewGameSession();
 void Game_HandleCharacterNameInput(const char* name);
 void RenderCharacterCreationUI(SDL_Renderer* renderer, TTF_Font* font);
-//
 
 
 #endif // GAME_H
