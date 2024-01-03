@@ -4,7 +4,7 @@
 #include "../include/Log.h"
 #include "../include/audio.h"
 #include "../include/text_input.h"
-
+#include "../include/trailer.h"
 
 char playerName[256] = "";
 char playerSurname[256] = "";
@@ -12,11 +12,13 @@ int isNameSelected = 0;
 int isSurnameSelected = 0;
 int nameCursorPosition = 0;
 int surnameCursorPosition = 0;
+static Trailer trailer;
 
 SDL_Rect nameInputRect = {100, 100, 200, 30};
 SDL_Rect surnameInputRect = {100, 150, 200, 30};
 SDL_Rect submitButtonRect = {100, 250, 200, 50};
 Button submitButton;
+
 /****************************************************************************/
 static SDL_Texture* CreateButtonTexture(TTF_Font* font, const char* text, SDL_Color color) {
     SDL_Surface* surface = TTF_RenderText_Solid(font, text, color);
@@ -48,6 +50,7 @@ void RenderTextLabel(SDL_Renderer* renderer, TTF_Font* font, const char* text, S
 
 void UI_Init(SDL_Renderer* renderer, TTF_Font* font, int windowWidth, int windowHeight, Mix_Chunk* soundEffect) {
     uiRenderer = renderer;
+    submitButton.isClickable = 1;
     buttonClickSound = soundEffect;  //  click sound effect
     SDL_Texture* submitButtonTexture;
     SDL_Texture* submitButtonHoverTexture;
@@ -132,11 +135,7 @@ void UI_HandleEvent(SDL_Event* e, int* running) {
                 isSurnameSelected = 0;
                 SDL_StopTextInput(); // Désactive la saisie de texte
             }
-            if (submitButton.isHovered) {
-                Log(LOG_INFO,"Submit button clicked.\n");
-                Log(LOG_INFO,"Player Name: %s, Player Surname: %s\n", playerName, playerSurname);
-                SubmitForm(running);
-            }
+
         }
     }
     if (e->type == SDL_TEXTINPUT) {
@@ -144,6 +143,15 @@ void UI_HandleEvent(SDL_Event* e, int* running) {
             handleTextInputEvent(e, playerName, &nameCursorPosition); // Utilisez la fonction modifiée
         } else if (isSurnameSelected) {
             handleTextInputEvent(e, playerSurname, &surnameCursorPosition); // Utilisez la fonction modifiée
+        }
+    }
+    if (submitButton.isHovered && e->type == SDL_MOUSEBUTTONDOWN) {
+        if (submitButton.isClickable) {
+            Log(LOG_INFO, "Submit button clicked.\n");
+            SubmitForm(running);
+            submitButton.isClickable = 0; // Empêcher les clics supplémentaires
+            Trailer_Init(&trailer);
+            trailer.isActive = 1;
         }
     }
 }
@@ -182,6 +190,7 @@ void UI_Render(SDL_Renderer* renderer, TTF_Font* font) {
 
 
 // ------------Screen create users (personnage) ------------
+
 void RenderCharacterCreationUI(SDL_Renderer* renderer, TTF_Font* font) {
     SDL_Rect nameLabelRect = {MARGIN, MARGIN, LABEL_WIDTH, LABEL_HEIGHT};
     SDL_Rect surnameLabelRect = {MARGIN, 2 * MARGIN + INPUT_HEIGHT + SPACING, LABEL_WIDTH, LABEL_HEIGHT};
@@ -214,6 +223,7 @@ void RenderCharacterCreationUI(SDL_Renderer* renderer, TTF_Font* font) {
     backButton.hoverTexture = CreateButtonTexture(font, "<", (SDL_Color){255, 0, 0});
     backButton.onClick = GoBack;
 }
+
 void RenderTextInputField(SDL_Renderer* renderer, TTF_Font* font, SDL_Rect* rect, const char* text, int isSelected) {
     SDL_Color backgroundColor = isSelected ? (SDL_Color){200, 200, 255, 255} : (SDL_Color){255, 255, 255, 255};
     SDL_Color textColor = {0, 0, 0, 255};
@@ -262,6 +272,7 @@ void SubmitForm(int* running) {
         fprintf(stderr, "SQL error: %s\n", sqlite3_errmsg(db));
     } else {
         fprintf(stdout, "Character saved successfully\n");
+        submitButton.isClickable = 0;
     }
 
     sqlite3_finalize(stmt);

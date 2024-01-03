@@ -8,6 +8,7 @@
 #define LABEL_WIDTH 100
 #define LABEL_HEIGHT 30
 #define SPACING 10
+#define SCREEN_WIDTH 800
 
 #include "include.h"
 
@@ -16,8 +17,10 @@ typedef struct {
     SDL_Texture* texture;
     SDL_Texture* hoverTexture;
     int isHovered;
+    int isClickable;
     void (*onClick)(int* running);
 } Button;
+
 
 extern Button submitButton;
 
@@ -52,7 +55,6 @@ void StartNewSession(int* running);
 void GoBack(int* running);
 void SubmitForm(int* running);
 void RenderTextLabel(SDL_Renderer* renderer, TTF_Font* font, const char* text, SDL_Color color, SDL_Rect rect);
-
 // ------------Add Prototype  ------------//
 
 void HandleButtonHover(Button *button, int mouseX, int mouseY);

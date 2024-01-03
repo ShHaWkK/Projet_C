@@ -9,6 +9,7 @@
 #include "../include/database.h"
 #include "../include/audio.h"
 #include "../include/text_input.h"
+#include "../include/trailer.h"
 
 //-------------------------------
 
@@ -20,7 +21,7 @@ GameState currentGameState = MENU;
 GameState previousGameState = MENU;
 static Mix_Chunk* soundEffect = NULL;
 ActiveInputField currentInputField = INPUT_FIELD_NONE;
-
+static Trailer trailer;
 //-------------- Prototype des fonctions ----------
 void InitializeGameWorld();
 void InitializeCharacters();
@@ -168,6 +169,9 @@ void Game_Run()
     int running = 1;
     SDL_Event event;
 
+    int windowWidth = 800;
+    int windowHeight = 600;
+
     while (running) {
         while (SDL_PollEvent(&event)) {
             Log(LOG_INFO, "Événement détecté: Type %d", event.type);
@@ -218,6 +222,9 @@ void Game_Run()
             case GAME_STATE_CHARACTER_CREATION:
                 RenderCharacterCreationUI(renderer, font);
                 break;
+        }
+        if (trailer.isActive) {
+            Trailer_Render(renderer, font, &trailer, windowWidth, windowHeight);
         }
 
         SDL_RenderPresent(renderer);
