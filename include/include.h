@@ -10,5 +10,5 @@
 #include <time.h>
 #include <sqlite3.h>
 #include <string.h>
-
+#include <stdbool.h>
 #endif // INCLUDE_H

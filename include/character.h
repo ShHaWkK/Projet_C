@@ -1,9 +1,8 @@
 // character.h
-#include <sqlite3.h>
-#include "include.h"
-
 #ifndef CHARACTER_H
 #define CHARACTER_H
+
+#include "include.h"
 
 typedef struct {
     int id;

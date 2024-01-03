@@ -1,5 +1,5 @@
-#include "Log.h"
-#include "include.h"
+#include "../include/Log.h"
+#include "../include/include.h"
 
 static FILE* logFile = NULL;
 
@@ -48,6 +48,12 @@ void Log(LogLevel level, const char* format, ...) {
     // Saut de ligne pour le prochain message
     fprintf(logFile, "\n");
     fflush(logFile);  // Assurer que le message est écrit immédiatement
+}
+
+LogLevel currentLogLevel = LOG_INFO;
+
+void Log_SetLevel(LogLevel level) {
+    currentLogLevel = level;
 }
 
 void Log_Close() {
