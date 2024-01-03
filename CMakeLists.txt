@@ -34,6 +34,8 @@ add_executable(${PROJECT_NAME}
         src/audio.c
         src/database.c
         src/text_input.c
+        src/trailer.c
+        #.h
         include/game.h
         include/ui.h
         include/audio.h
@@ -42,6 +44,7 @@ add_executable(${PROJECT_NAME}
         include/database.h
         include/Log.h
         include/text_input.h
+        include/trailer.h
         assets/
         survivor_colony.db
         )
