@@ -57,13 +57,20 @@ void ChangeGameState(GameState newState)
     previousGameState = currentGameState;
     currentGameState = newState;
 
+    Log(LOG_INFO, "État actuel du jeu: %d", currentGameState);
+
     if (previousGameState == GAME_STATE_CHARACTER_CREATION && currentGameState != GAME_STATE_CHARACTER_CREATION)
     {
         inputActive = 0;
         SDL_StopTextInput();
         Log(LOG_INFO, "SDL_StopTextInput appelé.");
     }
+
+    if (currentGameState != MENU) {
+        Log(LOG_INFO, "L'état du jeu n'est plus MENU. Le bouton '<' devrait être affiché.");
+    }
 }
+
 
 
 //--------------------Function InitializeNewGameSession ---------------------//
