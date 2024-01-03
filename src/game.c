@@ -66,22 +66,27 @@ void ChangeGameState(GameState newState)
 }
 
 
-/*********************************************************************************************/
+//--------------------Function InitializeNewGameSession ---------------------//
 
-void InitializeNewGameSession() {
-    // Implémentez ici la logique pour initialiser une nouvelle session de jeu
+void InitializeNewGameSession()
+{
+    //initialiser une nouvelle session de jeu
 }
-void InitializeGameWorld() {
+
+//--------------------Function InitializeGameWorld ---------------------//
+
+void InitializeGameWorld()
+{
     gameWorld.day = 1; // Commence au jour 1
-    // Initialisation d'autres éléments du monde ici
 }
 
 /*
 void UpdateGameWorld() {
     // Mettre à jour le monde du jeu
-    // Par exemple, gérer les cycles jour/nuit, les événements aléatoires...
+    // Par exemple, gérer les cycles
 }
 */
+//--------------------Function Game_HandleCharacterNameInput ---------------------//
 
 void Game_HandleCharacterNameInput(const char* name) {
     Character player = CreateCharacter(name); // Create a new character with the entered name
@@ -89,6 +94,7 @@ void Game_HandleCharacterNameInput(const char* name) {
     ChangeGameState(GAME_RUNNING); // Change the game state to running
 }
 
+//--------------------Function RenderGameUI ---------------------//
 
 void RenderGameUI(SDL_Renderer* renderer) {
     Log(LOG_INFO, "Rendu de l'interface de jeu.");
@@ -96,13 +102,11 @@ void RenderGameUI(SDL_Renderer* renderer) {
     // Afficher les personnages, les ressources, le monde...
 }
 
-/***************************************************************************************************/
+//-------------------- Function Game_Init ----------------------//
 
 void Game_Init() {
-    // Initialisation du système de logs
     Log_Init("game.log");
 
-    // Log de l'initialisation du jeu
     Log(LOG_INFO, "Initialisation du jeu...");
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
@@ -141,7 +145,6 @@ void Game_Init() {
 
     UI_Init(renderer, font, windowWidth, windowHeight, soundEffect);
 
-    // Log de la fin de l'initialisation du jeu
     Log(LOG_INFO, "Jeu initialisé avec succès.");
     Character player = CreateCharacter("Player 1");
     AssignTask(&player, "Collect Wood");
@@ -170,20 +173,20 @@ void Game_Run()
                 case SDL_KEYDOWN:
                     Log(LOG_INFO, "Événement SDL_KEYDOWN détecté.");
                     if (isNameSelected) {
-                        // Gestion des entrées clavier pour le champ du nom
+                        // Keyboard input management for the name field
                         handleKeyboardEvent(&event, playerName, &nameCursorPosition);
                     } else if (isSurnameSelected) {
-                        // Gestion des entrées clavier pour le champ du prénom
+                        // Keyboard input management for the first name field
                         handleKeyboardEvent(&event, playerSurname, &surnameCursorPosition);
                     }
                     break;
                 case SDL_TEXTINPUT:
                     Log(LOG_INFO, "Événement SDL_TEXTINPUT détecté.");
                     if (isNameSelected) {
-                        // Gestion de la saisie de texte pour le champ du nom
+                        // Manage text input for the name field
                         handleTextInputEvent(&event, playerName, &nameCursorPosition);
                     } else if (isSurnameSelected) {
-                        // Gestion de la saisie de texte pour le champ du prénom
+                        // Manage text input for the first name field
                         handleTextInputEvent(&event, playerSurname, &surnameCursorPosition);
                     }
                     break;
@@ -208,13 +211,13 @@ void Game_Run()
             case GAME_STATE_CHARACTER_CREATION:
                 RenderCharacterCreationUI(renderer, font);
                 break;
-                // Gérer les autres états si nécessaire
         }
 
         SDL_RenderPresent(renderer);
     }
 }
 
+//--------------------Function Game_Shutdown ---------------------//
 
 void Game_Shutdown() {
     UI_Shutdown();
@@ -229,8 +232,6 @@ void Game_Shutdown() {
     SDL_DestroyWindow(window);
     TTF_Quit();
     SDL_Quit();
-
-    // Fermeture du système de logs
     Log_Close();
 
     Log(LOG_INFO, "Jeu fermé.");
