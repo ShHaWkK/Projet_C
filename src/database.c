@@ -2,6 +2,7 @@
 #include "../include/database.h"
 #include "../include/include.h"
 #include "../include/Log.h"
+#include "../include/ui.h"
 
 int db_open(const char *filename, sqlite3 **db) {
     return sqlite3_open(filename, db);
