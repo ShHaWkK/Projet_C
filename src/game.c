@@ -42,15 +42,19 @@ extern int nameCursorPosition;
 extern int surnameCursorPosition;
 
 
-/*********************************************************************************/
+//--------------------Function StartNewSession ---------------------//
+
 void StartNewSession(int* running) {
     Log(LOG_INFO, "Démarrage d'une nouvelle session.");
     ChangeGameState(GAME_STATE_CHARACTER_CREATION);
     inputActive = 1;
     SDL_StartTextInput();
     Log(LOG_INFO, "SDL_StartTextInput appelé.");
+    // Passer à l'état de bande-annonce
+    ChangeGameState(GAME_STATE_TRAILER);
 }
 
+//--------------------Function ChangeGameState ---------------------//
 
 void ChangeGameState(GameState newState)
 {
@@ -72,6 +76,13 @@ void ChangeGameState(GameState newState)
     }
 }
 
+//--------------------Function SomeActionThatChangesState ---------------------//
+
+
+void SomeActionThatChangesState() {
+    // L'utilisateur a fait quelque chose pour changer l'état, comme cliquer sur un bouton
+    ChangeGameState(GAME_STATE_TRAILER); // Changez l'état pour afficher la bande-annonce
+}
 
 
 //--------------------Function InitializeNewGameSession ---------------------//
@@ -222,9 +233,12 @@ void Game_Run()
             case GAME_STATE_CHARACTER_CREATION:
                 RenderCharacterCreationUI(renderer, font);
                 break;
-        }
-        if (trailer.isActive) {
-            Trailer_Render(renderer, font, &trailer, windowWidth, windowHeight);
+            case GAME_STATE_TRAILER:
+                // Afficher la bande-annonce ici
+                if (trailer.isActive) {
+                    Trailer_Render(renderer, font, &trailer, windowWidth, windowHeight);
+                }
+                break;
         }
 
         SDL_RenderPresent(renderer);

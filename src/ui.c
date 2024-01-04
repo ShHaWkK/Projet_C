@@ -136,6 +136,7 @@ void UI_HandleEvent(SDL_Event* e, int* running) {
                 SDL_StopTextInput(); // Désactive la saisie de texte
             }
 
+
         }
     }
     if (e->type == SDL_TEXTINPUT) {
@@ -152,6 +153,16 @@ void UI_HandleEvent(SDL_Event* e, int* running) {
             submitButton.isClickable = 0; // Empêcher les clics supplémentaires
             Trailer_Init(&trailer);
             trailer.isActive = 1;
+            submitButton.isClickable = 0;
+        }
+        if (SDL_PointInRect(&(SDL_Point){mouseX, mouseY}, &submitButton.rect) && submitButton.isClickable) {
+            // Bouton soumettre cliqué et est cliquable
+            Log(LOG_INFO, "Submit button clicked.\n");
+            SubmitForm(running); // Traitez la soumission du formulaire
+            Trailer_Init(&trailer); // Initialisez le trailer
+            trailer.isActive = 1; // Activez le trailer
+            ChangeGameState(GAME_STATE_TRAILER); // Changez l'état du jeu pour afficher le trailer
+            submitButton.isClickable = 0; // Désactivez le bouton pour empêcher des clics supplémentaires
         }
     }
 }
