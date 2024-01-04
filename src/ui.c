@@ -284,11 +284,15 @@ void SubmitForm(int* running) {
     } else {
         fprintf(stdout, "Character saved successfully\n");
         submitButton.isClickable = 0;
+
+        // Changement d'état vers le trailer après l'enregistrement réussi
+        ChangeGameState(GAME_STATE_TRAILER);
     }
 
     sqlite3_finalize(stmt);
     sqlite3_close(db);
 }
+
 
 void UI_Shutdown() {
     // Free button textures and any other UI resources here

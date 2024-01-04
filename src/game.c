@@ -46,13 +46,12 @@ extern int surnameCursorPosition;
 
 void StartNewSession(int* running) {
     Log(LOG_INFO, "Démarrage d'une nouvelle session.");
-    ChangeGameState(GAME_STATE_CHARACTER_CREATION);
+    ChangeGameState(GAME_STATE_CHARACTER_CREATION); // Changer l'état pour créer un personnage
     inputActive = 1;
-    SDL_StartTextInput();
+    SDL_StartTextInput(); // Activer la saisie de texte pour la création du personnage
     Log(LOG_INFO, "SDL_StartTextInput appelé.");
-    // Passer à l'état de bande-annonce
-    ChangeGameState(GAME_STATE_TRAILER);
 }
+
 
 //--------------------Function ChangeGameState ---------------------//
 
@@ -175,13 +174,14 @@ void Game_Init() {
 
 //--------------------Function Game_Run ---------------------//
 
-void Game_Run()
-{
+void Game_Run() {
     int running = 1;
     SDL_Event event;
 
     int windowWidth = 800;
     int windowHeight = 600;
+    Trailer_Init(&trailer);
+    trailer.isActive = 1;
 
     while (running) {
         while (SDL_PollEvent(&event)) {
@@ -211,37 +211,43 @@ void Game_Run()
                         // Manage text input for the first name field
                         handleTextInputEvent(&event, playerSurname, &surnameCursorPosition);
                     }
-                    break;
                 default:
                     UI_HandleEvent(&event, &running);
                     break;
             }
-        }
 
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderClear(renderer);
-
-        switch (currentGameState) {
-            case MENU:
-                UI_Render(renderer, font);
-                break;
-            case GAME_RUNNING:
-                // UpdateGameWorld();
-                UpdateCharacters();
-                RenderGameUI(renderer);
-                break;
-            case GAME_STATE_CHARACTER_CREATION:
-                RenderCharacterCreationUI(renderer, font);
-                break;
-            case GAME_STATE_TRAILER:
-                // Afficher la bande-annonce ici
-                if (trailer.isActive) {
-                    Trailer_Render(renderer, font, &trailer, windowWidth, windowHeight);
+            // Gestion du trailer en dehors de la boucle des événements
+            if (currentGameState == GAME_STATE_TRAILER) {
+                Trailer_Update(&trailer, &event);
+                if (!trailer.isActive) {
+                    // Le trailer est terminé, passer à l'état suivant
+                    ChangeGameState(GAME_RUNNING);
                 }
-                break;
-        }
+            }
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+            SDL_RenderClear(renderer);
 
-        SDL_RenderPresent(renderer);
+            switch (currentGameState) {
+                case MENU:
+                    UI_Render(renderer, font);
+                    break;
+                case GAME_RUNNING:
+                    // UpdateGameWorld();
+                    UpdateCharacters();
+                    RenderGameUI(renderer);
+                    break;
+                case GAME_STATE_CHARACTER_CREATION:
+                    RenderCharacterCreationUI(renderer, font); // Affiche l'écran de création de personnage
+                    break;
+                case GAME_STATE_TRAILER:
+                    if (trailer.isActive) {
+                        Trailer_Render(renderer, font, &trailer, windowWidth, windowHeight);
+                    }
+                    break;
+            }
+
+            SDL_RenderPresent(renderer);
+        }
     }
 }
 
