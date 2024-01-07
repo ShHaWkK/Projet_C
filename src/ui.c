@@ -168,7 +168,7 @@ void UI_HandleEvent(SDL_Event* e, int* running) {
         }
         if (SDL_PointInRect(&(SDL_Point){mouseX, mouseY}, &submitButton.rect) && submitButton.isClickable) {
             // Bouton soumettre cliqué et est cliquable
-            Log(LOG_INFO, "Submit button clicked.\n");
+            Log(LOG_INFO, "Submit button clicked SDL_PointInRect.\n");
             SubmitForm(running); // Traitez la soumission du formulaire
             Trailer_Init(&trailer); // Initialisez le trailer
             trailer.isActive = 1; // Activez le trailer
