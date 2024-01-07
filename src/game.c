@@ -192,7 +192,6 @@ void Game_Run() {
     trailer.isActive = 1;
 
     while (running) {
-
         while (SDL_PollEvent(&event)) {
             Log(LOG_INFO, "Événement détecté: Type %d", event.type);
 
