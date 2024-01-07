@@ -10,6 +10,7 @@
 #include "../include/audio.h"
 #include "../include/text_input.h"
 #include "../include/trailer.h"
+#include "../include/logo.h"
 
 //-------------------------------
 
@@ -131,8 +132,14 @@ void Game_Init() {
         Log(LOG_ERROR, "SDL could not initialize!");
         exit(1);
     }
+    if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
+        Log(LOG_ERROR, "Unable to initialize SDL_image: %s\n", IMG_GetError());
+        exit(1);
 
-    window = SDL_CreateWindow("Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, 0);
+    }
+
+
+    window = SDL_CreateWindow("Survivor's Colony", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, 0);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (!renderer) {
         Log(LOG_ERROR, "Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
@@ -170,6 +177,7 @@ void Game_Init() {
     CompleteTask(&player);
 
     currentGameState = MENU;
+    SetWindowIcon(window, "../assets/images/Survivor's_Colony.png");
 }
 
 //--------------------Function Game_Run ---------------------//
