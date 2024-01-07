@@ -16,5 +16,7 @@ void Trailer_Render(SDL_Renderer* renderer, TTF_Font* font, Trailer* trailer, in
 void Trailer_Update(Trailer* trailer, SDL_Event* e);
 
 void Trailer_HandleEvent(Trailer* trailer, SDL_Event* e);
+// - -------------//
+char* strndup(const char* s, size_t n);
 
 #endif // TRAILER_H

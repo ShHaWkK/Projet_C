@@ -1,5 +1,7 @@
 #include "../include/trailer.h"
-
+int letterIndex = 0; // L'index de la lettre actuelle à afficher
+float timeSinceLastLetter = 0; // Le temps depuis la dernière mise à jour de la lettre
+float letterDelay = 0.05;
 // Ajoutez des variables globales pour gérer le texte du trailer
 const char* trailerTexts[] = {
         "Humanity has been searching for a new planet for hundreds of years."
@@ -17,8 +19,8 @@ void Trailer_Init(Trailer* trailer) {
 
 void Trailer_Render(SDL_Renderer* renderer, TTF_Font* font, Trailer* trailer, int windowWidth, int windowHeight) {
     if (trailer->isActive) {
-        // Utilisez la fonction appropriée pour le rendu UTF-8
-        SDL_Surface* surface = TTF_RenderUTF8_Solid(font, trailer->text, (SDL_Color){255, 255, 255, 255});
+        // Utilisez la fonction appropriée pour un meilleur rendu
+        SDL_Surface* surface = TTF_RenderText_Blended_Wrapped(font, trailer->text, (SDL_Color){255, 255, 255, 255}, windowWidth);
         SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
 
         int textWidth = surface->w;
@@ -35,6 +37,9 @@ void Trailer_Render(SDL_Renderer* renderer, TTF_Font* font, Trailer* trailer, in
         SDL_DestroyTexture(texture);
     }
 }
+
+
+
 
 
 void Trailer_Update(Trailer* trailer, SDL_Event* e) {
