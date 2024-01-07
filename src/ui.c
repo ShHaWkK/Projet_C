@@ -6,6 +6,8 @@
 #include "../include/text_input.h"
 #include "../include/trailer.h"
 
+// ------------ Declaration ------------ //
+
 char playerName[256] = "";
 char playerSurname[256] = "";
 int isNameSelected = 0;
@@ -14,12 +16,15 @@ int nameCursorPosition = 0;
 int surnameCursorPosition = 0;
 static Trailer trailer;
 
+// ------------ SDL_react ------------ //
+
 SDL_Rect nameInputRect = {100, 100, 200, 30};
 SDL_Rect surnameInputRect = {100, 150, 200, 30};
 SDL_Rect submitButtonRect = {100, 250, 200, 50};
 Button submitButton;
 
-/****************************************************************************/
+// ------------ CreateButtonTexture ------------ //
+
 static SDL_Texture* CreateButtonTexture(TTF_Font* font, const char* text, SDL_Color color) {
     SDL_Surface* surface = TTF_RenderText_Solid(font, text, color);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(uiRenderer, surface);
@@ -27,17 +32,20 @@ static SDL_Texture* CreateButtonTexture(TTF_Font* font, const char* text, SDL_Co
     return texture;
 }
 
+// ------------ QuitGame ------------ //
 static void QuitGame(int* running) {
     Log(LOG_INFO, "Quit game initiated.");
     Audio_PlayClickSound();
     *running = 0;
 }
 
+// ------------ OpenSettings ------------ //
 static void OpenSettings(int* running) {
     Mix_PlayChannel(-1, buttonClickSound, 0);  // Play sound effect
     printf("Opening settings...\n");
     // settings
 }
+// ------------ UI_Init ------------ //
 void RenderTextLabel(SDL_Renderer* renderer, TTF_Font* font, const char* text, SDL_Color color, SDL_Rect rect) {
     // Render the label text
     SDL_Surface* textSurface = TTF_RenderText_Blended(font, text, color);
@@ -47,7 +55,7 @@ void RenderTextLabel(SDL_Renderer* renderer, TTF_Font* font, const char* text, S
     SDL_DestroyTexture(textTexture);
 }
 
-
+// ------------ UI_Init ------------ //
 void UI_Init(SDL_Renderer* renderer, TTF_Font* font, int windowWidth, int windowHeight, Mix_Chunk* soundEffect) {
     uiRenderer = renderer;
     submitButton.isClickable = 1;
@@ -89,6 +97,7 @@ void UI_Init(SDL_Renderer* renderer, TTF_Font* font, int windowWidth, int window
     submitButton.rect = submitButtonRect;
 }
 
+// ------------ UI_HandleEvent ------------ //
 
 void UI_HandleEvent(SDL_Event* e, int* running) {
     // Handle events for the buttons
@@ -139,6 +148,7 @@ void UI_HandleEvent(SDL_Event* e, int* running) {
 
         }
     }
+
     if (e->type == SDL_TEXTINPUT) {
         if (isNameSelected) {
             handleTextInputEvent(e, playerName, &nameCursorPosition); // Utilisez la fonction modifiée
@@ -146,6 +156,7 @@ void UI_HandleEvent(SDL_Event* e, int* running) {
             handleTextInputEvent(e, playerSurname, &surnameCursorPosition); // Utilisez la fonction modifiée
         }
     }
+
     if (submitButton.isHovered && e->type == SDL_MOUSEBUTTONDOWN) {
         if (submitButton.isClickable) {
             Log(LOG_INFO, "Submit button clicked.\n");
@@ -168,9 +179,8 @@ void UI_HandleEvent(SDL_Event* e, int* running) {
 }
 
 
-/*
- * Affiche l'interface utilisateur.
- */
+// ------------Affiche l'interface utilisateur. ------------
+
 void UI_Render(SDL_Renderer* renderer, TTF_Font* font) {
     SDL_Texture* currentTexture;
 
@@ -235,6 +245,8 @@ void RenderCharacterCreationUI(SDL_Renderer* renderer, TTF_Font* font) {
     backButton.onClick = GoBack;
 }
 
+// ------------ RenderTextInputField ------------ //
+
 void RenderTextInputField(SDL_Renderer* renderer, TTF_Font* font, SDL_Rect* rect, const char* text, int isSelected) {
     SDL_Color backgroundColor = isSelected ? (SDL_Color){200, 200, 255, 255} : (SDL_Color){255, 255, 255, 255};
     SDL_Color textColor = {0, 0, 0, 255};
@@ -249,6 +261,7 @@ void RenderTextInputField(SDL_Renderer* renderer, TTF_Font* font, SDL_Rect* rect
 }
 
 
+// ------------ RenderText ------------ //
 void RenderText(SDL_Renderer* renderer, TTF_Font* font, const char* text, SDL_Color textColor, SDL_Rect* rect) {
     SDL_Surface* surface = TTF_RenderText_Solid(font, text, textColor);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
@@ -257,9 +270,14 @@ void RenderText(SDL_Renderer* renderer, TTF_Font* font, const char* text, SDL_Co
     SDL_DestroyTexture(texture);
 
 }
+
+// ------------ GoBack ------------ //
+
 void GoBack(int* running) {
     ChangeGameState(previousGameState);
 }
+
+// ------------ SubmitForm ------------ //
 
 void SubmitForm(int* running) {
     sqlite3 *db;
@@ -293,6 +311,7 @@ void SubmitForm(int* running) {
     sqlite3_close(db);
 }
 
+// ------------ UI_Shutdown ------------ //
 
 void UI_Shutdown() {
     // Free button textures and any other UI resources here

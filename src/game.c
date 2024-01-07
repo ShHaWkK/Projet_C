@@ -202,15 +202,6 @@ void Game_Run() {
                         handleKeyboardEvent(&event, playerSurname, &surnameCursorPosition);
                     }
                     break;
-                case SDL_TEXTINPUT:
-                    Log(LOG_INFO, "Événement SDL_TEXTINPUT détecté.");
-                    if (isNameSelected) {
-                        // Manage text input for the name field
-                        handleTextInputEvent(&event, playerName, &nameCursorPosition);
-                    } else if (isSurnameSelected) {
-                        // Manage text input for the first name field
-                        handleTextInputEvent(&event, playerSurname, &surnameCursorPosition);
-                    }
                 default:
                     UI_HandleEvent(&event, &running);
                     break;
