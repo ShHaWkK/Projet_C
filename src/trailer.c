@@ -1,11 +1,11 @@
 #include "../include/trailer.h"
 int letterIndex = 0; // L'index de la lettre actuelle à afficher
 float timeSinceLastLetter = 0; // Le temps depuis la dernière mise à jour de la lettre
-float letterDelay = 0.01;
+float letterDelay = 75.00;
 
 
 const char* trailerTexts[] = {
-        "Humanity has been searching for a new planet for hundreds of years."
+        "Humanity has been searching for a new planet for hundreds of years.",
         "You are an astronaut, who crashed on a planet similar to Earth but strangely inhabited by unusual creatures.",
         "Out of fear, you decided to hide, then take refuge in the side of a mountain.",
         "To my surprise, as I approached this mountain, I discovered a hidden base."
