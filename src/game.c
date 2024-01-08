@@ -191,10 +191,20 @@ void Game_Run() {
     Trailer_Init(&trailer);
     trailer.isActive = 1;
 
+    Uint32 lastTime = SDL_GetTicks();
+
     while (running) {
+        Uint32 currentTime = SDL_GetTicks();
+        Uint32 deltaTime = currentTime - lastTime;
+        lastTime = currentTime;
+
         while (SDL_PollEvent(&event)) {
             Log(LOG_INFO, "Événement détecté: Type %d", event.type);
+            if (event.type == SDL_QUIT) {
+                running = 0;
+            }
 
+            // Gestion des événements clavier pour les champs de saisie
             switch (event.type) {
                 case SDL_QUIT:
                     Log(LOG_INFO, "Événement SDL_QUIT détecté.");
@@ -203,10 +213,8 @@ void Game_Run() {
                 case SDL_KEYDOWN:
                     Log(LOG_INFO, "Événement SDL_KEYDOWN détecté.");
                     if (isNameSelected) {
-                        // Keyboard input management for the name field
                         handleKeyboardEvent(&event, playerName, &nameCursorPosition);
                     } else if (isSurnameSelected) {
-                        // Keyboard input management for the first name field
                         handleKeyboardEvent(&event, playerSurname, &surnameCursorPosition);
                     }
                     break;
@@ -214,40 +222,45 @@ void Game_Run() {
                     UI_HandleEvent(&event, &running);
                     break;
             }
-
-            // Gestion du trailer en dehors de la boucle des événements
-            if (currentGameState == GAME_STATE_TRAILER) {
-                Trailer_Update(&trailer, &event);
-                if (!trailer.isActive) {
-                    // Le trailer est terminé, passer à l'état suivant
-                    ChangeGameState(GAME_RUNNING);
-                }
-            }
-            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-            SDL_RenderClear(renderer);
-
-            switch (currentGameState) {
-                case MENU:
-                    UI_Render(renderer, font);
-                    break;
-                case GAME_RUNNING:
-                    // UpdateGameWorld();
-                    UpdateCharacters();
-                    RenderGameUI(renderer);
-                    break;
-                case GAME_STATE_CHARACTER_CREATION:
-                    RenderCharacterCreationUI(renderer, font); // Affiche l'écran de création de personnage
-                    break;
-                case GAME_STATE_TRAILER:
-                    if (trailer.isActive) {
-                        Trailer_Render(renderer, font, &trailer, windowWidth, windowHeight);                    }
-                    break;
-            }
-
-            SDL_RenderPresent(renderer);
         }
+
+        // Gestion du trailer en dehors de la boucle des événements
+        if (currentGameState == GAME_STATE_TRAILER) {
+            Trailer_Update(&trailer, deltaTime); // Notez que nous passons deltaTime maintenant
+            if (!trailer.isActive) {
+                // Le trailer est terminé, passer à l'état suivant
+                ChangeGameState(GAME_RUNNING);
+            }
+        }
+
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderClear(renderer);
+
+        switch (currentGameState) {
+            case MENU:
+                UI_Render(renderer, font);
+                break;
+            case GAME_RUNNING:
+                UpdateCharacters();
+                RenderGameUI(renderer);
+                break;
+            case GAME_STATE_CHARACTER_CREATION:
+                RenderCharacterCreationUI(renderer, font);
+                break;
+            case GAME_STATE_TRAILER:
+                if (trailer.isActive) {
+                    Trailer_Render(renderer, font, &trailer, windowWidth, windowHeight);
+                }
+                break;
+        }
+
+        SDL_RenderPresent(renderer);
+        SDL_Delay(16); // Régulation à environ 60 FPS
     }
 }
+
+// ----------------- ------------------ //
+
 
 //--------------------Function Game_Shutdown ---------------------//
 
