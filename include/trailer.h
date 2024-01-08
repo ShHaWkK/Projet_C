@@ -1,6 +1,6 @@
 #ifndef TRAILER_H
 #define TRAILER_H
-#define TRAILER_TEXT_MAX_LENGTH 512
+#define TRAILER_TEXT_MAX_LENGTH 1024
 
 #include "../include/include.h"
 
@@ -8,6 +8,7 @@
 typedef struct {
     char text[TRAILER_TEXT_MAX_LENGTH];
     int isActive;
+    Uint32 lastUpdateTime;
 } Trailer;
 
 // Function prototypes

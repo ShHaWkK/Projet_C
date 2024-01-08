@@ -14,29 +14,67 @@ int currentTrailerPart = 0;
 const int totalTrailerParts = sizeof(trailerTexts) / sizeof(trailerTexts[0]);
 
 void Trailer_Init(Trailer* trailer) {
-    strncpy(trailer->text, trailerTexts[currentTrailerPart], TRAILER_TEXT_MAX_LENGTH);
+    letterIndex = 0;
+    currentTrailerPart = 0;
     trailer->isActive = 1;
+    trailer->lastUpdateTime = SDL_GetTicks();
+
+    strncpy(trailer->text, trailerTexts[currentTrailerPart], TRAILER_TEXT_MAX_LENGTH);
 }
 
 void Trailer_Render(SDL_Renderer* renderer, TTF_Font* font, Trailer* trailer, int windowWidth, int windowHeight) {
-    if (trailer->isActive) {
-        // Utilisez la fonction appropriée pour un meilleur rendu
-        SDL_Surface* surface = TTF_RenderText_Blended_Wrapped(font, trailer->text, (SDL_Color){255, 255, 255, 255}, windowWidth);
-        SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-
-        int textWidth = surface->w;
-        int textHeight = surface->h;
-        SDL_Rect renderQuad = {
-                (windowWidth - textWidth) / 2, // Centre horizontalement
-                (windowHeight - textHeight) / 2, // Centre verticalement
-                textWidth,
-                textHeight
-        };
-
-        SDL_FreeSurface(surface);
-        SDL_RenderCopy(renderer, texture, NULL, &renderQuad);
-        SDL_DestroyTexture(texture);
+    if (!trailer->isActive) {
+        return;
     }
+
+    // Obtenez le temps actuel
+    Uint32 currentTime = SDL_GetTicks();
+
+    // Si suffisamment de temps s'est écoulé depuis la dernière mise à jour, avancez l'index de la lettre
+    if (currentTime - trailer->lastUpdateTime > letterDelay * 1000) {
+        letterIndex++;
+        trailer->lastUpdateTime = currentTime; // Mise à jour du dernier temps d'actualisation
+    }
+
+    // Ne dépassez pas la longueur du texte actuel
+    if (letterIndex > strlen(trailerTexts[currentTrailerPart])) {
+        letterIndex = 0;
+        currentTrailerPart++;
+        if (currentTrailerPart >= totalTrailerParts) {
+            trailer->isActive = 0; // Nous avons terminé le trailer
+            return;
+        }
+    }
+
+    // Préparez le texte à afficher jusqu'à l'index actuel de la lettre
+    char displayedText[TRAILER_TEXT_MAX_LENGTH] = {0};
+    strncpy(displayedText, trailerTexts[currentTrailerPart], letterIndex);
+
+    // Configurez la couleur du texte et rendez le texte
+    SDL_Color textColor = {255, 255, 255, 255}; // Couleur du texte en blanc
+    SDL_Surface* surface = TTF_RenderText_Solid(font, displayedText, textColor);
+    if (!surface) {
+        fprintf(stderr, "Unable to render text surface: %s\n", TTF_GetError());
+        return;
+    }
+
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    if (!texture) {
+        fprintf(stderr, "Unable to create texture from surface: %s\n", SDL_GetError());
+        SDL_FreeSurface(surface); // Libérez la surface si la création de la texture échoue
+        return;
+    }
+
+    // Centrez le texte à l'écran
+    int textWidth = 0;
+    int textHeight = 0;
+    SDL_QueryTexture(texture, NULL, NULL, &textWidth, &textHeight);
+    SDL_Rect renderQuad = {(windowWidth - textWidth) / 2, (windowHeight - textHeight) / 2, textWidth, textHeight};
+
+    // Rendez la texture à l'écran et libérez les ressources
+    SDL_RenderCopy(renderer, texture, NULL, &renderQuad);
+    SDL_DestroyTexture(texture);
+    SDL_FreeSurface(surface);
 }
 
 
