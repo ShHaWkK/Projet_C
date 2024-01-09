@@ -19,5 +19,9 @@ typedef struct {
     BlockType type;
 } MapZone;
 
+typedef struct {
+    SDL_Rect position; // Position et taille du joueur
+    SDL_Texture* texture; // Texture du joueur
+} Player;
 
 #endif // MAP_H
