@@ -1,5 +1,6 @@
 #include "map.h"
 
+
 /*
  * ciel=0
  * terre=1
@@ -9,6 +10,21 @@
  * ble=5
  *
  */
+
+/*
+ *int map[11][26];
+
+ */
+#define ROWS 11
+#define COLS 26
+
+int mapArray[ROWS][COLS] = {
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        // Répétez pour les autres lignes comme dans votre exemple
+};
+
+/*
+
 int map[11][26];
 
 map[0][0]=0;
@@ -304,4 +320,4 @@ map[10][22]=0;
 map[10][23]=0;
 map[10][24]=0;
 map[10][25]=0;
-
+*/
