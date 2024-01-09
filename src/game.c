@@ -180,6 +180,8 @@ void Game_Init() {
     SetWindowIcon(window, "../assets/images/Survivor's_Colony.png");
 }
 
+
+
 //--------------------Function Game_Run ---------------------//
 
 void Game_Run() {
@@ -258,6 +260,7 @@ void Game_Run() {
         SDL_Delay(16); // Régulation à environ 60 FPS
     }
 }
+
 
 // ----------------- ------------------ //
 

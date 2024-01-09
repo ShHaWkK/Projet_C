@@ -158,14 +158,6 @@ void UI_HandleEvent(SDL_Event* e, int* running) {
     }
 
     if (submitButton.isHovered && e->type == SDL_MOUSEBUTTONDOWN) {
-        if (submitButton.isClickable) {
-            Log(LOG_INFO, "Submit button clicked.\n");
-            SubmitForm(running);
-            submitButton.isClickable = 0; // Empêcher les clics supplémentaires
-            Trailer_Init(&trailer);
-            trailer.isActive = 1;
-            submitButton.isClickable = 0;
-        }
         if (SDL_PointInRect(&(SDL_Point){mouseX, mouseY}, &submitButton.rect) && submitButton.isClickable) {
             // Bouton soumettre cliqué et est cliquable
             Log(LOG_INFO, "Submit button clicked SDL_PointInRect.\n");
