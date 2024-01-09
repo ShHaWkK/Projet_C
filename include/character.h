@@ -29,7 +29,6 @@ void CompleteTask(Character* character);
 void PrintCharacterInfo(const Character* character);
 void InitializeCharacters();
 void UpdateCharacters();
-
 //--------  --------//
 extern Character player;
 

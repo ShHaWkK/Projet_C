@@ -7,6 +7,7 @@
 #include "../include/Log.h"
 
 Character player;
+
 Character CreateCharacter(const char* name) {
     Character character;
     strncpy(character.name, name, sizeof(character.name));
@@ -43,6 +44,7 @@ void InitializeCharacters() {
     player.hunger = 0;
     // Initialiser ici d'autres personnages si nécessaire
 }
+
 
 void UpdateCharacters() {
     player.hunger++; // Augmente la faim du joueur
