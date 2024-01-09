@@ -177,7 +177,7 @@ void Game_Init() {
     CompleteTask(&player);
 
     currentGameState = MENU;
-    SetWindowIcon(window, "../assets/images/Survivor's_Colony.png");
+    SetWindowIcon(window, "../assets/images/Survivor's_Colony2.png");
 }
 
 
