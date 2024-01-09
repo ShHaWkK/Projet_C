@@ -1,10 +1,23 @@
+#ifndef MAP_H
+#define MAP_H
+
 #include "include.h"
 
-#define SizeBlock // a definir
+#define SIZE_BLOCK 32 // Taille de bloc
+
+typedef enum {
+    CIEL, TERRE, MONTAGNE, BOIS, CAILLOU, BLE
+} BlockType;
+
+typedef enum {
+    TOP, BOT, LEFT, RIGHT, DOWN
+} Direction;
 
 typedef struct {
     SDL_Rect area;
     SDL_Texture* texture;
-    enum{TOP,BOT,LEFT,RIGHT};//mouvement joueur
-    enum{};//les texture de chaque blocks
+    BlockType type;
 } MapZone;
+
+
+#endif // MAP_H
