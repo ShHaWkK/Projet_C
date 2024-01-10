@@ -182,8 +182,9 @@ void Game_Init() {
     SetWindowIcon(window, "../assets/images/Survivor's_Colony.png");
 
     // Initialisation de la carte et du joueur
-    initMap(renderer);  // les textures
-    initPlayer(); //  initialise le joueur
+    initMap(renderer);
+    initPlayer(renderer);
+
 
 }
 
