@@ -12,4 +12,5 @@
 #include <string.h>
 #include <stdbool.h>
 #include <SDL_image.h>
+
 #endif // INCLUDE_H

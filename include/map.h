@@ -24,4 +24,12 @@ typedef struct {
     SDL_Texture* texture; // Texture du joueur
 } Player;
 
+void initMap();
+void initPlayer();
+void movePlayer(int x, int y);
+void renderMap(SDL_Renderer* renderer);
+void renderPlayer(SDL_Renderer* renderer);
+void freeMapTextures();
+void freePlayerTexture();
+
 #endif // MAP_H
