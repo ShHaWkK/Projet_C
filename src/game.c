@@ -11,6 +11,8 @@
 #include "../include/text_input.h"
 #include "../include/trailer.h"
 #include "../include/logo.h"
+#include "../include/map.h"
+
 
 //-------------------------------
 
@@ -178,6 +180,11 @@ void Game_Init() {
 
     currentGameState = MENU;
     SetWindowIcon(window, "../assets/images/Survivor's_Colony.png");
+
+    // Initialisation de la carte et du joueur
+    initMap(renderer);  // les textures
+    initPlayer(); //  initialise le joueur
+
 }
 
 //--------------------Function Game_Run ---------------------//
@@ -243,6 +250,8 @@ void Game_Run() {
             case GAME_RUNNING:
                 UpdateCharacters();
                 RenderGameUI(renderer);
+                renderMap(renderer);
+                renderPlayer(renderer);
                 break;
             case GAME_STATE_CHARACTER_CREATION:
                 RenderCharacterCreationUI(renderer, font);
@@ -273,6 +282,8 @@ void Game_Shutdown() {
 
     Mix_CloseAudio();
     TTF_CloseFont(font);
+    freeMapTextures();
+    freePlayerTexture();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     TTF_Quit();
