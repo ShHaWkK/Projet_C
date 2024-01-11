@@ -4,6 +4,8 @@
 - ShHaWkK
 - AlexandreDjazz
 
+## Game Operation : 
+
 ## Library : 
 
 We used several libraries: 
