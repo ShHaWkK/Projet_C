@@ -9,6 +9,8 @@
 #include "../include/database.h"
 #include "../include/audio.h"
 #include "../include/text_input.h"
+#include "../include/trailer.h"
+#include "../include/logo.h"
 
 //-------------------------------
 
@@ -20,7 +22,7 @@ GameState currentGameState = MENU;
 GameState previousGameState = MENU;
 static Mix_Chunk* soundEffect = NULL;
 ActiveInputField currentInputField = INPUT_FIELD_NONE;
-
+static Trailer trailer;
 //-------------- Prototype des fonctions ----------
 void InitializeGameWorld();
 void InitializeCharacters();
@@ -41,15 +43,18 @@ extern int nameCursorPosition;
 extern int surnameCursorPosition;
 
 
-/*********************************************************************************/
+//--------------------Function StartNewSession ---------------------//
+
 void StartNewSession(int* running) {
     Log(LOG_INFO, "Démarrage d'une nouvelle session.");
-    ChangeGameState(GAME_STATE_CHARACTER_CREATION);
+    ChangeGameState(GAME_STATE_CHARACTER_CREATION); // Changer l'état pour créer un personnage
     inputActive = 1;
-    SDL_StartTextInput();
+    SDL_StartTextInput(); // Activer la saisie de texte pour la création du personnage
     Log(LOG_INFO, "SDL_StartTextInput appelé.");
 }
 
+
+//--------------------Function ChangeGameState ---------------------//
 
 void ChangeGameState(GameState newState)
 {
@@ -57,12 +62,26 @@ void ChangeGameState(GameState newState)
     previousGameState = currentGameState;
     currentGameState = newState;
 
+    Log(LOG_INFO, "État actuel du jeu: %d", currentGameState);
+
     if (previousGameState == GAME_STATE_CHARACTER_CREATION && currentGameState != GAME_STATE_CHARACTER_CREATION)
     {
         inputActive = 0;
         SDL_StopTextInput();
         Log(LOG_INFO, "SDL_StopTextInput appelé.");
     }
+
+    if (currentGameState != MENU) {
+        Log(LOG_INFO, "L'état du jeu n'est plus MENU. Le bouton '<' devrait être affiché.");
+    }
+}
+
+//--------------------Function SomeActionThatChangesState ---------------------//
+
+
+void SomeActionThatChangesState() {
+    // L'utilisateur a fait quelque chose pour changer l'état, comme cliquer sur un bouton
+    ChangeGameState(GAME_STATE_TRAILER); // Changez l'état pour afficher la bande-annonce
 }
 
 
@@ -113,8 +132,14 @@ void Game_Init() {
         Log(LOG_ERROR, "SDL could not initialize!");
         exit(1);
     }
+    if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
+        Log(LOG_ERROR, "Unable to initialize SDL_image: %s\n", IMG_GetError());
+        exit(1);
 
-    window = SDL_CreateWindow("Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, 0);
+    }
+
+
+    window = SDL_CreateWindow("Survivor's Colony", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, 0);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (!renderer) {
         Log(LOG_ERROR, "Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
@@ -152,19 +177,36 @@ void Game_Init() {
     CompleteTask(&player);
 
     currentGameState = MENU;
+    SetWindowIcon(window, "../assets/images/Survivor's_Colony2.png");
 }
+
+
 
 //--------------------Function Game_Run ---------------------//
 
-void Game_Run()
-{
+void Game_Run() {
     int running = 1;
     SDL_Event event;
 
+    int windowWidth = 800;
+    int windowHeight = 600;
+    Trailer_Init(&trailer);
+    trailer.isActive = 1;
+
+    Uint32 lastTime = SDL_GetTicks();
+
     while (running) {
+        Uint32 currentTime = SDL_GetTicks();
+        Uint32 deltaTime = currentTime - lastTime;
+        lastTime = currentTime;
+
         while (SDL_PollEvent(&event)) {
             Log(LOG_INFO, "Événement détecté: Type %d", event.type);
+            if (event.type == SDL_QUIT) {
+                running = 0;
+            }
 
+            // Gestion des événements clavier pour les champs de saisie
             switch (event.type) {
                 case SDL_QUIT:
                     Log(LOG_INFO, "Événement SDL_QUIT détecté.");
@@ -173,26 +215,23 @@ void Game_Run()
                 case SDL_KEYDOWN:
                     Log(LOG_INFO, "Événement SDL_KEYDOWN détecté.");
                     if (isNameSelected) {
-                        // Keyboard input management for the name field
                         handleKeyboardEvent(&event, playerName, &nameCursorPosition);
                     } else if (isSurnameSelected) {
-                        // Keyboard input management for the first name field
                         handleKeyboardEvent(&event, playerSurname, &surnameCursorPosition);
-                    }
-                    break;
-                case SDL_TEXTINPUT:
-                    Log(LOG_INFO, "Événement SDL_TEXTINPUT détecté.");
-                    if (isNameSelected) {
-                        // Manage text input for the name field
-                        handleTextInputEvent(&event, playerName, &nameCursorPosition);
-                    } else if (isSurnameSelected) {
-                        // Manage text input for the first name field
-                        handleTextInputEvent(&event, playerSurname, &surnameCursorPosition);
                     }
                     break;
                 default:
                     UI_HandleEvent(&event, &running);
                     break;
+            }
+        }
+
+        // Gestion du trailer en dehors de la boucle des événements
+        if (currentGameState == GAME_STATE_TRAILER) {
+            Trailer_Update(&trailer, deltaTime); // Notez que nous passons deltaTime maintenant
+            if (!trailer.isActive) {
+                // Le trailer est terminé, passer à l'état suivant
+                ChangeGameState(GAME_RUNNING);
             }
         }
 
@@ -204,18 +243,27 @@ void Game_Run()
                 UI_Render(renderer, font);
                 break;
             case GAME_RUNNING:
-                // UpdateGameWorld();
                 UpdateCharacters();
                 RenderGameUI(renderer);
                 break;
             case GAME_STATE_CHARACTER_CREATION:
                 RenderCharacterCreationUI(renderer, font);
                 break;
+            case GAME_STATE_TRAILER:
+                if (trailer.isActive) {
+                    Trailer_Render(renderer, font, &trailer, windowWidth, windowHeight);
+                }
+                break;
         }
 
         SDL_RenderPresent(renderer);
+        SDL_Delay(16); // Régulation à environ 60 FPS
     }
 }
+
+
+// ----------------- ------------------ //
+
 
 //--------------------Function Game_Shutdown ---------------------//
 
