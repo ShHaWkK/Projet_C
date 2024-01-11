@@ -16,12 +16,12 @@ We used several libraries:
 - FindSDL2_ttf.cmake : https://github.com/aminosbh/sdl2-cmake-modules/blob/master/FindSDL2_ttf.cmake
 
 ### SDL_image : 
-- Release :
-- FindSDL2_image.cmake : 
+- FindSDL2_image.cmake :  https://github.com/aminosbh/sdl2-cmake-modules/blob/master/FindSDL2_image.cmake
+- Release : https://github.com/libsdl-org/SDL_image/releases
 
 ### SDL_mixer : 
-- Release :https://github.com/libsdl-org/SDL_mixer/releases
-- FindSDL2_mixer.cmake :https://github.com/aminosbh/sdl2-cmake-modules/blob/master/FindSDL2_mixer.cmake
+- Release : https://github.com/libsdl-org/SDL_mixer/releases
+- FindSDL2_mixer.cmake : https://github.com/aminosbh/sdl2-cmake-modules/blob/master/FindSDL2_mixer.cmake
 
 ### Sqlite : 
 -  Release (.h, .lib.a.dll, .exe) :https://www.sqlite.org/download.html
