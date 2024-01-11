@@ -20,8 +20,8 @@ We used several libraries:
 - FindSDL2_image.cmake : 
 
 ### SDL_mixer : 
-- Release :
-- FindSDL2_mixer.cmake :
+- Release :https://github.com/libsdl-org/SDL_mixer/releases
+- FindSDL2_mixer.cmake :https://github.com/aminosbh/sdl2-cmake-modules/blob/master/FindSDL2_mixer.cmake
 
 ### Sqlite : 
 -  Release (.h, .lib.a.dll, .exe) :https://www.sqlite.org/download.html
