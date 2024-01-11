@@ -12,12 +12,12 @@ typedef struct {
     Uint32 timeSinceLastLetter;
 } Trailer;
 
-// Function prototypes
+//----- Function prototypes -----//
+
 void Trailer_Init(Trailer* trailer);
 void Trailer_Render(SDL_Renderer* renderer, TTF_Font* font, Trailer* trailer, int windowWidth, int windowHeight);
 //void Trailer_Update(Trailer* trailer, SDL_Event* e);
 void Trailer_Update(Trailer* trailer, Uint32 deltaTime);
-
 void Trailer_HandleEvent(Trailer* trailer, SDL_Event* e);
 // - -------------//
 char* strndup(const char* s, size_t n);

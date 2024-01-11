@@ -182,7 +182,7 @@ void Game_Init() {
 
 
 
-//--------------------Function Game_Run ---------------------//
+//----------------- Function Game_Run ---------------------//
 
 void Game_Run() {
     int running = 1;
