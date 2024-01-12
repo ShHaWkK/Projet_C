@@ -13,7 +13,6 @@ typedef struct {
 } Trailer;
 
 //----- Function prototypes -----//
-
 void Trailer_Init(Trailer* trailer);
 void Trailer_Render(SDL_Renderer* renderer, TTF_Font* font, Trailer* trailer, int windowWidth, int windowHeight);
 //void Trailer_Update(Trailer* trailer, SDL_Event* e);
