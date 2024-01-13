@@ -1,4 +1,4 @@
-//------------- includes ----------//
+//-------------include----------
 
 #include "../include/include.h"
 #include "../include/game.h"
@@ -23,9 +23,7 @@ GameState previousGameState = MENU;
 static Mix_Chunk* soundEffect = NULL;
 ActiveInputField currentInputField = INPUT_FIELD_NONE;
 static Trailer trailer;
-
-//-------------- Prototype des fonctions --------------//
-
+//-------------- Prototype des fonctions ----------
 void InitializeGameWorld();
 void InitializeCharacters();
 void UpdateGameWorld();
@@ -40,8 +38,7 @@ void GameState_GameRunning_Update();
 void GameState_GameRunning_Render(SDL_Renderer* renderer);
 void GameState_CharacterCreation_Update();
 void GameState_CharacterCreation_Render(SDL_Renderer* renderer);
-//--------------    Extern  --------------//
-
+//----------------------------------------------------------------
 extern int nameCursorPosition;
 extern int surnameCursorPosition;
 
@@ -79,7 +76,7 @@ void ChangeGameState(GameState newState)
     }
 }
 
-//--------------------- Function SomeActionThatChangesState ---------------------//
+//--------------------Function SomeActionThatChangesState ---------------------//
 
 
 void SomeActionThatChangesState() {
@@ -88,14 +85,14 @@ void SomeActionThatChangesState() {
 }
 
 
-//--------------------- Function InitializeNewGameSession ---------------------//
+//--------------------Function InitializeNewGameSession ---------------------//
 
 void InitializeNewGameSession()
 {
     //initialiser une nouvelle session de jeu
 }
 
-//---------------------  Function InitializeGameWorld ---------------------//
+//--------------------Function InitializeGameWorld ---------------------//
 
 void InitializeGameWorld()
 {
@@ -108,7 +105,7 @@ void UpdateGameWorld() {
     // Par exemple, gérer les cycles
 }
 */
-//---------------------  Function Game_HandleCharacterNameInput ---------------------//
+//--------------------Function Game_HandleCharacterNameInput ---------------------//
 
 void Game_HandleCharacterNameInput(const char* name) {
     Character player = CreateCharacter(name); // Create a new character with the entered name
@@ -116,7 +113,7 @@ void Game_HandleCharacterNameInput(const char* name) {
     ChangeGameState(GAME_RUNNING); // Change the game state to running
 }
 
-//---------------------  Function RenderGameUI ---------------------//
+//--------------------Function RenderGameUI ---------------------//
 
 void RenderGameUI(SDL_Renderer* renderer) {
     Log(LOG_INFO, "Rendu de l'interface de jeu.");
@@ -124,7 +121,7 @@ void RenderGameUI(SDL_Renderer* renderer) {
     // Afficher les personnages, les ressources, le monde...
 }
 
-//--------------------- Function Game_Init ---------------------//
+//-------------------- Function Game_Init ----------------------//
 
 void Game_Init() {
     Log_Init("game.log");
@@ -185,7 +182,7 @@ void Game_Init() {
 
 
 
-//--------------------- Function Game_Run ---------------------//
+//--------------------Function Game_Run ---------------------//
 
 void Game_Run() {
     int running = 1;
@@ -268,7 +265,7 @@ void Game_Run() {
 // ----------------- ------------------ //
 
 
-//---------------------  Function Game_Shutdown ---------------------//
+//--------------------Function Game_Shutdown ---------------------//
 
 void Game_Shutdown() {
     UI_Shutdown();
