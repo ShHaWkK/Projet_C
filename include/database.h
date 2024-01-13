@@ -12,7 +12,4 @@ int db_execute(sqlite3 *db, const char *sql);
 int db_begin_transaction(sqlite3 *db);
 int db_commit_transaction(sqlite3 *db);
 int db_rollback_transaction(sqlite3 *db);
-
-
-
 #endif // DATABASE_H
