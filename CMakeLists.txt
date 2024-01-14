@@ -36,7 +36,7 @@ add_executable(${PROJECT_NAME}
         src/game.c
         src/ui.c
         src/Log.c
-        src/character.c
+        src/survivor.c
         src/audio.c
         src/database.c
         src/text_input.c
@@ -46,14 +46,14 @@ add_executable(${PROJECT_NAME}
         include/game.h
         include/ui.h
         include/audio.h
-        include/character.h
+        include/survivor.h
         include/include.h
         include/database.h
         include/Log.h
         include/text_input.h
         include/trailer.h
         include/logo.h
-        assets
+        assets/
         survivor_colony.db
         )
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY} ${SDL2_TTF_LIBRARY} ${SDL2_MIXER_LIBRARIES} ${SDL2_IMAGE_LIBRARY} sqlite3 )
