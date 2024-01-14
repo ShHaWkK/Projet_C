@@ -3,7 +3,7 @@
 #include "../include/include.h"
 #include "../include/game.h"
 #include "../include/ui.h"
-#include "../include/character.h"
+#include "../include/survivor.h"
 #include "../include/Log.h"
 #include "../include/config.h"
 #include "../include/database.h"
@@ -108,7 +108,7 @@ void UpdateGameWorld() {
 //--------------------Function Game_HandleCharacterNameInput ---------------------//
 
 void Game_HandleCharacterNameInput(const char* name) {
-    Character player = CreateCharacter(name); // Create a new character with the entered name
+    Survivor player;
     // Additional logic to set up the player character
     ChangeGameState(GAME_RUNNING); // Change the game state to running
 }
@@ -171,11 +171,8 @@ void Game_Init() {
     UI_Init(renderer, font, windowWidth, windowHeight, soundEffect);
 
     Log(LOG_INFO, "Jeu initialisé avec succès.");
-    Character player = CreateCharacter("Player 1");
-    AssignTask(&player, "Collect Wood");
-    IncreaseHunger(&player);
-    CompleteTask(&player);
-
+    sqlite3* db;
+    db_open("survivor_colony.db", &db);
     currentGameState = MENU;
     SetWindowIcon(window, "../assets/images/Survivor's_Colony2.png");
 }
@@ -243,7 +240,7 @@ void Game_Run() {
                 UI_Render(renderer, font);
                 break;
             case GAME_RUNNING:
-                UpdateCharacters();
+                UpdateSurvivors();
                 RenderGameUI(renderer);
                 break;
             case GAME_STATE_CHARACTER_CREATION:
