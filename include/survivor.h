@@ -1,31 +1,28 @@
-// character.h
-#ifndef CHARACTER_H
-#define CHARACTER_H
+#ifndef SURVIVOR_H
+#define SURVIVOR_H
 
 #include "include.h"
 
-//--------  --------//
 typedef struct {
     int id;
     char name[50];
-    int health;
-    int hunger;
-    int tasks_completed;
-    int morale;
-} Character;
+    char surname[50];
+    int heal;
+    int water;
+    int food;
+    int roles;
+} Survivor;
+//---------     Extern   ---------//
+extern Survivor survivors[100];
+extern int nombre_de_survivants;
+//---------     Functions    ---------//
 
-//--------  --------//
-int character_create_table(sqlite3 *db);
-int character_insert(sqlite3 *db, Character *character);
-int character_update(sqlite3 *db, Character *character);
-int character_delete(sqlite3 *db, int character_id);
+void survivor_create_table(sqlite3 *db);
+void survivor_insert(sqlite3 *db, Survivor *survivor);
+void survivor_update(sqlite3 *db, Survivor *survivor, int survivor_id);
+void survivor_delete(sqlite3 *db, int survivor_id);
+void UpdateSurvivors();
 
 //-------- Prototypes des fonctions pour la gestion des personnages --------//
 
-//---------     Functions    ---------//
-int character_create_table(sqlite3 *db);
-int character_insert(sqlite3 *db, Character *character);
-int character_update(sqlite3 *db, Character *character, int character_id);
-int character_delete(sqlite3 *db, int character_id);
-
-#endif // CHARACTER_H
+#endif // SURVIVOR_H
