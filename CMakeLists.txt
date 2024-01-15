@@ -32,6 +32,7 @@ include_directories(${SDL2_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIR} ${SDL2_MIXER_INC
 
 file(COPY ${CMAKE_SOURCE_DIR}/assets DESTINATION ${CMAKE_BINARY_DIR})
 add_executable(${PROJECT_NAME}
+        src/
         src/main.c
         src/game.c
         src/ui.c
@@ -42,7 +43,9 @@ add_executable(${PROJECT_NAME}
         src/text_input.c
         src/trailer.c
         src/logo.c
+        src/screen.c
         #.h
+        include/
         include/game.h
         include/ui.h
         include/audio.h
@@ -53,6 +56,7 @@ add_executable(${PROJECT_NAME}
         include/text_input.h
         include/trailer.h
         include/logo.h
+        include/screen.h
         assets
         survivor_colony.db
         )
