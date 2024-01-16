@@ -1,15 +1,22 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-// Structure pour stocker les configurations du jeu
+#include "include.h"
+
 typedef struct {
     int windowWidth;
     int windowHeight;
     int fullScreen;
+    char keyUp[5];
+    char keyDown[5];
+    char keyLeft[5];
+    char keyRight[5];
 } GameConfig;
 
-// Fonctions pour gérer la configuration
-GameConfig LoadGameConfig(const char* filename);
-void SaveGameConfig(const char* filename, const GameConfig* config);
+GameConfig loadConfig(const char *filename);
+void saveConfig(const GameConfig *config, const char *filename);
+void updateResolution(ScreenManager *screenManager, GameConfig *config);
+void renderConfigOptions(SDL_Renderer *renderer, TTF_Font *font, GameConfig *config);
+void handleConfigurations(ScreenManager *screenManager);
 
 #endif // CONFIG_H
