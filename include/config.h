@@ -2,14 +2,14 @@
 #define CONFIG_H
 
 // Structure pour stocker les configurations du jeu
-typedef struct GameConfig {
+typedef struct {
     int windowWidth;
     int windowHeight;
-    int fullscreen;
+    int fullScreen;
 } GameConfig;
 
 // Fonctions pour gérer la configuration
-GameConfig LoadGameConfig(const char* configFile);
-void SaveGameConfig(const char* configFile, const GameConfig* config);
+GameConfig LoadGameConfig(const char* filename);
+void SaveGameConfig(const char* filename, const GameConfig* config);
 
 #endif // CONFIG_H
