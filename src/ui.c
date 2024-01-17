@@ -5,6 +5,8 @@
 #include "../include/audio.h"
 #include "../include/text_input.h"
 #include "../include/trailer.h"
+#include "../include/survivor.h"
+#include "../include/database.h"
 
 // ------------ Declaration ------------ //
 
@@ -15,6 +17,8 @@ int isSurnameSelected = 0;
 int nameCursorPosition = 0;
 int surnameCursorPosition = 0;
 static Trailer trailer;
+Survivor survivors[100];
+int nombre_de_survivants = 0;
 
 // ------------ SDL_react ------------ //
 
@@ -158,14 +162,6 @@ void UI_HandleEvent(SDL_Event* e, int* running) {
     }
 
     if (submitButton.isHovered && e->type == SDL_MOUSEBUTTONDOWN) {
-        if (submitButton.isClickable) {
-            Log(LOG_INFO, "Submit button clicked.\n");
-            SubmitForm(running);
-            submitButton.isClickable = 0; // Empêcher les clics supplémentaires
-            Trailer_Init(&trailer);
-            trailer.isActive = 1;
-            submitButton.isClickable = 0;
-        }
         if (SDL_PointInRect(&(SDL_Point){mouseX, mouseY}, &submitButton.rect) && submitButton.isClickable) {
             // Bouton soumettre cliqué et est cliquable
             Log(LOG_INFO, "Submit button clicked SDL_PointInRect.\n");
@@ -238,7 +234,7 @@ void RenderCharacterCreationUI(SDL_Renderer* renderer, TTF_Font* font) {
     SDL_Texture* buttonTexture = submitButton.isHovered ? submitButton.hoverTexture : submitButton.texture;
     SDL_RenderCopy(renderer, buttonTexture, NULL, &submitButton.rect);
 
-    // Initialisation du bouton de retour
+    // bouton de retour
     backButton.rect = (SDL_Rect){10, 10, 50, 30};
     backButton.texture = CreateButtonTexture(font, "<", (SDL_Color){255, 255, 255});
     backButton.hoverTexture = CreateButtonTexture(font, "<", (SDL_Color){255, 0, 0});
@@ -278,38 +274,40 @@ void GoBack(int* running) {
 }
 
 // ------------ SubmitForm ------------ //
-
 void SubmitForm(int* running) {
     sqlite3 *db;
-    char *err_msg = 0;
-    int rc = sqlite3_open("../survivor_colony.db", &db);
 
-    if (rc != SQLITE_OK) {
-        fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
-        sqlite3_close(db);
+    if (strlen(playerName) == 0 || strlen(playerSurname) == 0) {
+        Log(LOG_WARNING, "Name or Surname cannot be empty.");
         return;
     }
 
-    char *sql = "INSERT INTO characters (name, surname) VALUES (?, ?);";
-    sqlite3_stmt *stmt;
-    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
-    sqlite3_bind_text(stmt, 1, playerName, -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 2, playerSurname, -1, SQLITE_STATIC);
-
-    rc = sqlite3_step(stmt);
-    if (rc != SQLITE_DONE) {
-        fprintf(stderr, "SQL error: %s\n", sqlite3_errmsg(db));
-    } else {
-        fprintf(stdout, "Character saved successfully\n");
-        submitButton.isClickable = 0;
-
-        // Changement d'état vers le trailer après l'enregistrement réussi
-        ChangeGameState(GAME_STATE_TRAILER);
+    // Ouverture de la connexion à la base de données
+    int rc = db_open("survivor_colony.db", &db);
+    if (rc != SQLITE_OK) {
+        Log(LOG_ERROR, "Cannot open database: %s", sqlite3_errmsg(db));
+        return;
     }
 
-    sqlite3_finalize(stmt);
-    sqlite3_close(db);
+    Survivor survivor;
+    strncpy(survivor.name, playerName, sizeof(survivor.name) - 1);
+    strncpy(survivor.surname, playerSurname, sizeof(survivor.surname) - 1);
+    // Initialisation des autres champs de survivor ici, si nécessaire
+
+    // Insertion du survivant dans la base de données
+    survivor_insert(db, &survivor);
+
+    // Fermeture de la connexion à la base de données
+    db_close(db);
+
+    Log(LOG_INFO, "Survivor inserted successfully.");
+    submitButton.isClickable = 0;
+
+    // Changement d'état vers le trailer après l'enregistrement réussi
+    ChangeGameState(GAME_STATE_TRAILER);
 }
+
+
 
 // ------------ UI_Shutdown ------------ //
 
