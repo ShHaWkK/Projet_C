@@ -11,6 +11,7 @@
 #include "../include/text_input.h"
 #include "../include/trailer.h"
 #include "../include/logo.h"
+#include "../include/breakMenu.h"
 
 //-------------------------------
 
@@ -201,6 +202,11 @@ void Game_Run() {
             Log(LOG_INFO, "Événement détecté: Type %d", event.type);
             if (event.type == SDL_QUIT) {
                 running = 0;
+            }else if (event.type == SDL_KEYDOWN) {
+                // Si la touche pressée est Échap
+                if (event.key.keysym.sym == SDLK_ESCAPE && !trailer.isActive) {
+                    breakMenu(renderer);
+                }
             }
 
             // Gestion des événements clavier pour les champs de saisie
