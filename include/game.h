@@ -12,6 +12,7 @@ typedef enum {
     GAME_STATE_CHARACTER_CREATION,
     GAME_STATE_TRAILER,
     SETTINGS,
+    RESSOURCE,
     QUIT
 } GameState;
 
