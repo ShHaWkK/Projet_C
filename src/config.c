@@ -92,12 +92,37 @@ void saveConfig(const GameConfig *config, const char *filename) {
     }
 }
 
+void selectResolution(GameConfig *config, int index) {
+    if (index >= 0 && index < config->supportedResolutionsCount) {
+        config->windowWidth = config->supportedResolutions[index][0];
+        config->windowHeight = config->supportedResolutions[index][1];
+    }
+}
+
 void updateResolution(ScreenManager *screenManager, GameConfig *config) {
     Screen_SetResolution(screenManager, config->windowWidth, config->windowHeight);
     if (config->fullScreen) {
         Screen_ToggleFullScreen(screenManager);
     }
 }
+
+
+void toggleFullScreen(GameConfig *config) {
+    config->fullScreen = !config->fullScreen;
+}
+
+void applySettings(ScreenManager *screenManager, const GameConfig *config) {
+    updateResolution(screenManager, config);
+    if (config->fullScreen) {
+        Screen_ToggleFullScreen(screenManager);
+    }
+}
+
+void saveCurrentConfig(const GameConfig *config) {
+    saveConfig(config, "../config/config.txt");
+}
+
+
 
 void renderConfigOptions(SDL_Renderer *renderer, TTF_Font *font, GameConfig *config) {
     SDL_Color color = {255, 255, 255};
