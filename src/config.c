@@ -3,10 +3,56 @@
 #include "../include/include.h"
 #include "../include/screen.h"
 
-void load_configuration(const char* filename) {
-    // Parsing du fichier de configuration...
+GameConfig loadConfig(const char *filename) {
+    GameConfig config;
+    initGameConfig(&config);
+    FILE *file = fopen(filename, "r");
+    if (file) {
+        // Si le fichier existe, lisez la configuration
+        if (fscanf(file, "windowWidth=%d\n", &config.windowWidth) != 1) {
+            fprintf(stderr, "Failed to read windowWidth from config file.\n");
+        }
+        if (fscanf(file, "windowHeight=%d\n", &config.windowHeight) != 1) {
+            fprintf(stderr, "Failed to read windowHeight from config file.\n");
+        }
+        if (fscanf(file, "fullScreen=%d\n", &config.fullScreen) != 1) {
+            fprintf(stderr, "Failed to read fullScreen from config file.\n");
+        }
+        if (fscanf(file, "keyUp=%s\n", config.keyUp) != 1) {
+            fprintf(stderr, "Failed to read keyUp from config file.\n");
+        }
+        if (fscanf(file, "keyDown=%s\n", config.keyDown) != 1) {
+            fprintf(stderr, "Failed to read keyDown from config file.\n");
+        }
+        if (fscanf(file, "keyLeft=%s\n", config.keyLeft) != 1) {
+            fprintf(stderr, "Failed to read keyLeft from config file.\n");
+        }
+        if (fscanf(file, "keyRight=%s\n", config.keyRight) != 1) {
+            fprintf(stderr, "Failed to read keyRight from config file.\n");
+        }
+        // Fermez le fichier après la lecture
+        fclose(file);
+    } else {
+        fprintf(stderr, "Config file '%s' not found. Using default settings.\n", filename);
+    }
+
+    return config;
 }
 
+void initGameConfig(GameConfig *config) {
+    config->windowWidth = 800;
+    config->windowHeight = 600;
+    config->fullScreen = 0;
+    static int defaultResolutions[][2] = {
+            {800, 600},
+            {1920, 1080}
+            // Ajoutez d'autres résolutions ici si nécessaire
+    };
+    config->supportedResolutions = defaultResolutions;
+    config->supportedResolutionsCount = sizeof(defaultResolutions) / sizeof(defaultResolutions[0]);
+}
+
+/*
 GameConfig loadConfig(const char *filename) {
     GameConfig config;
     FILE *file = fopen(filename, "r");
@@ -30,6 +76,7 @@ GameConfig loadConfig(const char *filename) {
     }
     return config;
 }
+*/
 
 void saveConfig(const GameConfig *config, const char *filename) {
     FILE *file = fopen(filename, "w");
