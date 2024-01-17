@@ -1,4 +1,4 @@
-//-------------include----------
+    //-------------include----------
 
 #include "../include/include.h"
 #include "../include/game.h"
@@ -11,6 +11,7 @@
 #include "../include/text_input.h"
 #include "../include/trailer.h"
 #include "../include/logo.h"
+#include "../include/ressources.h"
 
 //-------------------------------
 
@@ -241,6 +242,7 @@ void Game_Run() {
                 break;
             case GAME_RUNNING:
                 UpdateSurvivors();
+                LoadGameResources(renderer);
                 RenderGameUI(renderer);
                 break;
             case GAME_STATE_CHARACTER_CREATION:
@@ -249,8 +251,8 @@ void Game_Run() {
             case GAME_STATE_TRAILER:
                 if (trailer.isActive) {
                     Trailer_Render(renderer, font, &trailer, windowWidth, windowHeight);
+                    break;
                 }
-                break;
         }
 
         SDL_RenderPresent(renderer);
@@ -259,7 +261,8 @@ void Game_Run() {
 }
 
 
-// ----------------- ------------------ //
+// -----------------Function Game_Play ------------------ //
+
 
 
 //--------------------Function Game_Shutdown ---------------------//
