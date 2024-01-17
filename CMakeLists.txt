@@ -42,6 +42,7 @@ add_executable(${PROJECT_NAME}
         src/text_input.c
         src/trailer.c
         src/logo.c
+        src/ressources.c
         #.h
         include/game.h
         include/ui.h
@@ -53,6 +54,7 @@ add_executable(${PROJECT_NAME}
         include/text_input.h
         include/trailer.h
         include/logo.h
+        include/ressources.h
         assets/
         survivor_colony.db
         )
