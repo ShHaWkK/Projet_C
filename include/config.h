@@ -11,6 +11,8 @@ typedef struct {
     char keyDown[5];
     char keyLeft[5];
     char keyRight[5];
+    int supportedResolutionsCount;
+    int (*supportedResolutions)[2];
 } GameConfig;
 
 GameConfig loadConfig(const char *filename);
