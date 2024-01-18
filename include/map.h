@@ -19,15 +19,13 @@
 #define ENTRANCE_WIDTH 100
 #define ENTRANCE_HEIGHT 50
 
-// Mountain position on the map
-#define MOUNTAIN_POS_X ((WINDOW_WIDTH - MOUNTAIN_WIDTH) / 2)
-#define MOUNTAIN_POS_Y (SKY_HEIGHT)
-
-// Entrance position based on the mountain's position and size
+#define MOUNTAIN_POS_X (WINDOW_WIDTH - MOUNTAIN_WIDTH - 2 + 10)
+#define MOUNTAIN_POS_Y (SKY_HEIGHT - MOUNTAIN_HEIGHT - 20 + 45)
 #define ENTRANCE_POS_X (MOUNTAIN_POS_X + (MOUNTAIN_WIDTH - ENTRANCE_WIDTH) / 2)
 #define ENTRANCE_POS_Y (MOUNTAIN_POS_Y + MOUNTAIN_HEIGHT - ENTRANCE_HEIGHT)
-
-// Tunnel entrance dimensions
+#define UNDERGROUND_Y (SKY_HEIGHT + GROUND_HEIGHT)
+#define UNDERGROUND_HEIGHT (WINDOW_HEIGHT - UNDERGROUND_Y)
+#define UNDERGROUND_LEVEL_HEIGHT (UNDERGROUND_HEIGHT / 2)
 #define TUNNEL_WIDTH 50
 #define TUNNEL_HEIGHT 30
 
@@ -69,5 +67,5 @@ void initGameMap(GameMap* map, SDL_Renderer* renderer, SDL_Texture* mountainText
 void renderGameMap(GameMap* map, SDL_Renderer* renderer);
 void freeGameMapResources();
 void initTunnelEntrance(GameMap* map, SDL_Renderer* renderer);
-
+void loadMountainTexture(SDL_Renderer* renderer);
 #endif // MAP_H
