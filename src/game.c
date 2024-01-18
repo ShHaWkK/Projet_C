@@ -182,8 +182,9 @@ void Game_Init() {
     SetWindowIcon(window, "../assets/images/Survivor's_Colony.png");
 
     // Initialisation de la carte et du joueur
-    initMap(renderer);
-    initPlayer(renderer);
+    initGameMap(&gameWorld.map);
+    //initMap(renderer);
+   initPlayer(renderer);
 
 
 }
@@ -251,8 +252,8 @@ void Game_Run() {
             case GAME_RUNNING:
                 UpdateCharacters();
                 RenderGameUI(renderer);
-                renderMap(renderer);
-                renderPlayer(renderer);
+                renderGameMap(&gameWorld.map, renderer);
+               // renderPlayer(renderer);
                 break;
             case GAME_STATE_CHARACTER_CREATION:
                 RenderCharacterCreationUI(renderer, font);
@@ -283,8 +284,9 @@ void Game_Shutdown() {
 
     Mix_CloseAudio();
     TTF_CloseFont(font);
-    freeMapTextures();
-    freePlayerTexture();
+//    freeMapTextures();
+    //freePlayerTexture();
+    freeGameMap(&gameWorld.map);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     TTF_Quit();
