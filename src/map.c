@@ -95,6 +95,8 @@ void loadMountainTexture(SDL_Renderer* renderer) {
     }
 }
 
+//--------------------Function initGameMap ---------------------//
+
 void initGameMap(GameMap* map, SDL_Renderer* renderer, SDL_Texture* mountainTexture) {
     // ciel
     map->sky = (SDL_Rect){0, 0, WINDOW_WIDTH, SKY_HEIGHT};
@@ -108,6 +110,8 @@ void initGameMap(GameMap* map, SDL_Renderer* renderer, SDL_Texture* mountainText
     // l'entrée de la zone
     map->entrance = (SDL_Rect){WINDOW_WIDTH - MOUNTAIN_WIDTH, WINDOW_HEIGHT - ENTRANCE_WIDTH, MOUNTAIN_WIDTH, ENTRANCE_WIDTH};
 }
+
+//--------------------Function renderGameMap ---------------------//
 
 void renderGameMap(GameMap* map, SDL_Renderer* renderer) {
     // Rendu du ciel
