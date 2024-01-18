@@ -43,40 +43,40 @@
 //// Map and player definitions
 //MapZone map[ROWS][COLS];
 Player player;
-//
-//SDL_Texture* loadTexture(const char* filePath, SDL_Renderer* renderer) {
-//    SDL_Texture* newTexture = NULL;
-//    SDL_Surface* loadedSurface = IMG_Load(filePath);
-//    if (loadedSurface == NULL) {
-//        printf("Unable to load image %s! SDL_image Error: %s\n", filePath, IMG_GetError());
-//    } else {
-//        newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
-//        if (newTexture == NULL) {
-//            printf("Unable to create texture from %s! SDL Error: %s\n", filePath, SDL_GetError());
-//        }
-//        SDL_FreeSurface(loadedSurface);
-//    }
-//    return newTexture;
-//}
-//
-//void initMap(SDL_Renderer* renderer) {
-//    for (int i = 0; i < ROWS; i++) {
-//        for (int j = 0; j < COLS; j++) {
-//            map[i][j].area.x = j * SIZE_BLOCK;
-//            map[i][j].area.y = i * SIZE_BLOCK;
-//            map[i][j].area.w = SIZE_BLOCK;
-//            map[i][j].area.h = SIZE_BLOCK;
-//
-//            // Assign the correct texture based on the map type
-//            if (mapArray[i][j] == TERRE) {
-//                map[i][j].texture = loadTexture(TERRE_TEXTURE_PATH, renderer);
-//            } else {
-//                map[i][j].texture = loadTexture(DEFAULT_TEXTURE_PATH, renderer);
-//            }
-//        }
-//    }
-//}
-//
+
+SDL_Texture* loadTexture(const char* filePath, SDL_Renderer* renderer) {
+    SDL_Texture* newTexture = NULL;
+    SDL_Surface* loadedSurface = IMG_Load(filePath);
+    if (loadedSurface == NULL) {
+        printf("Unable to load image %s! SDL_image Error: %s\n", filePath, IMG_GetError());
+    } else {
+        newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
+        if (newTexture == NULL) {
+            printf("Unable to create texture from %s! SDL Error: %s\n", filePath, SDL_GetError());
+        }
+        SDL_FreeSurface(loadedSurface);
+    }
+    return newTexture;
+}
+/*
+void initMap(SDL_Renderer* renderer) {
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            map[i][j].area.x = j * SIZE_BLOCK;
+            map[i][j].area.y = i * SIZE_BLOCK;
+            map[i][j].area.w = SIZE_BLOCK;
+            map[i][j].area.h = SIZE_BLOCK;
+
+            // Assign the correct texture based on the map type
+            if (mapArray[i][j] == TERRE) {
+                map[i][j].texture = loadTexture(TERRE_TEXTURE_PATH, renderer);
+            } else {
+                map[i][j].texture = loadTexture(DEFAULT_TEXTURE_PATH, renderer);
+            }
+        }
+    }
+}
+*/
 void initPlayer(SDL_Renderer* renderer) {
     player.position.x = 0; // Starting position
     player.position.y = 0;
