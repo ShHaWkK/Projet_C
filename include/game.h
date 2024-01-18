@@ -2,6 +2,8 @@
 #define GAME_H
 
 #include "include.h"
+#include "map.h"
+#include "include.h"
 
 //--------  --------//
 
@@ -27,6 +29,7 @@ extern ActiveInputField currentInputField;
 //--------  --------//
 typedef struct {
     int day;
+    GameMap map;
 } GameWorld;
 
 //-------- Global variables declarations --------//
