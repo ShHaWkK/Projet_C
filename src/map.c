@@ -102,16 +102,17 @@ void initGameMap(GameMap* map, SDL_Renderer* renderer, SDL_Texture* mountainText
     map->sky = (SDL_Rect){0, 0, WINDOW_WIDTH, SKY_HEIGHT};
 
     // Sol
-    map->ground = (SDL_Rect){0, SKY_HEIGHT, WINDOW_WIDTH, 100};
+    map->ground = (SDL_Rect){0, SKY_HEIGHT, WINDOW_WIDTH, GROUND_HEIGHT};
 
     // Montagne
-    map->mountain = (SDL_Rect){WINDOW_WIDTH - MOUNTAIN_WIDTH, SKY_HEIGHT, MOUNTAIN_WIDTH, GROUND_HEIGHT};
     int mountainPosX = WINDOW_WIDTH - MOUNTAIN_WIDTH;
-    int GROUND_Y = SKY_HEIGHT;
-    int mountainPosY = GROUND_Y - MOUNTAIN_HEIGHT;
+    int mountainPosY = SKY_HEIGHT;
     map->mountain = (SDL_Rect){mountainPosX, mountainPosY, MOUNTAIN_WIDTH, MOUNTAIN_HEIGHT};
 
-    map->entrance = (SDL_Rect){WINDOW_WIDTH - MOUNTAIN_WIDTH, WINDOW_HEIGHT - ENTRANCE_WIDTH, MOUNTAIN_WIDTH, ENTRANCE_WIDTH};
+    // Entrée// Centre l'entrée sur la montagne
+    int entrancePosX = mountainPosX + (MOUNTAIN_WIDTH - ENTRANCE_WIDTH) / 2;
+    int entrancePosY = mountainPosY + (MOUNTAIN_HEIGHT - ENTRANCE_HEIGHT);
+    map->entrance = (SDL_Rect){entrancePosX, entrancePosY, ENTRANCE_WIDTH, ENTRANCE_HEIGHT};
 
     map->souterraine = (SDL_Rect){0, SKY_HEIGHT + 100, WINDOW_WIDTH, GROUND_HEIGHT - 100};
 
