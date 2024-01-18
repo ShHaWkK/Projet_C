@@ -15,105 +15,105 @@
  *int map[11][26];
 
  */
-#include "../include/map.h"
-#define ROWS 11
-#define COLS 26
-#define CIEL 0
-#define TERRE 1
-#define MONTAGNE 2
-#define BOIS 3
-#define CAILLOU 4
-#define BLE 5
-
-
-// Constants for texture file paths
-#define TERRE_TEXTURE_PATH "../assets/images/bloc.png" // Replace with the actual path to your "terre" image
+//#include "../include/map.h"
+//#define ROWS 11
+//#define COLS 26
+//#define CIEL 0
+//#define TERRE 1
+//#define MONTAGNE 2
+//#define BOIS 3
+//#define CAILLOU 4
+//#define BLE 5
+//
+//
+//// Constants for texture file paths
+//#define TERRE_TEXTURE_PATH "../assets/images/bloc.png" // Replace with the actual path to your "terre" image
 #define PLAYER_TEXTURE_PATH "../assets/images/marioArretDroite.png" // Replace with the actual path to your player image
-#define DEFAULT_TEXTURE_PATH "../assets/images/default.png" // Replace with the actual path to your default image
-
-// Define the size of the block for your map
+//#define DEFAULT_TEXTURE_PATH "../assets/images/default.png" // Replace with the actual path to your default image
+//
+//// Define the size of the block for your map
 #define SIZE_BLOCK 32 // You need to define this based on your game's scale
-
-int mapArray[ROWS][COLS] = {
-        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL},
-        {TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE},
-};
-// Map and player definitions
-MapZone map[ROWS][COLS];
+//
+//int mapArray[ROWS][COLS] = {
+//        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//        {CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL, CIEL},
+//        {TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE, TERRE},
+//};
+//// Map and player definitions
+//MapZone map[ROWS][COLS];
 Player player;
-
-SDL_Texture* loadTexture(const char* filePath, SDL_Renderer* renderer) {
-    SDL_Texture* newTexture = NULL;
-    SDL_Surface* loadedSurface = IMG_Load(filePath);
-    if (loadedSurface == NULL) {
-        printf("Unable to load image %s! SDL_image Error: %s\n", filePath, IMG_GetError());
-    } else {
-        newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
-        if (newTexture == NULL) {
-            printf("Unable to create texture from %s! SDL Error: %s\n", filePath, SDL_GetError());
-        }
-        SDL_FreeSurface(loadedSurface);
-    }
-    return newTexture;
-}
-
-void initMap(SDL_Renderer* renderer) {
-    for (int i = 0; i < ROWS; i++) {
-        for (int j = 0; j < COLS; j++) {
-            map[i][j].area.x = j * SIZE_BLOCK;
-            map[i][j].area.y = i * SIZE_BLOCK;
-            map[i][j].area.w = SIZE_BLOCK;
-            map[i][j].area.h = SIZE_BLOCK;
-
-            // Assign the correct texture based on the map type
-            if (mapArray[i][j] == TERRE) {
-                map[i][j].texture = loadTexture(TERRE_TEXTURE_PATH, renderer);
-            } else {
-                map[i][j].texture = loadTexture(DEFAULT_TEXTURE_PATH, renderer);
-            }
-        }
-    }
-}
-
+//
+//SDL_Texture* loadTexture(const char* filePath, SDL_Renderer* renderer) {
+//    SDL_Texture* newTexture = NULL;
+//    SDL_Surface* loadedSurface = IMG_Load(filePath);
+//    if (loadedSurface == NULL) {
+//        printf("Unable to load image %s! SDL_image Error: %s\n", filePath, IMG_GetError());
+//    } else {
+//        newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
+//        if (newTexture == NULL) {
+//            printf("Unable to create texture from %s! SDL Error: %s\n", filePath, SDL_GetError());
+//        }
+//        SDL_FreeSurface(loadedSurface);
+//    }
+//    return newTexture;
+//}
+//
+//void initMap(SDL_Renderer* renderer) {
+//    for (int i = 0; i < ROWS; i++) {
+//        for (int j = 0; j < COLS; j++) {
+//            map[i][j].area.x = j * SIZE_BLOCK;
+//            map[i][j].area.y = i * SIZE_BLOCK;
+//            map[i][j].area.w = SIZE_BLOCK;
+//            map[i][j].area.h = SIZE_BLOCK;
+//
+//            // Assign the correct texture based on the map type
+//            if (mapArray[i][j] == TERRE) {
+//                map[i][j].texture = loadTexture(TERRE_TEXTURE_PATH, renderer);
+//            } else {
+//                map[i][j].texture = loadTexture(DEFAULT_TEXTURE_PATH, renderer);
+//            }
+//        }
+//    }
+//}
+//
 void initPlayer(SDL_Renderer* renderer) {
     player.position.x = 0; // Starting position
     player.position.y = 0;
     player.position.w = SIZE_BLOCK; // Player's size
     player.position.h = SIZE_BLOCK;
-    player.texture = loadTexture(PLAYER_TEXTURE_PATH, renderer); // Load the player texture
+    //player.texture = loadTexture(PLAYER_TEXTURE_PATH, renderer); // Load the player texture
 }
-
-void movePlayer(int x, int y) {
-    // Update the player's position
-    player.position.x += x * SIZE_BLOCK;
-    player.position.y += y * SIZE_BLOCK;
-    // Add boundary and collision checks here
-}
-
-void renderMap(SDL_Renderer* renderer) {
-    for (int i = 0; i < ROWS; i++) {
-        for (int j = 0; j < COLS; j++) {
-            SDL_RenderCopy(renderer, map[i][j].texture, NULL, &map[i][j].area);
-        }
-    }
-}
-
+//
+//void movePlayer(int x, int y) {
+//    // Update the player's position
+//    player.position.x += x * SIZE_BLOCK;
+//    player.position.y += y * SIZE_BLOCK;
+//    // Add boundary and collision checks here
+//}
+//
+//void renderMap(SDL_Renderer* renderer) {
+//    for (int i = 0; i < ROWS; i++) {
+//        for (int j = 0; j < COLS; j++) {
+//            SDL_RenderCopy(renderer, map[i][j].texture, NULL, &map[i][j].area);
+//        }
+//    }
+//}
+//
 void renderPlayer(SDL_Renderer* renderer) {
     SDL_RenderCopy(renderer, player.texture, NULL, &player.position);
 }
-
-void freeMapTextures() {
-    for (int i = 0; i < ROWS; i++) {
-        for (int j = 0; j < COLS; j++) {
-            if (map[i][j].texture != NULL) {
-                SDL_DestroyTexture(map[i][j].texture);
-                map[i][j].texture = NULL;
-            }
-        }
-    }
-}
-
+//
+//void freeMapTextures() {
+//    for (int i = 0; i < ROWS; i++) {
+//        for (int j = 0; j < COLS; j++) {
+//            if (map[i][j].texture != NULL) {
+//                SDL_DestroyTexture(map[i][j].texture);
+//                map[i][j].texture = NULL;
+//            }
+//        }
+//    }
+//}
+//
 void freePlayerTexture() {
     if (player.texture != NULL) {
         SDL_DestroyTexture(player.texture);
@@ -121,8 +121,66 @@ void freePlayerTexture() {
     }
 }
 
-/*
 
+
+
+
+void initGameMap(GameMap* map) {
+    // Initialiser la zone extérieure
+    map->exterior.rect = (SDL_Rect){0, 0, EXTERIOR_ZONE_WIDTH, EXTERIOR_ZONE_HEIGHT};
+    map->exterior.color = (SDL_Color){0xFF, 0xA5, 0x00, 0xFF}; // Couleur orange pour représenter un terrain désertique
+
+    // Initialiser la zone d'entrée
+    map->entrance.rect = (SDL_Rect){EXTERIOR_ZONE_WIDTH, 0, ENTRANCE_ZONE_WIDTH, ENTRANCE_ZONE_HEIGHT};
+    map->entrance.color = (SDL_Color){0x80, 0x80, 0x80, 0xFF}; // Couleur grise pour représenter la zone d'entrée
+
+    // Initialiser la zone de base souterraine
+    map->base.rect = (SDL_Rect){EXTERIOR_ZONE_WIDTH, ENTRANCE_ZONE_HEIGHT, BASE_ZONE_WIDTH, BASE_ZONE_HEIGHT};
+    map->base.color = (SDL_Color){0x00, 0x00, 0x00, 0xFF}; // Couleur noire pour représenter une zone souterraine
+
+    map->sky.rect = (SDL_Rect){0, 0, SCREEN_WIDTH, SKY_HEIGHT};
+    map->sky.color = (SDL_Color){0x00, 0x00, 0xFF, 0xFF}; // Bleu pour le ciel
+
+    // Initialiser la zone extérieure
+    map->exterior.rect = (SDL_Rect){0, SKY_HEIGHT, SCREEN_WIDTH, GROUND_HEIGHT};
+    map->exterior.color = (SDL_Color){0x00, 0x80, 0x00, 0xFF}; // Vert pour le sol
+
+    // Initialiser la zone d'entrée (maison)
+    map->entrance.rect = (SDL_Rect){SCREEN_WIDTH - ENTRANCE_ZONE_WIDTH, SKY_HEIGHT, ENTRANCE_ZONE_WIDTH, GROUND_HEIGHT};
+    map->entrance.color = (SDL_Color){0xA5, 0x2A, 0x2A, 0xFF};
+}
+
+void renderGameMap(GameMap* map, SDL_Renderer* renderer) {
+    // Dessiner la zone extérieure
+    SDL_SetRenderDrawColor(renderer, map->exterior.color.r, map->exterior.color.g, map->exterior.color.b, map->exterior.color.a);
+    SDL_RenderFillRect(renderer, &map->exterior.rect);
+
+    // Dessiner la zone d'entrée
+    SDL_SetRenderDrawColor(renderer, map->entrance.color.r, map->entrance.color.g, map->entrance.color.b, map->entrance.color.a);
+    SDL_RenderFillRect(renderer, &map->entrance.rect);
+
+    // Dessiner la zone de base souterraine
+    SDL_SetRenderDrawColor(renderer, map->base.color.r, map->base.color.g, map->base.color.b, map->base.color.a);
+    SDL_RenderFillRect(renderer, &map->base.rect);
+
+    // Dessiner le ciel
+    SDL_SetRenderDrawColor(renderer, map->sky.color.r, map->sky.color.g, map->sky.color.b, map->sky.color.a);
+    SDL_RenderFillRect(renderer, &map->sky.rect);
+
+    // Dessiner la zone extérieure
+    SDL_SetRenderDrawColor(renderer, map->exterior.color.r, map->exterior.color.g, map->exterior.color.b, map->exterior.color.a);
+    SDL_RenderFillRect(renderer, &map->exterior.rect);
+
+    // Dessiner la zone d'entrée
+    SDL_SetRenderDrawColor(renderer, map->entrance.color.r, map->entrance.color.g, map->entrance.color.b, map->entrance.color.a);
+    SDL_RenderFillRect(renderer, &map->entrance.rect);
+}
+
+void freeGameMap(GameMap* map) {
+    // Libérer les ressources de la carte si nécessaire
+}
+
+/*
 int map[11][26];
 
 map[0][0]=0;
