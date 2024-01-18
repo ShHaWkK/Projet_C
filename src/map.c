@@ -98,16 +98,16 @@ void loadMountainTexture(SDL_Renderer* renderer) {
 //--------------------Function initGameMap ---------------------//
 
 void initGameMap(GameMap* map, SDL_Renderer* renderer, SDL_Texture* mountainTexture) {
-    // ciel
+    // Ciel
     map->sky = (SDL_Rect){0, 0, WINDOW_WIDTH, SKY_HEIGHT};
 
-    // sol
-    map->ground = (SDL_Rect){0, SKY_HEIGHT, WINDOW_WIDTH, GROUND_HEIGHT};
+    // Sol
+    map->ground = (SDL_Rect){0, SKY_HEIGHT, WINDOW_WIDTH, 100};
 
-// montagne
+    // Montagne
     map->mountain = (SDL_Rect){WINDOW_WIDTH - MOUNTAIN_WIDTH, SKY_HEIGHT, MOUNTAIN_WIDTH, GROUND_HEIGHT - ENTRANCE_WIDTH};
 
-    // l'entrée de la zone
+    // Entrée de la zone
     map->entrance = (SDL_Rect){WINDOW_WIDTH - MOUNTAIN_WIDTH, WINDOW_HEIGHT - ENTRANCE_WIDTH, MOUNTAIN_WIDTH, ENTRANCE_WIDTH};
 }
 
@@ -115,21 +115,36 @@ void initGameMap(GameMap* map, SDL_Renderer* renderer, SDL_Texture* mountainText
 
 void renderGameMap(GameMap* map, SDL_Renderer* renderer) {
     // Rendu du ciel
-    SDL_SetRenderDrawColor(renderer, COLOR_SKY.r, COLOR_SKY.g, COLOR_SKY.b, COLOR_SKY.a);
+    SDL_SetRenderDrawColor(renderer, 135, 206, 250, 255); // Couleur ciel
     SDL_RenderFillRect(renderer, &map->sky);
 
     // Rendu du sol
-    SDL_SetRenderDrawColor(renderer, COLOR_GROUND.r, COLOR_GROUND.g, COLOR_GROUND.b, COLOR_GROUND.a);
+    SDL_SetRenderDrawColor(renderer, 139, 69, 19, 255); // Couleur sol
     SDL_RenderFillRect(renderer, &map->ground);
 
     // Rendu de la montagne
-    SDL_SetRenderDrawColor(renderer, COLOR_MOUNTAIN.r, COLOR_MOUNTAIN.g, COLOR_MOUNTAIN.b, COLOR_MOUNTAIN.a);
+    SDL_SetRenderDrawColor(renderer, 139, 137, 137, 255); // Couleur montagne
     SDL_RenderFillRect(renderer, &map->mountain);
 
+    // Rendu du ciel (zone extérieure)
+    SDL_SetRenderDrawColor(renderer, 135, 206, 250, 255); // Couleur ciel (extérieur)
+    SDL_RenderFillRect(renderer, &map->sky);
+
+// Rendu du sol (zone extérieure)
+    SDL_SetRenderDrawColor(renderer, 139, 69, 19, 255); // Couleur sol (extérieur)
+    SDL_RenderFillRect(renderer, &map->ground);
+
+// Rendu de la zone souterraine
+    SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255); // Couleur sombre (souterraine)
+    SDL_RenderFillRect(renderer, &map->souterraine);
+
+    // Rendu de la texture de montagne
     if (mountainTexture != NULL) {
         SDL_RenderCopy(renderer, mountainTexture, NULL, &map->mountain);
     }
-    SDL_SetRenderDrawColor(renderer, COLOR_ENTRANCE.r, COLOR_ENTRANCE.g, COLOR_ENTRANCE.b, COLOR_ENTRANCE.a);
+
+    // Rendu de l'entrée de la zone
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Couleur d'entrée
     SDL_RenderFillRect(renderer, &map->entrance);
 
 }
