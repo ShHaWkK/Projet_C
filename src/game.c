@@ -25,6 +25,7 @@ GameState previousGameState = MENU;
 static Mix_Chunk* soundEffect = NULL;
 ActiveInputField currentInputField = INPUT_FIELD_NONE;
 static Trailer trailer;
+
 //-------------- Prototype des fonctions ----------
 void InitializeGameWorld();
 void InitializeCharacters();
@@ -182,7 +183,18 @@ void Game_Init() {
     SetWindowIcon(window, "../assets/images/Survivor's_Colony.png");
 
     // Initialisation de la carte et du joueur
-    initGameMap(&gameWorld.map);
+
+    initGameMap(&gameWorld.map, renderer, mountainTexture);
+    loadMountainTexture(renderer);
+    mountainTexture = IMG_LoadTexture(renderer, "../assets/images/mountain-1728498_1280.png");
+    if (mountainTexture == NULL) {
+        Log(LOG_ERROR, "Failed to load mountain texture: %s", IMG_GetError());
+        // Handle error
+    }
+
+    // Initialize the game map with the renderer and mountain texture
+    initGameMap(&gameWorld.map, renderer, mountainTexture);
+
     //initMap(renderer);
    initPlayer(renderer);
 
@@ -253,6 +265,7 @@ void Game_Run() {
                 UpdateCharacters();
                 RenderGameUI(renderer);
                 renderGameMap(&gameWorld.map, renderer);
+
                // renderPlayer(renderer);
                 break;
             case GAME_STATE_CHARACTER_CREATION:
@@ -284,9 +297,14 @@ void Game_Shutdown() {
 
     Mix_CloseAudio();
     TTF_CloseFont(font);
-//    freeMapTextures();
+    //freeMapTextures();
     //freePlayerTexture();
-    freeGameMap(&gameWorld.map);
+    //freeGameMap(&gameWorld.map);
+    if (mountainTexture != NULL) {
+        SDL_DestroyTexture(mountainTexture);
+        mountainTexture = NULL;
+    }
+    freeGameMapResources();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     TTF_Quit();
