@@ -56,7 +56,6 @@ add_executable(${PROJECT_NAME}
         include/logo.h
         include/map.h
         assets/
-        assets/images/mountain-1728498_1280.png
         survivor_colony.db
         )
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY} ${SDL2_TTF_LIBRARY} ${SDL2_MIXER_LIBRARIES} ${SDL2_IMAGE_LIBRARY} sqlite3 )

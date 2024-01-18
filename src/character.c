@@ -1,4 +1,9 @@
-// character.c
+/**********************************************************************/
+/* File : include.h                                                   */
+/* Date : 18/12/2023                                                  */
+/* author : ShHaWkK                                                   */
+/**********************************************************************/
+
 
 #include "../include/character.h"
 #include "../include/database.h"
@@ -54,7 +59,7 @@ void UpdateCharacters() {
 
 int character_create_table(sqlite3 *db) {
     Log(LOG_INFO, "Creating character table in the database.");
-    const char *sql = "CREATE TABLE IF NOT EXISTS characters ("
+    const char *sql = "CREATE TABLE IF NOT EXISTS SURVIVOR ("
                       "id INTEGER PRIMARY KEY AUTOINCREMENT, "
                       "name TEXT NOT NULL, "
                       "health INTEGER, "
@@ -65,7 +70,7 @@ int character_create_table(sqlite3 *db) {
 
 int character_insert(sqlite3 *db, Character *character) {
     sqlite3_stmt *stmt;
-    const char *sql = "INSERT INTO characters (name, health, hunger, morale) VALUES (?, ?, ?, ?);";
+    const char *sql = "INSERT INTO SURVIVORS (name, health, hunger, morale) VALUES (?, ?, ?, ?);";
 
     int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
     if (rc == SQLITE_OK) {
@@ -81,7 +86,7 @@ int character_insert(sqlite3 *db, Character *character) {
 
 int character_update(sqlite3 *db, Character *character) {
     sqlite3_stmt *stmt;
-    const char *sql = "UPDATE characters SET name = ?, health = ?, hunger = ?, morale = ? WHERE id = ?;";
+    const char *sql = "UPDATE SURVIVOR SET name = ?, health = ?, hunger = ?, morale = ? WHERE id = ?;";
 
     int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
     if (rc == SQLITE_OK) {
@@ -98,7 +103,7 @@ int character_update(sqlite3 *db, Character *character) {
 
 int character_delete(sqlite3 *db, int character_id) {
     sqlite3_stmt *stmt;
-    const char *sql = "DELETE FROM characters WHERE id = ?;";
+    const char *sql = "DELETE FROM SURVIVOR WHERE id = ?;";
 
     int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
     if (rc == SQLITE_OK) {

@@ -1,7 +1,11 @@
+/**********************************************************************/
+/* File : Log.c                                                     */
+/* Date : 18/11/2023                                                 */
+/* author : ShHaWkK                                                   */
+/**********************************************************************/
+
+
 #include "../include/Log.h"
-#include <stdarg.h>
-#include <stdio.h>
-#include <string.h>
 
 static FILE* logFile = NULL;
 static LogLevel currentLogLevel = LOG_INFO;
