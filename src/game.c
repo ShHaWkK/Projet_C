@@ -193,7 +193,7 @@ void Game_Init() {
 
     initGameMap(&gameWorld.map, renderer, mountainTexture);
     loadMountainTexture(renderer);
-    mountainTexture = IMG_LoadTexture(renderer, "../assets/images/mountain-1728498_1280.png");
+    mountainTexture = IMG_LoadTexture(renderer, "../assets/images/mountain.png");
     if (mountainTexture == NULL) {
         Log(LOG_ERROR, "Failed to load mountain texture: %s", IMG_GetError());
     }
