@@ -42,20 +42,27 @@ void freePlayerTexture();
 
 #include <SDL.h>
 
-// Définitions pour les zones de la carte
-#define EXTERIOR_ZONE_WIDTH 800
-#define EXTERIOR_ZONE_HEIGHT 600
+// Constantes pour les dimensions de la fenêtre et les zones de la carte
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 600
+#define SKY_HEIGHT 150
+#define GROUND_HEIGHT (WINDOW_HEIGHT - SKY_HEIGHT)
+#define MOUNTAIN_WIDTH 200
+#define ENTRANCE_WIDTH 100
 
-#define ENTRANCE_ZONE_WIDTH 200
-#define ENTRANCE_ZONE_HEIGHT 200
+// Couleurs pour chaque zone
+#define COLOR_SKY (SDL_Color){135, 206, 235, 255} // Couleur bleu ciel
+#define COLOR_GROUND (SDL_Color){244, 164, 96, 255} // Couleur sable
+#define COLOR_MOUNTAIN (SDL_Color){139, 69, 19, 255} // Couleur marron pour la montagne
+#define COLOR_ENTRANCE (SDL_Color){160, 82, 45, 255} // Couleur plus sombre pour l'entrée
 
-#define BASE_ZONE_WIDTH 400
-#define BASE_ZONE_HEIGHT 400
+typedef struct {
+    SDL_Rect sky;
+    SDL_Rect ground;
+    SDL_Rect mountain;
+    SDL_Rect entrance;
+} GameMap;
 
-#define SCREEN_WIDTH 800
-#define SKY_HEIGHT 200
-#define GROUND_HEIGHT 400
-#define ENTRANCE_ZONE_WIDTH 200
 
 void initPlayer();
 
@@ -66,12 +73,6 @@ typedef struct {
 } MapZone;
 
 // Structure pour la carte entière
-typedef struct {
-    MapZone exterior;
-    MapZone entrance;
-    MapZone base;
-    MapZone sky;
-} GameMap;
 
 
 typedef struct {
