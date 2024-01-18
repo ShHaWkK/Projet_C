@@ -66,6 +66,7 @@ typedef struct {
     SDL_Rect ground;
     SDL_Rect mountain;
     SDL_Rect entrance;
+    SDL_Rect souterraine;
 } GameMap;
 
 
