@@ -123,37 +123,34 @@ void initGameMap(GameMap* map, SDL_Renderer* renderer, SDL_Texture* mountainText
 
 void renderGameMap(GameMap* map, SDL_Renderer* renderer) {
     // Rendu du ciel
-    SDL_SetRenderDrawColor(renderer, 135, 206, 250, 255); // Couleur ciel
+    SDL_SetRenderDrawColor(renderer, 135, 206, 250, 255);
     SDL_RenderFillRect(renderer, &map->sky);
 
     // Rendu du sol
-    SDL_SetRenderDrawColor(renderer, 139, 69, 19, 255); // Couleur sol
+    SDL_SetRenderDrawColor(renderer, 139, 69, 19, 255);
     SDL_RenderFillRect(renderer, &map->ground);
 
     // Rendu de la montagne
-    SDL_SetRenderDrawColor(renderer, 139, 137, 137, 255); // Couleur montagne
+    SDL_SetRenderDrawColor(renderer, 139, 137, 137, 255);
     SDL_RenderFillRect(renderer, &map->mountain);
-
-    // Rendu du ciel (zone extérieure)
-    SDL_SetRenderDrawColor(renderer, 135, 206, 250, 255); // Couleur ciel (extérieur)
-    SDL_RenderFillRect(renderer, &map->sky);
-
-// Rendu du sol (zone extérieure)
-    SDL_SetRenderDrawColor(renderer, 245, 222, 179, 255);
-    SDL_RenderFillRect(renderer, &map->ground);
-
-    // Souterraine
-    SDL_SetRenderDrawColor(renderer, 139, 69, 19, 255); // Couleur marron foncé (souterraine)
-    SDL_RenderFillRect(renderer, &map->souterraine);
 
     // Rendu de la texture de montagne
     if (mountainTexture != NULL) {
         SDL_RenderCopy(renderer, mountainTexture, NULL, &map->mountain);
     }
 
-    // Rendu de l'entrée de la zone
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Couleur d'entrée
+    // Rendu de l'entrée de la montagne avec une couleur gris foncé
+    SDL_SetRenderDrawColor(renderer, 105, 105, 105, 255);
     SDL_RenderFillRect(renderer, &map->entrance);
+
+    // Rendu de la zone souterraine avec une couleur marron foncé pour représenter un espace souterrain
+    SDL_SetRenderDrawColor(renderer, 101, 67, 33, 255);
+    SDL_RenderFillRect(renderer, &map->souterraine);
+    // Souterraine
+    SDL_SetRenderDrawColor(renderer, 139, 69, 19, 255); // Couleur marron foncé (souterraine)
+    SDL_RenderFillRect(renderer, &map->souterraine);
+
+
 
 }
 //--------------------Function freeGameMapResources ---------------------//
