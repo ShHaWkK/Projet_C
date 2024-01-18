@@ -126,54 +126,35 @@ void freePlayerTexture() {
 
 
 void initGameMap(GameMap* map) {
-    // Initialiser la zone extérieure
-    map->exterior.rect = (SDL_Rect){0, 0, EXTERIOR_ZONE_WIDTH, EXTERIOR_ZONE_HEIGHT};
-    map->exterior.color = (SDL_Color){0xFF, 0xA5, 0x00, 0xFF}; // Couleur orange pour représenter un terrain désertique
+    // Initialisation du ciel
+    map->sky = (SDL_Rect){0, 0, WINDOW_WIDTH, SKY_HEIGHT};
 
-    // Initialiser la zone d'entrée
-    map->entrance.rect = (SDL_Rect){EXTERIOR_ZONE_WIDTH, 0, ENTRANCE_ZONE_WIDTH, ENTRANCE_ZONE_HEIGHT};
-    map->entrance.color = (SDL_Color){0x80, 0x80, 0x80, 0xFF}; // Couleur grise pour représenter la zone d'entrée
+    // Initialisation du sol
+    map->ground = (SDL_Rect){0, SKY_HEIGHT, WINDOW_WIDTH - MOUNTAIN_WIDTH, GROUND_HEIGHT};
 
-    // Initialiser la zone de base souterraine
-    map->base.rect = (SDL_Rect){EXTERIOR_ZONE_WIDTH, ENTRANCE_ZONE_HEIGHT, BASE_ZONE_WIDTH, BASE_ZONE_HEIGHT};
-    map->base.color = (SDL_Color){0x00, 0x00, 0x00, 0xFF}; // Couleur noire pour représenter une zone souterraine
+    // Initialisation de la montagne
+    map->mountain = (SDL_Rect){WINDOW_WIDTH - MOUNTAIN_WIDTH, SKY_HEIGHT, MOUNTAIN_WIDTH, GROUND_HEIGHT - ENTRANCE_WIDTH};
 
-    map->sky.rect = (SDL_Rect){0, 0, SCREEN_WIDTH, SKY_HEIGHT};
-    map->sky.color = (SDL_Color){0x00, 0x00, 0xFF, 0xFF}; // Bleu pour le ciel
-
-    // Initialiser la zone extérieure
-    map->exterior.rect = (SDL_Rect){0, SKY_HEIGHT, SCREEN_WIDTH, GROUND_HEIGHT};
-    map->exterior.color = (SDL_Color){0x00, 0x80, 0x00, 0xFF}; // Vert pour le sol
-
-    // Initialiser la zone d'entrée (maison)
-    map->entrance.rect = (SDL_Rect){SCREEN_WIDTH - ENTRANCE_ZONE_WIDTH, SKY_HEIGHT, ENTRANCE_ZONE_WIDTH, GROUND_HEIGHT};
-    map->entrance.color = (SDL_Color){0xA5, 0x2A, 0x2A, 0xFF};
+    // Initialisation de l'entrée
+    map->entrance = (SDL_Rect){WINDOW_WIDTH - MOUNTAIN_WIDTH, WINDOW_HEIGHT - ENTRANCE_WIDTH, MOUNTAIN_WIDTH, ENTRANCE_WIDTH};
 }
 
 void renderGameMap(GameMap* map, SDL_Renderer* renderer) {
-    // Dessiner la zone extérieure
-    SDL_SetRenderDrawColor(renderer, map->exterior.color.r, map->exterior.color.g, map->exterior.color.b, map->exterior.color.a);
-    SDL_RenderFillRect(renderer, &map->exterior.rect);
+    // Rendu du ciel
+    SDL_SetRenderDrawColor(renderer, COLOR_SKY.r, COLOR_SKY.g, COLOR_SKY.b, COLOR_SKY.a);
+    SDL_RenderFillRect(renderer, &map->sky);
 
-    // Dessiner la zone d'entrée
-    SDL_SetRenderDrawColor(renderer, map->entrance.color.r, map->entrance.color.g, map->entrance.color.b, map->entrance.color.a);
-    SDL_RenderFillRect(renderer, &map->entrance.rect);
+    // Rendu du sol
+    SDL_SetRenderDrawColor(renderer, COLOR_GROUND.r, COLOR_GROUND.g, COLOR_GROUND.b, COLOR_GROUND.a);
+    SDL_RenderFillRect(renderer, &map->ground);
 
-    // Dessiner la zone de base souterraine
-    SDL_SetRenderDrawColor(renderer, map->base.color.r, map->base.color.g, map->base.color.b, map->base.color.a);
-    SDL_RenderFillRect(renderer, &map->base.rect);
+    // Rendu de la montagne
+    SDL_SetRenderDrawColor(renderer, COLOR_MOUNTAIN.r, COLOR_MOUNTAIN.g, COLOR_MOUNTAIN.b, COLOR_MOUNTAIN.a);
+    SDL_RenderFillRect(renderer, &map->mountain);
 
-    // Dessiner le ciel
-    SDL_SetRenderDrawColor(renderer, map->sky.color.r, map->sky.color.g, map->sky.color.b, map->sky.color.a);
-    SDL_RenderFillRect(renderer, &map->sky.rect);
-
-    // Dessiner la zone extérieure
-    SDL_SetRenderDrawColor(renderer, map->exterior.color.r, map->exterior.color.g, map->exterior.color.b, map->exterior.color.a);
-    SDL_RenderFillRect(renderer, &map->exterior.rect);
-
-    // Dessiner la zone d'entrée
-    SDL_SetRenderDrawColor(renderer, map->entrance.color.r, map->entrance.color.g, map->entrance.color.b, map->entrance.color.a);
-    SDL_RenderFillRect(renderer, &map->entrance.rect);
+    // Rendu de l'entrée
+    SDL_SetRenderDrawColor(renderer, COLOR_ENTRANCE.r, COLOR_ENTRANCE.g, COLOR_ENTRANCE.b, COLOR_ENTRANCE.a);
+    SDL_RenderFillRect(renderer, &map->entrance);
 }
 
 void freeGameMap(GameMap* map) {
