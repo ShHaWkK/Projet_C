@@ -126,17 +126,24 @@ void freePlayerTexture() {
 
 
 
-void initGameMap(GameMap* map) {
-    // Initialisation du ciel
+void loadMountainTexture(SDL_Renderer* renderer) {
+    mountainTexture = IMG_LoadTexture(renderer, "../assets/images/mountain-1728498_1280.png");
+    if (mountainTexture == NULL) {
+        printf("Failed to load mountain texture: %s\n", IMG_GetError());
+    }
+}
+
+void initGameMap(GameMap* map, SDL_Renderer* renderer, SDL_Texture* mountainTexture) {
+    // ciel
     map->sky = (SDL_Rect){0, 0, WINDOW_WIDTH, SKY_HEIGHT};
 
-    // Initialisation du sol
-    map->ground = (SDL_Rect){0, SKY_HEIGHT, WINDOW_WIDTH - MOUNTAIN_WIDTH, GROUND_HEIGHT};
+    // sol
+    map->ground = (SDL_Rect){0, SKY_HEIGHT, WINDOW_WIDTH, GROUND_HEIGHT};
 
-    // Initialisation de la montagne
+// montagne
     map->mountain = (SDL_Rect){WINDOW_WIDTH - MOUNTAIN_WIDTH, SKY_HEIGHT, MOUNTAIN_WIDTH, GROUND_HEIGHT - ENTRANCE_WIDTH};
 
-    // Initialisation de l'entrée
+    // l'entrée de la zone
     map->entrance = (SDL_Rect){WINDOW_WIDTH - MOUNTAIN_WIDTH, WINDOW_HEIGHT - ENTRANCE_WIDTH, MOUNTAIN_WIDTH, ENTRANCE_WIDTH};
 }
 
@@ -153,15 +160,20 @@ void renderGameMap(GameMap* map, SDL_Renderer* renderer) {
     SDL_SetRenderDrawColor(renderer, COLOR_MOUNTAIN.r, COLOR_MOUNTAIN.g, COLOR_MOUNTAIN.b, COLOR_MOUNTAIN.a);
     SDL_RenderFillRect(renderer, &map->mountain);
 
-    // Rendu de l'entrée
+    if (mountainTexture != NULL) {
+        SDL_RenderCopy(renderer, mountainTexture, NULL, &map->mountain);
+    }
     SDL_SetRenderDrawColor(renderer, COLOR_ENTRANCE.r, COLOR_ENTRANCE.g, COLOR_ENTRANCE.b, COLOR_ENTRANCE.a);
     SDL_RenderFillRect(renderer, &map->entrance);
+
 }
 
-void freeGameMap(GameMap* map) {
-    // Libérer les ressources de la carte si nécessaire
+void freeGameMapResources() {
+    if (mountainTexture != NULL) {
+        SDL_DestroyTexture(mountainTexture);
+        mountainTexture = NULL;
+    }
 }
-
 /*
 int map[11][26];
 
