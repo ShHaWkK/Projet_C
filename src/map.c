@@ -89,19 +89,20 @@ void initGameMap(GameMap* map, SDL_Renderer* renderer, SDL_Texture* mountainText
     map->ground = (SDL_Rect){0, SKY_HEIGHT, WINDOW_WIDTH, GROUND_HEIGHT};
 
     // Montagne
-    int mountainPosX = WINDOW_WIDTH - MOUNTAIN_WIDTH;
-    int mountainPosY = SKY_HEIGHT;
+    int mountainPosX = (WINDOW_WIDTH - MOUNTAIN_WIDTH) / 2; // Centrez la montagne horizontalement
+    int mountainPosY = SKY_HEIGHT; // Positionnez la montagne juste en dessous du ciel
     map->mountain = (SDL_Rect){mountainPosX, mountainPosY, MOUNTAIN_WIDTH, MOUNTAIN_HEIGHT};
 
-    // Entrée// Centre l'entrée sur la montagne
-    int entrancePosX = mountainPosX + (MOUNTAIN_WIDTH - ENTRANCE_WIDTH) / 2;
-    int entrancePosY = mountainPosY + (MOUNTAIN_HEIGHT - ENTRANCE_HEIGHT);
+    // Entrée
+    int entrancePosX = mountainPosX + (MOUNTAIN_WIDTH - ENTRANCE_WIDTH) / 2; // Centrez l'entrée sur la montagne
+    int entrancePosY = mountainPosY + MOUNTAIN_HEIGHT - ENTRANCE_HEIGHT; // Positionnez l'entrée en bas de la montagne
     map->entrance = (SDL_Rect){entrancePosX, entrancePosY, ENTRANCE_WIDTH, ENTRANCE_HEIGHT};
 
-    map->souterraine = (SDL_Rect){0, SKY_HEIGHT + 100, WINDOW_WIDTH, GROUND_HEIGHT - 100};
-
-    // map->souterraine = (SDL_Rect){0, SKY_HEIGHT + 2, WINDOW_WIDTH, GROUND_HEIGHT - 2};
+    // Zone souterraine
+    map->souterraine = (SDL_Rect){0, GROUND_Y + GROUND_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT - (GROUND_Y + GROUND_HEIGHT)};
 }
+
+
 
 //--------------------Function renderGameMap ---------------------//
 
@@ -116,7 +117,7 @@ void renderGameMap(GameMap* map, SDL_Renderer* renderer) {
 
     // Rendu de la montagne
     SDL_SetRenderDrawColor(renderer, 139, 137, 137, 255);
-    SDL_RenderFillRect(renderer, &map->mountain);
+    SDL_RenderCopy(renderer, map->tunnelEntrance.texture, NULL, &map->entrance);
 
     // Rendu de la texture de montagne
     if (mountainTexture != NULL) {
@@ -133,7 +134,11 @@ void renderGameMap(GameMap* map, SDL_Renderer* renderer) {
     // Souterraine
     SDL_SetRenderDrawColor(renderer, 139, 69, 19, 255); // Couleur marron foncé (souterraine)
     SDL_RenderFillRect(renderer, &map->souterraine);
-
+    // Render the entrance of the tunnel
+    if (map->tunnelEntrance.texture != NULL) {
+        SDL_Rect entranceRect = {map->entrance.x, map->entrance.y, ENTRANCE_WIDTH, ENTRANCE_HEIGHT};
+        SDL_RenderCopy(renderer, map->tunnelEntrance.texture, NULL, &entranceRect);
+    }
 
 
 }
@@ -146,3 +151,16 @@ void freeGameMapResources() {
     }
 }
 
+void initTunnelEntrance(GameMap* map, SDL_Renderer* renderer) {
+    // Chargez la texture du tunnel
+    SDL_Texture* tunnelTexture = IMG_LoadTexture(renderer, "chemin/vers/texture_tunnel.png");
+    if (tunnelTexture == NULL) {
+        printf("Failed to load tunnel texture: %s\n", IMG_GetError());
+    }
+
+    // Configurez le rectangle pour l'entrée du tunnel
+    int tunnelPosX = WINDOW_WIDTH - MOUNTAIN_WIDTH; // Ajustez si nécessaire
+    int tunnelPosY = GROUND_Y;
+    map->tunnelEntrance.rect = (SDL_Rect){tunnelPosX, tunnelPosY, TUNNEL_WIDTH, TUNNEL_HEIGHT};
+    map->tunnelEntrance.texture = tunnelTexture;
+}
