@@ -89,7 +89,7 @@ void freePlayerTexture() {
 
 
 void loadMountainTexture(SDL_Renderer* renderer) {
-    mountainTexture = IMG_LoadTexture(renderer, "../assets/images/mountain-1728498_1280.png");
+    mountainTexture = IMG_LoadTexture(renderer, "../assets/images/mountain.png");
     if (mountainTexture == NULL) {
         printf("Failed to load mountain texture: %s\n", IMG_GetError());
     }
@@ -105,10 +105,17 @@ void initGameMap(GameMap* map, SDL_Renderer* renderer, SDL_Texture* mountainText
     map->ground = (SDL_Rect){0, SKY_HEIGHT, WINDOW_WIDTH, 100};
 
     // Montagne
-    map->mountain = (SDL_Rect){WINDOW_WIDTH - MOUNTAIN_WIDTH, SKY_HEIGHT, MOUNTAIN_WIDTH, GROUND_HEIGHT - ENTRANCE_WIDTH};
+    map->mountain = (SDL_Rect){WINDOW_WIDTH - MOUNTAIN_WIDTH, SKY_HEIGHT, MOUNTAIN_WIDTH, GROUND_HEIGHT};
+    int mountainPosX = WINDOW_WIDTH - MOUNTAIN_WIDTH;
+    int GROUND_Y = SKY_HEIGHT;
+    int mountainPosY = GROUND_Y - MOUNTAIN_HEIGHT;
+    map->mountain = (SDL_Rect){mountainPosX, mountainPosY, MOUNTAIN_WIDTH, MOUNTAIN_HEIGHT};
 
-    // Entrée de la zone
     map->entrance = (SDL_Rect){WINDOW_WIDTH - MOUNTAIN_WIDTH, WINDOW_HEIGHT - ENTRANCE_WIDTH, MOUNTAIN_WIDTH, ENTRANCE_WIDTH};
+
+    map->souterraine = (SDL_Rect){0, SKY_HEIGHT + 100, WINDOW_WIDTH, GROUND_HEIGHT - 100};
+
+    // map->souterraine = (SDL_Rect){0, SKY_HEIGHT + 2, WINDOW_WIDTH, GROUND_HEIGHT - 2};
 }
 
 //--------------------Function renderGameMap ---------------------//
@@ -131,11 +138,11 @@ void renderGameMap(GameMap* map, SDL_Renderer* renderer) {
     SDL_RenderFillRect(renderer, &map->sky);
 
 // Rendu du sol (zone extérieure)
-    SDL_SetRenderDrawColor(renderer, 139, 69, 19, 255); // Couleur sol (extérieur)
+    SDL_SetRenderDrawColor(renderer, 245, 222, 179, 255);
     SDL_RenderFillRect(renderer, &map->ground);
 
-// Rendu de la zone souterraine
-    SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255); // Couleur sombre (souterraine)
+    // Souterraine
+    SDL_SetRenderDrawColor(renderer, 139, 69, 19, 255); // Couleur marron foncé (souterraine)
     SDL_RenderFillRect(renderer, &map->souterraine);
 
     // Rendu de la texture de montagne

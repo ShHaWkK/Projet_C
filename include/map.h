@@ -47,9 +47,9 @@ void freePlayerTexture();
 #define WINDOW_HEIGHT 600
 #define SKY_HEIGHT 150
 #define GROUND_HEIGHT (WINDOW_HEIGHT - SKY_HEIGHT)
-#define MOUNTAIN_WIDTH 200
+#define MOUNTAIN_WIDTH 160
 #define ENTRANCE_WIDTH 100
-#define MOUNTAIN_HEIGHT 300
+#define MOUNTAIN_HEIGHT 150
 #define ENTRANCE_HEIGHT 100
 
 // Couleurs pour chaque zone
