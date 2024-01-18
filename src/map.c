@@ -7,27 +7,6 @@
 #include "../include/map.h"
 #include "../include/include.h"
 
-
-/*
- * ciel=0
- * terre=1
- * montagne=2
- * bois=3
- * caillou=4
- * ble=5
- *
- */
-
-#define ROWS 11
-#define COLS 26
-//#define CIEL 0
-//#define TERRE 1
-//#define MONTAGNE 2
-//#define BOIS 3
-//#define CAILLOU 4
-//#define BLE 5
-//
-//
 //#define TERRE_TEXTURE_PATH "../assets/images/bloc.png" // Replace with the actual path to your "terre" image
 #define PLAYER_TEXTURE_PATH "../assets/images/marioArretDroite.png" // Replace with the actual path to your player image
 //#define DEFAULT_TEXTURE_PATH "../assets/images/default.png" // Replace with the actual path to your default image
@@ -102,7 +81,6 @@ void loadMountainTexture(SDL_Renderer* renderer) {
 }
 
 //--------------------Function initGameMap ---------------------//
-
 void initGameMap(GameMap* map, SDL_Renderer* renderer, SDL_Texture* mountainTexture) {
     // Ciel
     map->sky = (SDL_Rect){0, 0, WINDOW_WIDTH, SKY_HEIGHT};
