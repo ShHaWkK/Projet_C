@@ -1,7 +1,10 @@
 #include "../include/Log.h"
 #include "../include/include.h"
+#include <string.h>
 
 static FILE* logFile = NULL;
+static char lastLoggedMessage[1024] = {0};
+LogLevel currentLogLevel = LOG_INFO;
 
 void Log_Init(const char* logFileName) {
     logFile = fopen(logFileName, "a");
