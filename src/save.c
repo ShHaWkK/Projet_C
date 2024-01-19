@@ -1,5 +1,6 @@
 #include "../include/save.h"
 
+
 void queryToFile(sqlite3 *db, const char *query, const char *filename) {
     FILE *f = fopen(filename, "w");
     if (f == NULL) {
@@ -36,14 +37,20 @@ void fileToQuery(sqlite3 *db, const char *filename, const char *table) {
     }
 
     char *line = NULL;
-    size_t len = 0;
-    ssize_t read;
+    size_t len = 1024; // Taille initiale du buffer
+    line = malloc(len * sizeof(char));
 
     char *err_msg = 0;
     sqlite3_exec(db, "BEGIN TRANSACTION;", NULL, NULL, &err_msg);
 
     char query[1024];
-    while ((read = getline(&line, &len, f)) != -1) {
+    while (fgets(line, len, f) != NULL) {
+        while (strlen(line) == len - 1 && line[len - 2] != '\n') {
+            len *= 2;
+            line = realloc(line, len);
+            fgets(line + strlen(line), len - strlen(line), f);
+        }
+
         snprintf(query, sizeof(query), "INSERT INTO %s VALUES (%s);", table, line);
         if (sqlite3_exec(db, query, NULL, NULL, &err_msg) != SQLITE_OK) {
             fprintf(stderr, "Erreur SQL: %s\n", err_msg);
@@ -58,19 +65,20 @@ void fileToQuery(sqlite3 *db, const char *filename, const char *table) {
     fclose(f);
 }
 
+
 void saveGame(sqlite3 *db) {
-    queryToFile(db, "SELECT * FROM SURVIVOR;", "../save/survivor_backup.txt");
-    queryToFile(db, "SELECT * FROM RESOURCES;", "../save/resources_backup.txt");
-    queryToFile(db, "SELECT * FROM STORAGE;", "../save/storage_backup.txt");
-    queryToFile(db, "SELECT * FROM USE;", "../save/use_backup.txt");
-    queryToFile(db, "SELECT * FROM EQUIPMENT;", "../save/equipment_backup.txt");
+    queryToFile(db, "SELECT * FROM SURVIVOR;", "../savePlayer/survivor_backup.txt");
+    queryToFile(db, "SELECT * FROM RESOURCES;", "../savePlayer/resources_backup.txt");
+    queryToFile(db, "SELECT * FROM STORAGE;", "../savePlayer/storage_backup.txt");
+    queryToFile(db, "SELECT * FROM USE;", "../savePlayer/use_backup.txt");
+    queryToFile(db, "SELECT * FROM EQUIPMENT;", "../savePlayer/equipment_backup.txt");
 
 }
 
 void loadGame(sqlite3 *db) {
-    fileToQuery(db, "../save/survivor_backup.txt", "SURVIVOR");
-    fileToQuery(db, "../save/resources_backup.txt", "RESOURCES");
-    queryToFile(db, "../save/storage_backup.txt", "STORAGE");
-    queryToFile(db, "../save/use_backup.txt", "USE");
-    queryToFile(db, "../save/equipment_backup.txt", "Equipment");
+    fileToQuery(db, "../savePlayer/survivor_backup.txt", "SURVIVOR");
+    fileToQuery(db, "../savePlayer/resources_backup.txt", "RESOURCES");
+    queryToFile(db, "../savePlayer/storage_backup.txt", "STORAGE");
+    queryToFile(db, "../savePlayer/use_backup.txt", "USE");
+    queryToFile(db, "../savePlayer/equipment_backup.txt", "Equipment");
 }
