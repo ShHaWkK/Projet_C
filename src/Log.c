@@ -14,9 +14,21 @@ void Log_Init(const char* logFileName) {
 }
 
 void Log(LogLevel level, const char* format, ...) {
-    if (logFile == NULL) {
+    if (logFile == NULL || level < currentLogLevel) {
         return;
     }
+
+    char newMessage[1024];
+    va_list args;
+    va_start(args, format);
+    vsnprintf(newMessage, sizeof(newMessage), format, args);
+    va_end(args);
+
+    if (strcmp(newMessage, lastLoggedMessage) == 0) {
+
+        return;
+    }
+    strncpy(lastLoggedMessage, newMessage, sizeof(lastLoggedMessage));
 
     // Obtenir la date et l'heure actuelles
     time_t currentTime;
@@ -26,10 +38,8 @@ void Log(LogLevel level, const char* format, ...) {
     timeInfo = localtime(&currentTime);
     strftime(timeString, sizeof(timeString), "%Y-%m-%d %H:%M:%S", timeInfo);
 
-    // Écrire la date et l'heure dans le fichier de log
     fprintf(logFile, "[%s] ", timeString);
 
-    // Écrire le niveau de log dans le fichier de log
     switch (level) {
         case LOG_INFO:
             fprintf(logFile, "[INFO] ");
@@ -42,18 +52,9 @@ void Log(LogLevel level, const char* format, ...) {
             break;
     }
 
-    // Écrire le message de log formaté dans le fichier de log
-    va_list args;
-    va_start(args, format);
-    vfprintf(logFile, format, args);
-    va_end(args);
-
-    // Saut de ligne pour le prochain message
-    fprintf(logFile, "\n");
-    fflush(logFile);  // Assurer que le message est écrit immédiatement
+    fprintf(logFile, "%s\n", newMessage);
+    fflush(logFile);
 }
-
-LogLevel currentLogLevel = LOG_INFO;
 
 void Log_SetLevel(LogLevel level) {
     currentLogLevel = level;
