@@ -6,6 +6,7 @@
 #include "../include/Log.h"
 #include "../include/include.h"
 
+Resources resources;  // Définition de la variable globale
 void initializeResources(Resources *resources) {
     resources->food = 100;
     resources->water = 50;
@@ -70,27 +71,27 @@ void LoadGameResources(SDL_Renderer * renderer) {
     if (font == NULL) {
         SDL_Log("Erreur lors du chargement de la police : %s", TTF_GetError());
     } else {
-        char *textQNourriture = "42";
+        char textQNourriture[20];
+        sprintf(textQNourriture, "%d", resources.food);  
         SDL_Surface *textSNourriture = TTF_RenderText_Solid(font, textQNourriture, textColor);
 
         if (textSNourriture == NULL) {
             SDL_Log("Erreur lors du rendu du texte : %s", TTF_GetError());
-            
+
         } else {
             SDL_Texture * textTNourriture = SDL_CreateTextureFromSurface(renderer, textSNourriture);
 
+            if (textTNourriture == NULL) {
+                SDL_Log("Erreur lors de la création de la texture du texte : %s", SDL_GetError());
 
-        if (textTNourriture == NULL) {
-            SDL_Log("Erreur lors de la création de la texture du texte : %s", SDL_GetError());
+            } else {
+                SDL_Rect textCase1 = {resourceCase1.x + 50, resourceCase1.y + 5, textSNourriture->w, textSNourriture->h};
+                SDL_RenderCopy(renderer, textTNourriture, NULL, &textCase1);
+                SDL_DestroyTexture(textTNourriture);
+            }
 
-        } else {
-            SDL_Rect textCase1 = {resourceCase1.x + 50, resourceCase1.y + 5, textSNourriture->w, textSNourriture->h};
-            SDL_RenderCopy(renderer, textTNourriture, NULL, &textCase1);
-            SDL_DestroyTexture(textTNourriture);
+            SDL_FreeSurface(textSNourriture);
         }
-
-        SDL_FreeSurface(textSNourriture);
-    }
     }
 
     SDL_Rect resourceCase2 = {170, 10, 100, 30};
@@ -117,7 +118,8 @@ void LoadGameResources(SDL_Renderer * renderer) {
     if (font == NULL) {
         SDL_Log("Erreur lors du chargement de la police : %s", TTF_GetError());
     } else {
-        char *textQWater = "16";
+        char *textQWater [20];
+        sprintf(textQWater, "%d", resources.food);
         SDL_Surface *textSWater = TTF_RenderText_Solid(font, textQWater, textColor);
 
         if (textSWater == NULL) {
@@ -164,7 +166,8 @@ void LoadGameResources(SDL_Renderer * renderer) {
     if (font == NULL) {
         SDL_Log("Erreur lors du chargement de la police : %s", TTF_GetError());
     } else {
-        char *textQHeart = "100";
+        char *textQHeart [20];
+        sprintf(textQHeart, "%d", resources.food);
         SDL_Surface *textSHeart = TTF_RenderText_Solid(font, textQHeart, textColor);
 
         if (textSHeart == NULL) {

@@ -19,6 +19,8 @@ typedef struct {
     int medicine;
 } Resources;
 
+extern Resources resources;
+
 void initializeResources(Resources *resources);
 
 void deductResources(Resources *resources, int survivors);
