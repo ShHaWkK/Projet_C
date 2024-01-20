@@ -191,13 +191,15 @@ void Game_Init() {
 
     // Initialisation de la carte et du joueur
 
-    initGameMap(&gameWorld.map, renderer, mountainTexture);
-    loadMountainTexture(renderer);
-    mountainTexture = IMG_LoadTexture(renderer, "../assets/images/mountain.png");
-    if (mountainTexture == NULL) {
+    // Load the textures for the game map
+    initGameMap(&gameWorld.map, renderer, NULL);
+    gameWorld.map.mountainTexture = IMG_LoadTexture(renderer, "../assets/images/mountain.png"); // Load mountain texture
+    if (gameWorld.map.mountainTexture == NULL) {
         Log(LOG_ERROR, "Failed to load mountain texture: %s", IMG_GetError());
     }
-    initGameMap(&gameWorld.map, renderer, mountainTexture);
+
+    // Load the base texture for the underground area
+    loadBaseTexture(renderer, &gameWorld.map);
 
     //initMap(renderer);
    initPlayer(renderer);
