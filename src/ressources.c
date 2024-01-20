@@ -6,12 +6,19 @@
 #include "../include/Log.h"
 #include "../include/include.h"
 
-Resources resources;  // Définition de la variable globale
+
+Uint32 lastResourceCreationTime = 0;
+
+
+Uint32 resourceCreationInterval = 5000;
+
+Resources resources;
 void initializeResources(Resources *resources) {
     resources->food = 100;
     resources->water = 50;
     resources->medicine = 30;
 }
+
 
 
 void deductResources(Resources *resources, int survivors) {
@@ -72,7 +79,7 @@ void LoadGameResources(SDL_Renderer * renderer) {
         SDL_Log("Erreur lors du chargement de la police : %s", TTF_GetError());
     } else {
         char textQNourriture[20];
-        sprintf(textQNourriture, "%d", resources.food);  
+        sprintf(textQNourriture, "%d", resources.food);
         SDL_Surface *textSNourriture = TTF_RenderText_Solid(font, textQNourriture, textColor);
 
         if (textSNourriture == NULL) {
@@ -190,4 +197,18 @@ void LoadGameResources(SDL_Renderer * renderer) {
         }
     }
         TTF_CloseFont(font);
+}
+
+void HandleResourceGeneration(Resources *resources) {
+    Uint32 currentTime = SDL_GetTicks();
+    if (currentTime - lastResourceCreationTime >= resourceCreationInterval) {
+        
+        printf("Ressources créées!\n");
+        lastResourceCreationTime = currentTime;
+    }
+}
+
+int playerIsInsideProductionZone(int playerX, int playerY, ProductionZone *productionZone) {
+    return (playerX >= productionZone->x && playerX <= productionZone->x + productionZone->width &&
+            playerY >= productionZone->y && playerY <= productionZone->y + productionZone->height);
 }
