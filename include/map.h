@@ -18,6 +18,10 @@
 #define MOUNTAIN_HEIGHT 200
 #define ENTRANCE_WIDTH 100
 #define ENTRANCE_HEIGHT 50
+#define BASE_WIDTH 400
+#define BASE_HEIGHT 100
+#define BASE_POS_X ((WINDOW_WIDTH - BASE_WIDTH) / 2)
+#define BASE_POS_Y (GROUND_Y + GROUND_HEIGHT)
 
 #define MOUNTAIN_POS_X (WINDOW_WIDTH - MOUNTAIN_WIDTH - 2 + 10)
 #define MOUNTAIN_POS_Y (SKY_HEIGHT - MOUNTAIN_HEIGHT - 20 + 45)
@@ -37,6 +41,7 @@ static SDL_Texture* mountainTexture = NULL;
 typedef struct {
     SDL_Rect rect;
     SDL_Texture* texture;
+    SDL_Texture* baseTexture;
 } TunnelEntrance;
 
 typedef struct {
@@ -45,7 +50,9 @@ typedef struct {
     SDL_Rect mountain;
     SDL_Rect entrance;
     SDL_Rect souterraine;
-    TunnelEntrance tunnelEntrance; // Adding the tunnel entrance
+    TunnelEntrance tunnelEntrance;
+    SDL_Texture* mountainTexture;
+    SDL_Texture* baseTexture;
 } GameMap;
 
 void initPlayer();
@@ -68,4 +75,5 @@ void renderGameMap(GameMap* map, SDL_Renderer* renderer);
 void freeGameMapResources();
 void initTunnelEntrance(GameMap* map, SDL_Renderer* renderer);
 void loadMountainTexture(SDL_Renderer* renderer);
+void loadBaseTexture(SDL_Renderer* renderer, GameMap* map);
 #endif // MAP_H
