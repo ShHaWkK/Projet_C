@@ -5,10 +5,19 @@
 #include "../include/database.h"
 #include "../include/Log.h"
 #include "../include/include.h"
+
+void initializeResources(Resources *resources) {
+    resources->food = 100;
+    resources->water = 50;
+    resources->medicine = 30;
+}
+
+
+
 void LoadGameResources(SDL_Renderer * renderer) {
     //initialisation du fonts
-    SDL_Color textColor = {255, 255, 255};  // Couleur du texte (blanc dans cet exemple)
-    TTF_Font* font = TTF_OpenFont("../assets/fonts/arial.ttf", 20);  // Ajustez la police et la taille selon vos besoins
+    SDL_Color textColor = {255, 255, 255};
+    TTF_Font* font = TTF_OpenFont("../assets/fonts/arial.ttf", 20);
 
     //Affiche la barre de fonds
     SDL_Rect resourceBar = {0, 0, 800, 50};
@@ -34,9 +43,9 @@ void LoadGameResources(SDL_Renderer * renderer) {
         // Vous pouvez également utiliser une couleur unie à la place de l'image
         SDL_SetRenderDrawColor(renderer, 0, 255, 0, SDL_ALPHA_OPAQUE);
     } else {
-        // Utilisation de la texture pour la couleur de la case
+
         SDL_RenderCopy(renderer, textureNourriture, NULL, &iconeCase1);
-        // N'oubliez pas de libérer la texture lorsque vous n'en avez plus besoin
+
         SDL_DestroyTexture(textureNourriture);
     }
 
@@ -49,14 +58,14 @@ void LoadGameResources(SDL_Renderer * renderer) {
 
         if (textSNourriture == NULL) {
             SDL_Log("Erreur lors du rendu du texte : %s", TTF_GetError());
-            // Gestion des erreurs
+            /
         } else {
             SDL_Texture * textTNourriture = SDL_CreateTextureFromSurface(renderer, textSNourriture);
 
 
         if (textTNourriture == NULL) {
             SDL_Log("Erreur lors de la création de la texture du texte : %s", SDL_GetError());
-            // Gestion des erreurs
+
         } else {
             SDL_Rect textCase1 = {resourceCase1.x + 50, resourceCase1.y + 5, textSNourriture->w, textSNourriture->h};
             SDL_RenderCopy(renderer, textTNourriture, NULL, &textCase1);
@@ -77,14 +86,14 @@ void LoadGameResources(SDL_Renderer * renderer) {
 
     SDL_Texture* textureWater = IMG_LoadTexture(renderer, "../assets/images/water.png");
     if (textureWater == NULL) {
-        // Gestion des erreurs lors du chargement de l'image
+
         SDL_Log("Erreur lors du chargement de l'image : %s", IMG_GetError());
-        // Vous pouvez également utiliser une couleur unie à la place de l'image
+
         SDL_SetRenderDrawColor(renderer, 0, 0, 255, SDL_ALPHA_OPAQUE);
     } else {
-        // Utilisation de la texture pour la couleur de la case
+
         SDL_RenderCopy(renderer, textureWater, NULL, &iconeCase2);
-        // N'oubliez pas de libérer la texture lorsque vous n'en avez plus besoin
+
         SDL_DestroyTexture(textureWater);
     }
 
@@ -96,14 +105,14 @@ void LoadGameResources(SDL_Renderer * renderer) {
 
         if (textSWater == NULL) {
             SDL_Log("Erreur lors du rendu du texte : %s", TTF_GetError());
-            // Gestion des erreurs
+
         } else {
             SDL_Texture * textTWater = SDL_CreateTextureFromSurface(renderer, textSWater);
 
 
             if (textTWater == NULL) {
                 SDL_Log("Erreur lors de la création de la texture du texte : %s", SDL_GetError());
-                // Gestion des erreurs
+
             } else {
                 SDL_Rect textCase2 = {resourceCase2.x + 50, resourceCase2.y + 5, textSWater->w, textSWater->h};
                 SDL_RenderCopy(renderer, textTWater ,NULL, &textCase2);
@@ -126,12 +135,12 @@ void LoadGameResources(SDL_Renderer * renderer) {
     if (textureHeart == NULL) {
         // Gestion des erreurs lors du chargement de l'image
         SDL_Log("Erreur lors du chargement de l'image : %s", IMG_GetError());
-        // Vous pouvez également utiliser une couleur unie à la place de l'image
+
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
     } else {
-        // Utilisation de la texture pour la couleur de la case
+
         SDL_RenderCopy(renderer, textureHeart, NULL, &iconeCase3);
-        // N'oubliez pas de libérer la texture lorsque vous n'en avez plus besoin
+
         SDL_DestroyTexture(textureHeart);
     }
 
@@ -143,14 +152,14 @@ void LoadGameResources(SDL_Renderer * renderer) {
 
         if (textSHeart == NULL) {
             SDL_Log("Erreur lors du rendu du texte : %s", TTF_GetError());
-            // Gestion des erreurs
+
         } else {
             SDL_Texture * textTHeart = SDL_CreateTextureFromSurface(renderer, textSHeart);
 
 
             if (textTHeart == NULL) {
                 SDL_Log("Erreur lors de la création de la texture du texte : %s", SDL_GetError());
-                // Gestion des erreurs
+
             } else {
                 SDL_Rect textCase3 = {resourceCase3.x + 50, resourceCase3.y + 5, textSHeart->w, textSHeart->h};
                 SDL_RenderCopy(renderer, textTHeart ,NULL, &textCase3);
