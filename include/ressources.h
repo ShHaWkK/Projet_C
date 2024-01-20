@@ -8,10 +8,8 @@
 
 void LoadGameResources(SDL_Renderer* renderer);
 typedef struct {
-    int id_resources;
-    int type;
-    int quantity;
-} Ressources;
+    int x, y, width, height;
+} ProductionZone;
 
 typedef struct {
     int food;
@@ -24,6 +22,7 @@ extern Resources resources;
 void initializeResources(Resources *resources);
 
 void deductResources(Resources *resources, int survivors);
-
+void HandleResourceGeneration(Resources *resources);
+int playerIsInsideProductionZone(int playerX, int playerY, ProductionZone *productionZone);
 
 #endif //PROJET_C_RESSOURCES_H
