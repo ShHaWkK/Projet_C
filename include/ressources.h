@@ -6,10 +6,22 @@
 #define PROJET_C_RESSOURCES_H
 #include "include.h"
 
-void LoadGameResources(SDL_Renderer * renderer);
+void LoadGameResources(SDL_Renderer* renderer);
 typedef struct {
     int id_resources;
     int type;
     int quantity;
 } Ressources;
+
+typedef struct {
+    int food;
+    int water;
+    int medicine;
+} Resources;
+
+void initializeResources(Resources *resources);
+
+
+
+
 #endif //PROJET_C_RESSOURCES_H
