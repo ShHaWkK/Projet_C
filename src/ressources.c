@@ -28,7 +28,7 @@ void deductResources(Resources *resources, int survivors) {
     if (resources->medicine < 0) resources->medicine = 0;
 
 
- 
+
 }
 
 void LoadGameResources(SDL_Renderer * renderer) {
@@ -75,7 +75,7 @@ void LoadGameResources(SDL_Renderer * renderer) {
 
         if (textSNourriture == NULL) {
             SDL_Log("Erreur lors du rendu du texte : %s", TTF_GetError());
-            /
+            
         } else {
             SDL_Texture * textTNourriture = SDL_CreateTextureFromSurface(renderer, textSNourriture);
 
