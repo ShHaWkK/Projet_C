@@ -125,7 +125,7 @@ void LoadGameResources(SDL_Renderer * renderer) {
     if (font == NULL) {
         SDL_Log("Erreur lors du chargement de la police : %s", TTF_GetError());
     } else {
-        char *textQWater [20];
+        char textQWater [20];
         sprintf(textQWater, "%d", resources.food);
         SDL_Surface *textSWater = TTF_RenderText_Solid(font, textQWater, textColor);
 
@@ -173,7 +173,7 @@ void LoadGameResources(SDL_Renderer * renderer) {
     if (font == NULL) {
         SDL_Log("Erreur lors du chargement de la police : %s", TTF_GetError());
     } else {
-        char *textQHeart [20];
+        char textQHeart [20];
         sprintf(textQHeart, "%d", resources.food);
         SDL_Surface *textSHeart = TTF_RenderText_Solid(font, textQHeart, textColor);
 
@@ -202,7 +202,7 @@ void LoadGameResources(SDL_Renderer * renderer) {
 void HandleResourceGeneration(Resources *resources) {
     Uint32 currentTime = SDL_GetTicks();
     if (currentTime - lastResourceCreationTime >= resourceCreationInterval) {
-        
+
         printf("Ressources créées!\n");
         lastResourceCreationTime = currentTime;
     }
