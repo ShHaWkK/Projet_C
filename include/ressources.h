@@ -21,7 +21,7 @@ typedef struct {
 
 void initializeResources(Resources *resources);
 
-
+void deductResources(Resources *resources, int survivors);
 
 
 #endif //PROJET_C_RESSOURCES_H
