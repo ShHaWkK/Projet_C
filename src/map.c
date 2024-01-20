@@ -87,49 +87,40 @@ void initGameMap(GameMap* map, SDL_Renderer* renderer, SDL_Texture* mountainText
 //--------------------Function renderGameMap ---------------------//
 
 void renderGameMap(GameMap* map, SDL_Renderer* renderer) {
-        // Rendu du ciel
-        SDL_SetRenderDrawColor(renderer, 135, 206, 250, 255); // Couleur du ciel
-        SDL_RenderFillRect(renderer, &map->sky);
+    // Render the sky
+    SDL_SetRenderDrawColor(renderer, 135, 206, 250, 255); // Sky color
+    SDL_RenderFillRect(renderer, &map->sky);
 
-        // Rendu du sol
-        //SDL_SetRenderDrawColor(renderer, 139, 69, 19, 255); // Couleur du sol
-        //SDL_RenderFillRect(renderer, &map->ground);
-        // Rendu du sol avec la texture de pierre
-        if (map->baseTexture != NULL) {
-            SDL_RenderCopy(renderer, map->baseTexture, NULL, &map->ground);
-        } else {
-            // Remplissage par défaut si la texture n'est pas chargée
-            SDL_SetRenderDrawColor(renderer, 139, 69, 19, 255);
-            SDL_RenderFillRect(renderer, &map->ground);
-        }
-
-        // Rendu de la montagne
-        if (map->mountainTexture != NULL) {
-            SDL_RenderCopy(renderer, map->mountainTexture, NULL, &map->mountain);
-        }
-
-        // Rendu de l'entrée du tunnel
-        if (map->tunnelEntrance.texture != NULL) {
-            SDL_RenderCopy(renderer, map->tunnelEntrance.texture, NULL, &map->entrance);
-        }
-
-    // Render the base of the underground area with a brown color instead of the stone texture
-    SDL_Rect brownAreaRect = {map->souterraine.x, map->souterraine.y, map->souterraine.w, map->souterraine.h};
-    SDL_SetRenderDrawColor(renderer, 139, 69, 19, 255); // Brown color
-    SDL_RenderFillRect(renderer, &brownAreaRect);
-
-
-    SDL_Rect levelRect;
-    for (int i = 0; i < 3; i++) {
-        levelRect = (SDL_Rect){0, UNDERGROUND_Y + (UNDERGROUND_LEVEL_HEIGHT * i), WINDOW_WIDTH, UNDERGROUND_LEVEL_HEIGHT};
-        SDL_SetRenderDrawColor(renderer, 192, 192, 192, 255);
-        SDL_RenderFillRect(renderer, &levelRect);
+    // Render the ground with texture
+    if (map->baseTexture != NULL) {
+        SDL_RenderCopy(renderer, map->baseTexture, NULL, &map->ground);
+    } else {
+        // Default fill if texture is not loaded
+        SDL_SetRenderDrawColor(renderer, 139, 69, 19, 255); // Ground color
+        SDL_RenderFillRect(renderer, &map->ground);
     }
 
+    // Render the mountain
+    if (map->mountainTexture != NULL) {
+        SDL_RenderCopy(renderer, map->mountainTexture, NULL, &map->mountain);
+    }
 
+    // Render the tunnel entrance
+    if (map->tunnelEntrance.texture != NULL) {
+        SDL_RenderCopy(renderer, map->tunnelEntrance.texture, NULL, &map->entrance);
+    }
 
+    // Render the underground base with texture
+    if (map->baseTexture != NULL) {
+        SDL_RenderCopy(renderer, map->baseTexture, NULL, &map->souterraine);
+    } else {
+        // Fill with brown color if texture is not loaded
+        SDL_SetRenderDrawColor(renderer, 139, 69, 19, 255); // Brown color for the base
+        SDL_RenderFillRect(renderer, &map->souterraine);
+    }
 
 }
+
 //--------------------Function freeGameMapResources ---------------------//
 
 void freeGameMapResources() {
