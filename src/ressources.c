@@ -13,6 +13,23 @@ void initializeResources(Resources *resources) {
 }
 
 
+void deductResources(Resources *resources, int survivors) {
+
+    int deductionRate = 5;
+
+
+    resources->food -= deductionRate * survivors;
+    resources->water -= deductionRate * survivors;
+    resources->medicine -= deductionRate * survivors;
+
+
+    if (resources->food < 0) resources->food = 0;
+    if (resources->water < 0) resources->water = 0;
+    if (resources->medicine < 0) resources->medicine = 0;
+
+
+ 
+}
 
 void LoadGameResources(SDL_Renderer * renderer) {
     //initialisation du fonts
