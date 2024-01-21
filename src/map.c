@@ -8,148 +8,73 @@
 #include "../include/include.h"
 
 //#define TERRE_TEXTURE_PATH "../assets/images/bloc.png" // Replace with the actual path to your "terre" image
-#define PLAYER_TEXTURE_PATH "../assets/images/marioArretDroite.png" // Replace with the actual path to your player image
-//#define DEFAULT_TEXTURE_PATH "../assets/images/default.png" // Replace with the actual path to your default image
-
 
 #define SIZE_BLOCK 32
 Player player;
-/*
+SDL_Texture* baseTexture = NULL;
+SDL_Texture* tunnelTextures[NUM_TUNNELS];
 
-/*
-void initMap(SDL_Renderer* renderer) {
-    for (int i = 0; i < ROWS; i++) {
-        for (int j = 0; j < COLS; j++) {
-            map[i][j].area.x = j * SIZE_BLOCK;
-            map[i][j].area.y = i * SIZE_BLOCK;
-            map[i][j].area.w = SIZE_BLOCK;
-            map[i][j].area.h = SIZE_BLOCK;
-
-            // Assign the correct texture based on the map type
-            if (mapArray[i][j] == TERRE) {
-                map[i][j].texture = loadTexture(TERRE_TEXTURE_PATH, renderer);
-            } else {
-                map[i][j].texture = loadTexture(DEFAULT_TEXTURE_PATH, renderer);
-            }
-        }
+//------------      LoadTexture      ------------//
+// Fonction générique pour charger une texture
+SDL_Texture* loadTexture(const char* filePath, SDL_Renderer* renderer) {
+    SDL_Texture* texture = IMG_LoadTexture(renderer, filePath);
+    if (texture == NULL) {
+        fprintf(stderr, "Failed to load texture %s: %s\n", filePath, IMG_GetError());
     }
-}
-*/
-void initPlayer(SDL_Renderer* renderer) {
-    player.position.x = 0; // Starting position
-    player.position.y = 0;
-    player.position.w = SIZE_BLOCK; // Player's size
-    player.position.h = SIZE_BLOCK;
-    //player.texture = loadTexture(PLAYER_TEXTURE_PATH, renderer); // Load the player texture
+    return texture;
 }
 
-void renderPlayer(SDL_Renderer* renderer) {
-    SDL_RenderCopy(renderer, player.texture, NULL, &player.position);
-}
-
-void freePlayerTexture() {
-    if (player.texture != NULL) {
-        SDL_DestroyTexture(player.texture);
-        player.texture = NULL;
+void loadAllTextures(GameMap* map, SDL_Renderer* renderer) {
+    map->mountainTexture = loadTexture("../assets/images/mountain.png", renderer);
+    map->baseTexture = loadTexture("../assets/images/stone.png", renderer);
+    map->tunnelEntranceTexture = loadTexture("../assets/images/tunnelEntrance.png", renderer);
+    map->souterraineTexture = loadTexture("../assets/images/tunnel.png", renderer);
+    for (int i = 0; i < NUM_TUNNELS; i++) {
+        map->tunnels[i].texture = loadTexture("../assets/images/tunnel.png", renderer);
     }
 }
 
-
-
-
-
-void loadMountainTexture(SDL_Renderer* renderer) {
-    mountainTexture = IMG_LoadTexture(renderer, "../assets/images/mountain.png");
-    if (mountainTexture == NULL) {
-        printf("Failed to load mountain texture: %s\n", IMG_GetError());
+void freeAllTextures(GameMap* map) {
+    if (map->mountainTexture) SDL_DestroyTexture(map->mountainTexture);
+    if (map->baseTexture) SDL_DestroyTexture(map->baseTexture);
+    if (map->tunnelEntranceTexture) SDL_DestroyTexture(map->tunnelEntranceTexture);
+    if (map->souterraineTexture) SDL_DestroyTexture(map->souterraineTexture);
+    for (int i = 0; i < NUM_TUNNELS; i++) {
+        if (map->tunnels[i].texture) SDL_DestroyTexture(map->tunnels[i].texture);
     }
 }
 
-//--------------------Function initGameMap ---------------------//
-void initGameMap(GameMap* map, SDL_Renderer* renderer, SDL_Texture* mountainTexture) {
-    // Ciel
+void initGameMap(GameMap* map, SDL_Renderer* renderer) {
+    // Initialisation des zones
     map->sky = (SDL_Rect) {0, 0, WINDOW_WIDTH, SKY_HEIGHT};
-
-    // Sol
     map->ground = (SDL_Rect) {0, SKY_HEIGHT, WINDOW_WIDTH, GROUND_HEIGHT};
+    map->mountain = (SDL_Rect){MOUNTAIN_POS_X, MOUNTAIN_POS_Y, MOUNTAIN_WIDTH, MOUNTAIN_HEIGHT};
+    map->entrance = (SDL_Rect){ENTRANCE_POS_X, ENTRANCE_POS_Y, ENTRANCE_WIDTH, ENTRANCE_HEIGHT};
+    map->souterraine = (SDL_Rect){BASE_POS_X, BASE_POS_Y, BASE_WIDTH, BASE_HEIGHT};
 
-    // Montagne
-    int mountainPosX = 0;
-    int mountainPosY = MOUNTAIN_POS_Y;
-    map->mountain = (SDL_Rect){MOUNTAIN_POS_X, mountainPosY, MOUNTAIN_WIDTH, MOUNTAIN_HEIGHT};
-
-    int entrancePosY = mountainPosY + MOUNTAIN_HEIGHT - ENTRANCE_HEIGHT; 
-    map->entrance = (SDL_Rect) {ENTRANCE_POS_X, ENTRANCE_POS_Y, ENTRANCE_WIDTH, ENTRANCE_HEIGHT};
-    // Zone souterraine
-    map->souterraine = (SDL_Rect) {BASE_POS_X, BASE_POS_Y, BASE_WIDTH, BASE_HEIGHT};
+    // Chargement des textures
+    loadAllTextures(map, renderer);
 }
-
-//--------------------Function renderGameMap ---------------------//
 
 void renderGameMap(GameMap* map, SDL_Renderer* renderer) {
-    // Render the sky
-    SDL_SetRenderDrawColor(renderer, 135, 206, 250, 255); // Sky color
+    // Rendu du ciel, du sol, de la montagne, de l'entrée et des tunnels
+    SDL_SetRenderDrawColor(renderer, 135, 206, 250, 255); // Couleur du ciel
     SDL_RenderFillRect(renderer, &map->sky);
 
-    // Render the ground with texture
-    if (map->baseTexture != NULL) {
-        SDL_RenderCopy(renderer, map->baseTexture, NULL, &map->ground);
-    } else {
-        // Default fill if texture is not loaded
-        SDL_SetRenderDrawColor(renderer, 139, 69, 19, 255); // Ground color
-        SDL_RenderFillRect(renderer, &map->ground);
+    SDL_RenderCopy(renderer, map->baseTexture, NULL, &map->ground);
+    SDL_RenderCopy(renderer, map->mountainTexture, NULL, &map->mountain);
+    SDL_RenderCopy(renderer, map->tunnelEntranceTexture, NULL, &map->entrance);
+
+    if (map->souterraineTexture) {
+        SDL_RenderCopy(renderer, map->souterraineTexture, NULL, &map->souterraine);
+    }
+    for (int i = 0; i < NUM_TUNNELS; i++) {
+        SDL_RenderCopy(renderer, map->tunnels[i].texture, NULL, &map->tunnels[i].rect);
     }
 
-    // Render the mountain
-    if (map->mountainTexture != NULL) {
-        SDL_RenderCopy(renderer, map->mountainTexture, NULL, &map->mountain);
-    }
-
-    // Render the tunnel entrance
-    if (map->tunnelEntrance.texture != NULL) {
-        SDL_RenderCopy(renderer, map->tunnelEntrance.texture, NULL, &map->entrance);
-    }
-
-    // Render the underground base with texture
-    if (map->baseTexture != NULL) {
-        SDL_RenderCopy(renderer, map->baseTexture, NULL, &map->souterraine);
-    } else {
-        // Fill with brown color if texture is not loaded
-        SDL_SetRenderDrawColor(renderer, 139, 69, 19, 255); // Brown color for the base
-        SDL_RenderFillRect(renderer, &map->souterraine);
-    }
-
+    SDL_RenderCopy(renderer, map->baseTexture, NULL, &map->souterraine);
 }
 
-//--------------------Function freeGameMapResources ---------------------//
-
-void freeGameMapResources() {
-    if (mountainTexture != NULL) {
-        SDL_DestroyTexture(mountainTexture);
-        mountainTexture = NULL;
-    }
-}
-
-void initTunnelEntrance(GameMap* map, SDL_Renderer* renderer) {
-    // Chargez la texture du tunnel
-    SDL_Texture* tunnelTexture = IMG_LoadTexture(renderer, "chemin/vers/texture_tunnel.png");
-    if (tunnelTexture == NULL) {
-        printf("Failed to load tunnel texture: %s\n", IMG_GetError());
-    }
-
-    // Configurez le rectangle pour l'entrée du tunnel
-    int tunnelPosX = WINDOW_WIDTH - MOUNTAIN_WIDTH; // Ajustez si nécessaire
-    int tunnelPosY = GROUND_Y;
-    map->tunnelEntrance.rect = (SDL_Rect){tunnelPosX, tunnelPosY, TUNNEL_WIDTH, TUNNEL_HEIGHT};
-    map->tunnelEntrance.texture = tunnelTexture;
-}
-
-// This function should be defined in one of your .c files
-void loadBaseTexture(SDL_Renderer* renderer, GameMap* map) {
-    const char* baseTexturePath = "../assets/images/stone.png"; // Make sure this path is correct
-    map->baseTexture = IMG_LoadTexture(renderer, baseTexturePath);
-    if (map->baseTexture == NULL) {
-        fprintf(stderr, "Failed to load base floor texture: %s\n", IMG_GetError());
-        // Handle error as needed
-    }
+void freeGameMapResources(GameMap* map) {
+    freeAllTextures(map);
 }
