@@ -192,17 +192,17 @@ void Game_Init() {
     // Initialisation de la carte et du joueur
 
     // Load the textures for the game map
-    initGameMap(&gameWorld.map, renderer, NULL);
+    initGameMap(&gameWorld.map, renderer);
     gameWorld.map.mountainTexture = IMG_LoadTexture(renderer, "../assets/images/mountain.png"); // Load mountain texture
     if (gameWorld.map.mountainTexture == NULL) {
         Log(LOG_ERROR, "Failed to load mountain texture: %s", IMG_GetError());
     }
 
     // Load the base texture for the underground area
-    loadBaseTexture(renderer, &gameWorld.map);
+//    loadBaseTexture(renderer, &gameWorld.map);
 
     //initMap(renderer);
-   initPlayer(renderer);
+//   initPlayer(renderer);
 
 
 }
@@ -306,11 +306,7 @@ void Game_Shutdown() {
     //freeMapTextures();
     //freePlayerTexture();
     //freeGameMap(&gameWorld.map);
-    if (mountainTexture != NULL) {
-        SDL_DestroyTexture(mountainTexture);
-        mountainTexture = NULL;
-    }
-    freeGameMapResources();
+    freeGameMapResources(&gameWorld.map);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     TTF_Quit();
