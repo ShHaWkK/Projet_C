@@ -7,12 +7,11 @@
 #include "../include/map.h"
 #include "../include/include.h"
 
-//#define TERRE_TEXTURE_PATH "../assets/images/bloc.png" // Replace with the actual path to your "terre" image
-
 #define SIZE_BLOCK 32
 Player player;
 SDL_Texture* baseTexture = NULL;
 SDL_Texture* tunnelTextures[NUM_TUNNELS];
+Elevator elevator;
 
 //------------      LoadTexture      ------------//
 // Fonction générique pour charger une texture
