@@ -57,6 +57,7 @@ typedef struct {
     SDL_Texture* souterraineTexture;
     SDL_Texture* tunnelEntranceTexture;
     SDL_Texture* ladderTexture;
+    SDL_Texture* elevatorTexture;
 } GameMap;
 
 // Structure for the map as a whole
@@ -67,10 +68,12 @@ typedef struct {
 
 
 typedef struct {
-    SDL_Rect rect;       // Position et taille de l'ascenseur
-    SDL_Texture* texture; // Texture de l'ascenseur
-    int startY;          // Position de départ en Y
-    int endY;            // Position de fin en Y
+    SDL_Rect rect;
+    SDL_Texture* texture;
+    int startY;
+    int endY;
+    int speed; // Vitesse de l'ascenseur
+    int movingUp; // Direction de l'ascenseur, 1 pour monter, 0 pour descendre
 } Elevator;
 
 

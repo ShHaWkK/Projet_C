@@ -30,6 +30,7 @@ void loadAllTextures(GameMap* map, SDL_Renderer* renderer)
     map->baseTexture = loadTexture("../assets/images/stone.png", renderer);
     map->souterraineTexture = loadTexture("../assets/images/tunnel.png", renderer);
     map->undergroundBaseTexture= loadTexture("../assets/images/souterrain.png",renderer);
+    map->elevatorTexture = loadTexture("../assets/images/bloc.png", renderer);
 }
 //------------      freeAllTextures      ------------//
 
@@ -45,24 +46,26 @@ void freeAllTextures(GameMap* map) {
         if (map->tunnels[i].texture) SDL_DestroyTexture(map->tunnels[i].texture);
     }
 }
-//------------      initGameMap      ------------//
+//------------                          initGameMap                       ------------//
 
-void initGameMap(GameMap* map, SDL_Renderer* renderer)
-{
+void initGameMap(GameMap* map, SDL_Renderer* renderer) {
+    int mountainBottom = map->mountain.y + map->mountain.h;
     // Initialisation des zones
     map->sky = (SDL_Rect) {0, 0, WINDOW_WIDTH, SKY_HEIGHT};
     map->ground = (SDL_Rect) {0, SKY_HEIGHT, WINDOW_WIDTH, GROUND_HEIGHT};
-    map->mountain = (SDL_Rect){MOUNTAIN_POS_X, MOUNTAIN_POS_Y, MOUNTAIN_WIDTH, MOUNTAIN_HEIGHT};
-    map->entrance = (SDL_Rect){ENTRANCE_POS_X, ENTRANCE_POS_Y, ENTRANCE_WIDTH, ENTRANCE_HEIGHT};
-    map->souterraine = (SDL_Rect){BASE_POS_X, BASE_POS_Y, BASE_WIDTH, BASE_HEIGHT};
-    map->mountain = (SDL_Rect){MOUNTAIN_POS_X, MOUNTAIN_POS_Y, MOUNTAIN_WIDTH, MOUNTAIN_HEIGHT};
+    map->mountain = (SDL_Rect) {MOUNTAIN_POS_X, MOUNTAIN_POS_Y, MOUNTAIN_WIDTH, MOUNTAIN_HEIGHT};
+    map->entrance = (SDL_Rect) {ENTRANCE_POS_X, ENTRANCE_POS_Y, ENTRANCE_WIDTH, ENTRANCE_HEIGHT};
+    map->souterraine = (SDL_Rect) {BASE_POS_X, BASE_POS_Y, BASE_WIDTH, BASE_HEIGHT};
+    map->mountain = (SDL_Rect) {MOUNTAIN_POS_X, MOUNTAIN_POS_Y, MOUNTAIN_WIDTH, MOUNTAIN_HEIGHT};
 
     loadAllTextures(map, renderer);
-    initElevator(&elevator, WINDOW_WIDTH / 2 - SIZE_BLOCK, map->ground.y + map->ground.h, BASE_POS_Y, map->baseTexture);
+    initElevator(&elevator, WINDOW_WIDTH / 2 - SIZE_BLOCK, mountainBottom - elevator.rect.h, BASE_POS_Y, map->elevatorTexture);
+    initElevator(&elevator, WINDOW_WIDTH / 2 - SIZE_BLOCK, map->mountain.y + map->mountain.h, BASE_POS_Y, map->elevatorTexture);
 }
-//------------      renderGameMap      ------------//
+//------------                              renderGameMap                 ------------//
 
 void renderGameMap(GameMap* map, SDL_Renderer* renderer) {
+
     // Render the sky
     SDL_SetRenderDrawColor(renderer, 135, 206, 250, 255); // Sky color
     SDL_RenderFillRect(renderer, &map->sky);
@@ -70,7 +73,12 @@ void renderGameMap(GameMap* map, SDL_Renderer* renderer) {
     // Render the mountain
     SDL_RenderCopy(renderer, map->mountainTexture, NULL, &map->mountain);
 
-    int caveHeight = WINDOW_HEIGHT / 2; // Hauteur à laquelle la grotte commence.
+    elevator.rect.y = map->mountain.y + map->mountain.h; // Assurez-vous que c'est le bord inférieur de la montagne
+    SDL_RenderCopy(renderer, elevator.texture, NULL, &elevator.rect);
+
+
+
+    int caveHeight = WINDOW_HEIGHT / 2;
     int caveCeilingThickness = SIZE_BLOCK * 3;
 
     for (int x = 0; x < WINDOW_WIDTH; x += SIZE_BLOCK) {
@@ -108,29 +116,42 @@ void renderGameMap(GameMap* map, SDL_Renderer* renderer) {
             SDL_RenderCopy(renderer, map->baseTexture, NULL, &stoneBlockRect);
         }
     }
+    SDL_RenderCopy(renderer, elevator.texture, NULL, &elevator.rect);
+    renderElevator(renderer, &elevator);
 
 
 }
 
-//------------      freeGameMapResources      ------------//
+//------------                          freeGameMapResources                 ------------//
 
 void freeGameMapResources(GameMap* map) {
     freeAllTextures(map);
 }
 
-//------------      Elevator      ------------//
+//------------                                  Elevator                    ------------//
+
 void initElevator(Elevator* elevator, int x, int startY, int endY, SDL_Texture* texture) {
     elevator->rect.x = x;
     elevator->rect.y = startY;
-    elevator->rect.w = SIZE_BLOCK * 2; // La largeur de l'ascenseur est de deux blocs
-    elevator->rect.h = SIZE_BLOCK * 4; // La hauteur de l'ascenseur est de quatre blocs
+    elevator->rect.w = SIZE_BLOCK * 2;
+    elevator->rect.h = SIZE_BLOCK * 4;
     elevator->startY = startY;
     elevator->endY = endY;
     elevator->texture = texture;
+    elevator->speed = 2;
+    elevator->movingUp = 1;
 }
 
 
 // Implementation of renderElevator function
 void renderElevator(SDL_Renderer* renderer, Elevator* elevator) {
     SDL_RenderCopy(renderer, elevator->texture, NULL, &elevator->rect);
+}
+void updateElevatorPosition(Elevator* elevator) {
+    // Déplacer l'ascenseur verticalement entre startY et endY
+    static int direction = 1;
+    elevator->rect.y += direction * 5; // Déplacez de 5 pixels par frame, ajustez selon vos besoins
+    if (elevator->rect.y <= elevator->startY || elevator->rect.y >= elevator->endY) {
+        direction *= -1;
+    }
 }
