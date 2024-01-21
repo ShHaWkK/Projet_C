@@ -36,6 +36,7 @@
 #define TUNNEL_HEIGHT 30
 #define BASE_POS_Y (GROUND_Y) // Débute juste après le sol
 #define BASE_HEIGHT (WINDOW_HEIGHT - BASE_POS_Y)
+#define LADDER_WIDTH 30
 
 typedef struct {
     SDL_Rect rect;
@@ -43,16 +44,19 @@ typedef struct {
 } Tunnel;
 
 typedef struct {
+    Tunnel tunnels[NUM_TUNNELS];
     SDL_Rect sky;
     SDL_Rect ground;
     SDL_Rect mountain;
     SDL_Rect entrance;
     SDL_Rect souterraine;
+    SDL_Rect undergroundBase;
+    SDL_Texture* undergroundBaseTexture;
     SDL_Texture* mountainTexture;
     SDL_Texture* baseTexture;
     SDL_Texture* souterraineTexture;
-    Tunnel tunnels[NUM_TUNNELS];
     SDL_Texture* tunnelEntranceTexture;
+    SDL_Texture* ladderTexture;
 } GameMap;
 
 // Structure for the map as a whole
@@ -61,10 +65,22 @@ typedef struct {
     SDL_Texture* texture; // Texture of the player
 } Player;
 
+
+typedef struct {
+    SDL_Rect rect;       // Position et taille de l'ascenseur
+    SDL_Texture* texture; // Texture de l'ascenseur
+    int startY;          // Position de départ en Y
+    int endY;            // Position de fin en Y
+} Elevator;
+
+
 void initGameMap(GameMap* map, SDL_Renderer* renderer);
 void renderGameMap(GameMap* map, SDL_Renderer* renderer);
 void freeGameMapResources(GameMap* map);
 void loadAllTextures(GameMap* map, SDL_Renderer* renderer);
 void freeAllTextures(GameMap* map);
+void initElevator(Elevator* elevator, int x, int startY, int endY, SDL_Texture* texture);
+void updateElevator(Elevator* elevator);
+void renderElevator(SDL_Renderer* renderer, Elevator* elevator);
 
 #endif // MAP_H
