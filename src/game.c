@@ -11,6 +11,7 @@
 #include "../include/text_input.h"
 #include "../include/trailer.h"
 #include "../include/logo.h"
+#include "../include/buildMenu.h"
 
 //-------------------------------
 
@@ -189,12 +190,14 @@ void Game_Init() {
 
 void Game_Run() {
     int running = 1;
+    int clear =1;
     SDL_Event event;
 
     int windowWidth = 800;
     int windowHeight = 600;
     Trailer_Init(&trailer);
     trailer.isActive = 1;
+
 
     Uint32 lastTime = SDL_GetTicks();
 
@@ -212,22 +215,47 @@ void Game_Run() {
             // Gestion des événements clavier pour les champs de saisie
             switch (event.type) {
                 case SDL_QUIT:
+
                     Log(LOG_INFO, "Événement SDL_QUIT détecté.");
                     running = 0;
                     break;
                 case SDL_KEYDOWN:
+
                     Log(LOG_INFO, "Événement SDL_KEYDOWN détecté.");
                     if (isNameSelected) {
                         handleKeyboardEvent(&event, playerName, &nameCursorPosition);
                     } else if (isSurnameSelected) {
                         handleKeyboardEvent(&event, playerSurname, &surnameCursorPosition);
                     }
+                    if (event.key.keysym.sym == SDLK_SPACE && !trailer.isActive) {
+                        SDL_RenderClear(renderer);
+                        clear=0;
+                        SDL_Log("Barre d'espace pressée");
+                        SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255); // Bleu
+                        SDL_RenderClear(renderer);
+                        RenderText1(renderer, font, "Votre texte ici", 400, 300);
+
+                       
+                        RenderClickableText1(renderer, font, "Cliquez ici", 400, 400, YourCallbackFunction);
+
+
+
+
+                    }
+
+
+
                     break;
                 default:
                     UI_HandleEvent(&event, &running);
                     break;
             }
         }
+
+
+
+
+
 
         // Gestion du trailer en dehors de la boucle des événements
         if (currentGameState == GAME_STATE_TRAILER) {
@@ -238,8 +266,6 @@ void Game_Run() {
             }
         }
 
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderClear(renderer);
 
         switch (currentGameState) {
             case MENU:
@@ -250,6 +276,7 @@ void Game_Run() {
                 RenderGameUI(renderer);
                 break;
             case GAME_STATE_CHARACTER_CREATION:
+
                 RenderCharacterCreationUI(renderer, font);
                 break;
             case GAME_STATE_TRAILER:
@@ -261,6 +288,10 @@ void Game_Run() {
 
         SDL_RenderPresent(renderer);
         SDL_Delay(16); // Régulation à environ 60 FPS
+        if (clear==1) {
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+            SDL_RenderClear(renderer);
+        }
     }
 }
 
