@@ -269,22 +269,10 @@ void Game_Run() {
 
         //a faire marcher
 
-        if (GetPlayerState() == PLAYER_STATE_TRAILER) {
-            Trailer_Update(&trailer, deltaTime);
-            if (!trailer.isActive) {
-
-                SetPlayerState(PLAYER_STATE_ACTIVE);
-            }
-        }
 
 
-        if (GetPlayerState() == PLAYER_STATE_ACTIVE) {
-            UpdatePlayerObject(&player, keystate);
-        }
-
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderClear(renderer);
-        RenderPlayerObject(renderer, &player);
+       // SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+       // SDL_RenderClear(renderer);
 
 
 
@@ -298,7 +286,18 @@ void Game_Run() {
                 ChangeGameState(GAME_RUNNING);
             }
         }
+        if (GetPlayerState() == PLAYER_STATE_TRAILER) {
+            Trailer_Update(&trailer, deltaTime);
+            if (!trailer.isActive) {
 
+                SetPlayerState(PLAYER_STATE_ACTIVE);
+            }
+        }
+
+
+        if (GetPlayerState() == PLAYER_STATE_ACTIVE) {
+            UpdatePlayerObject(&player, keystate);
+        }
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
@@ -311,7 +310,7 @@ void Game_Run() {
                 RenderGameUI(renderer);
                 renderGameMap(&gameWorld.map, renderer);
                 renderMovingBlock(renderer, &elevatorBlock, gameWorld.map.elevatorTexture);
-
+                RenderPlayerObject(renderer, &player);
 
                 // renderPlayer(renderer);
                 break;
