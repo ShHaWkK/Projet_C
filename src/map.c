@@ -119,6 +119,24 @@ void renderGameMap(GameMap* map, SDL_Renderer* renderer) {
         }
     }
 
+    // Render the lower cave structure
+    for (int y = caveFloorHeight; y < WINDOW_HEIGHT; y += SIZE_BLOCK) {
+        for (int x = 0; x < WINDOW_WIDTH; x += SIZE_BLOCK) {
+            // Si les blocs à enlever se trouvent sur la ligne y == 300, par exemple,
+            // et entre les colonnes x == 600 et x == 700, ajustez ces valeurs selon vos besoins.
+            if (y == 500 && (x >= 600 && x <= 700)) {
+                continue; // On saute la dessin des blocs dans cette plage
+            }
+
+            // Render the blocks to form the floor and walls of the cave
+            SDL_Rect stoneBlockRect = {x, y, SIZE_BLOCK, SIZE_BLOCK};
+            SDL_RenderCopy(renderer, map->baseTexture, NULL, &stoneBlockRect);
+        }
+    }
+    //Elevator texture
+
+    renderMovingBlock(renderer, &elevatorBlock, map->elevatorTexture);
+
 }
 
 //------------                          freeGameMapResources                 ------------//
@@ -148,15 +166,16 @@ void updateMovingBlockPosition(MovingBlock* block) {
     if (block->movingUp) {
         block->rect.y -= block->speed;
         if (block->rect.y <= block->minY) {
-            block->movingUp = 0; // Changement de direction vers le bas
+            block->movingUp = 0; // Change direction to down
         }
     } else {
         block->rect.y += block->speed;
         if (block->rect.y >= block->maxY) {
-            block->movingUp = 1; // Changement de direction vers le haut
+            block->movingUp = 1; // Change direction to up
         }
     }
 }
+
 
 // Fonction de rendu de l'ascenseur
 void renderMovingBlock(SDL_Renderer* renderer, MovingBlock* block, SDL_Texture* texture) {
