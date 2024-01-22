@@ -11,7 +11,6 @@
 Player player;
 SDL_Texture* baseTexture = NULL;
 SDL_Texture* tunnelTextures[NUM_TUNNELS];
-Elevator elevator;
 
 //------------      LoadTexture      ------------//
 // Fonction générique pour charger une texture
@@ -59,8 +58,10 @@ void initGameMap(GameMap* map, SDL_Renderer* renderer) {
     map->mountain = (SDL_Rect) {MOUNTAIN_POS_X, MOUNTAIN_POS_Y, MOUNTAIN_WIDTH, MOUNTAIN_HEIGHT};
 
     loadAllTextures(map, renderer);
-    initElevator(&elevator, WINDOW_WIDTH / 2 - SIZE_BLOCK, mountainBottom - elevator.rect.h, BASE_POS_Y, map->elevatorTexture);
-    initElevator(&elevator, WINDOW_WIDTH / 2 - SIZE_BLOCK, map->mountain.y + map->mountain.h, BASE_POS_Y, map->elevatorTexture);
+    MovingBlock elevatorBlock;
+    initMovingBlock(&elevatorBlock, 100, 300, 32, 64, 2, 200, 400);
+    updateMovingBlockPosition(&elevatorBlock);
+
 }
 //------------                              renderGameMap                 ------------//
 
@@ -73,10 +74,8 @@ void renderGameMap(GameMap* map, SDL_Renderer* renderer) {
     // Render the mountain
     SDL_RenderCopy(renderer, map->mountainTexture, NULL, &map->mountain);
 
-    elevator.rect.y = map->mountain.y + map->mountain.h; // Assurez-vous que c'est le bord inférieur de la montagne
-    SDL_RenderCopy(renderer, elevator.texture, NULL, &elevator.rect);
 
-
+    SDL_SetRenderDrawColor(renderer, 180, 180, 180, 255);
 
     int caveHeight = WINDOW_HEIGHT / 2;
     int caveCeilingThickness = SIZE_BLOCK * 3;
