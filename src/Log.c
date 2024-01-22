@@ -1,63 +1,54 @@
+/**********************************************************************/
+/* File : Log.c                                                     */
+/* Date : 18/11/2023                                                 */
+/* author : ShHaWkK                                                   */
+/**********************************************************************/
+
+
 #include "../include/Log.h"
-#include "../include/include.h"
 
 static FILE* logFile = NULL;
+static LogLevel currentLogLevel = LOG_INFO;
 
 void Log_Init(const char* logFileName) {
     logFile = fopen(logFileName, "a");
     if (logFile == NULL) {
-        printf("Erreur lors de l'ouverture du fichier de log.\n");
+        printf("Error opening log file.\n");
     }
 }
 
 void Log(LogLevel level, const char* format, ...) {
-    if (logFile == NULL) {
+    if (logFile == NULL || level < currentLogLevel) {
         return;
     }
 
-    // Obtenir la date et l'heure actuelles
-    time_t currentTime;
-    struct tm* timeInfo;
+    // Get the current time and format it
     char timeString[20];
-    time(&currentTime);
-    timeInfo = localtime(&currentTime);
+    time_t currentTime = time(NULL);
+    struct tm* timeInfo = localtime(&currentTime);
     strftime(timeString, sizeof(timeString), "%Y-%m-%d %H:%M:%S", timeInfo);
 
-    // Écrire la date et l'heure dans le fichier de log
-    fprintf(logFile, "[%s] ", timeString);
+    // Print the time and log level
+    const char* levelString = (level == LOG_INFO) ? "INFO" : (level == LOG_WARNING) ? "WARNING" : "ERROR";
+    fprintf(logFile, "[%s] [%s] ", timeString, levelString);
 
-    // Écrire le niveau de log dans le fichier de log
-    switch (level) {
-        case LOG_INFO:
-            fprintf(logFile, "[INFO] ");
-            break;
-        case LOG_WARNING:
-            fprintf(logFile, "[WARNING] ");
-            break;
-        case LOG_ERROR:
-            fprintf(logFile, "[ERROR] ");
-            break;
-    }
-
-    // Écrire le message de log formaté dans le fichier de log
+    // Print the formatted log message
     va_list args;
     va_start(args, format);
     vfprintf(logFile, format, args);
     va_end(args);
 
-    // Saut de ligne pour le prochain message
     fprintf(logFile, "\n");
-    fflush(logFile);  // Assurer que le message est écrit immédiatement
-}
-
-LogLevel currentLogLevel = LOG_INFO;
-
-void Log_SetLevel(LogLevel level) {
-    currentLogLevel = level;
+    fflush(logFile);
 }
 
 void Log_Close() {
     if (logFile != NULL) {
         fclose(logFile);
+        logFile = NULL;
     }
+}
+
+void Log_SetLevel(LogLevel level) {
+    currentLogLevel = level;
 }

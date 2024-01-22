@@ -1,3 +1,9 @@
+/**********************************************************************/
+/* File : include.h                                                   */
+/* Date : 10/01/2024                                                  */
+/* author : ShHaWkK                                                   */
+/**********************************************************************/
+
 #ifndef INCLUDE_H
 #define INCLUDE_H
 
@@ -12,4 +18,5 @@
 #include <string.h>
 #include <stdbool.h>
 #include <SDL_image.h>
+
 #endif // INCLUDE_H

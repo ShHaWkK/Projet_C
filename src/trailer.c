@@ -1,3 +1,9 @@
+/**********************************************************************/
+/* File : trailer.c */
+/* Date : 28/12/2023 */
+/* author : ShHaWkK */
+/**********************************************************************/
+
 #include "../include/trailer.h"
 int letterIndex = 0; // L'index de la lettre actuelle à afficher
 float timeSinceLastLetter = 0; // Le temps depuis la dernière mise à jour de la lettre
@@ -105,16 +111,15 @@ void Trailer_Update(Trailer* trailer, Uint32 deltaTime) {
 
     if (trailer->timeSinceLastLetter > letterDelay) {
         if (letterIndex < strlen(trailerTexts[currentTrailerPart])) {
-            letterIndex++; // Incrémentez pour afficher la lettre suivante
+            letterIndex++;
         } else {
-            // Passez à la partie suivante du texte du trailer
             currentTrailerPart++;
             if (currentTrailerPart >= totalTrailerParts) {
-                trailer->isActive = 0; // Le trailer est terminé
+                trailer->isActive = 0;
             } else {
-                letterIndex = 0; // Réinitialisez pour la nouvelle partie
+                letterIndex = 0;
             }
         }
-        trailer->timeSinceLastLetter = 0; // Réinitialisez le compteur
+        trailer->timeSinceLastLetter = 0;
     }
 }

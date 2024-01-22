@@ -1,3 +1,9 @@
+/**********************************************************************/
+/* File : Log.h                                                   */
+/* Date : 18/11/2023                                                 */
+/* author : ShHaWkK                                                   */
+/**********************************************************************/
+
 #ifndef LOG_H
 #define LOG_H
 
@@ -12,9 +18,6 @@ typedef enum {
 void Log_Init(const char* logFileName);
 void Log(LogLevel level, const char* format, ...);
 void Log_Close();
-
-
 void Log_SetLevel(LogLevel level);
-extern LogLevel currentLogLevel;
 
 #endif // LOG_H

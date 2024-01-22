@@ -1,4 +1,9 @@
-// database.c
+/**********************************************************************/
+/* File : database.c                                                   */
+/* Date : 22/12/2023                                                  */
+/* author : ShHaWkK                                                   */
+/**********************************************************************/
+
 #include "../include/database.h"
 #include "../include/include.h"
 #include "../include/Log.h"

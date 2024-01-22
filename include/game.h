@@ -1,6 +1,14 @@
+/**********************************************************************/
+/* File : game.h                                                       */
+/* Date : 25/12/2023                                                  */
+/* author : ShHaWkK                                                   */
+/**********************************************************************/
+
 #ifndef GAME_H
 #define GAME_H
 
+#include "include.h"
+#include "map.h"
 #include "include.h"
 
 //--------  --------//
@@ -27,6 +35,7 @@ extern ActiveInputField currentInputField;
 //--------  --------//
 typedef struct {
     int day;
+    GameMap map;
 } GameWorld;
 
 //-------- Global variables declarations --------//
@@ -41,6 +50,7 @@ extern SDL_Rect nameInputRect;
 extern SDL_Rect surnameInputRect;
 extern ActiveInputField currentInputField;
 extern int inputActive;
+extern MovingBlock elevatorBlock;
 
 //--------  Function prototypes --------//
 

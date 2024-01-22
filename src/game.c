@@ -1,4 +1,4 @@
-//------------- includes ----------//
+//-------------include----------
 
 #include "../include/include.h"
 #include "../include/game.h"
@@ -11,6 +11,8 @@
 #include "../include/text_input.h"
 #include "../include/trailer.h"
 #include "../include/logo.h"
+#include "../include/map.h"
+
 
 //-------------------------------
 
@@ -23,9 +25,7 @@ GameState previousGameState = MENU;
 static Mix_Chunk* soundEffect = NULL;
 ActiveInputField currentInputField = INPUT_FIELD_NONE;
 static Trailer trailer;
-
-//-------------- Prototype des fonctions --------------//
-
+//-------------- Prototype des fonctions ----------
 void InitializeGameWorld();
 void InitializeCharacters();
 void UpdateGameWorld();
@@ -44,6 +44,7 @@ void GameState_CharacterCreation_Render(SDL_Renderer* renderer);
 
 extern int nameCursorPosition;
 extern int surnameCursorPosition;
+//----------------------------------------------------------------
 
 
 //--------------------Function StartNewSession ---------------------//
@@ -124,7 +125,7 @@ void RenderGameUI(SDL_Renderer* renderer) {
     // Afficher les personnages, les ressources, le monde...
 }
 
-//--------------------- Function Game_Init ---------------------//
+//-------------------- Function Game_Init ----------------------//
 
 void Game_Init() {
     Log_Init("game.log");
@@ -180,7 +181,7 @@ void Game_Init() {
     CompleteTask(&player);
 
     currentGameState = MENU;
-    SetWindowIcon(window, "../assets/images/Survivor's_Colony2.png");
+    SetWindowIcon(window, "../assets/images/Survivor's_Colony.png");
 }
 
 
@@ -201,6 +202,7 @@ void Game_Run() {
     while (running) {
         Uint32 currentTime = SDL_GetTicks();
         Uint32 deltaTime = currentTime - lastTime;
+        updateMovingBlockPosition(&elevatorBlock);
         lastTime = currentTime;
 
         while (SDL_PollEvent(&event)) {
@@ -208,6 +210,7 @@ void Game_Run() {
             if (event.type == SDL_QUIT) {
                 running = 0;
             }
+
 
             // Gestion des événements clavier pour les champs de saisie
             switch (event.type) {
@@ -228,6 +231,7 @@ void Game_Run() {
                     break;
             }
         }
+        updateMovingBlockPosition(&elevatorBlock);
 
         // Gestion du trailer en dehors de la boucle des événements
         if (currentGameState == GAME_STATE_TRAILER) {
@@ -248,6 +252,11 @@ void Game_Run() {
             case GAME_RUNNING:
                 UpdateCharacters();
                 RenderGameUI(renderer);
+                renderGameMap(&gameWorld.map, renderer);
+                renderMovingBlock(renderer, &elevatorBlock, gameWorld.map.elevatorTexture);
+
+
+                // renderPlayer(renderer);
                 break;
             case GAME_STATE_CHARACTER_CREATION:
                 RenderCharacterCreationUI(renderer, font);
@@ -264,7 +273,6 @@ void Game_Run() {
     }
 }
 
-
 // ----------------- ------------------ //
 
 
@@ -279,6 +287,10 @@ void Game_Shutdown() {
 
     Mix_CloseAudio();
     TTF_CloseFont(font);
+    //freeMapTextures();
+    //freePlayerTexture();
+    //freeGameMap(&gameWorld.map);
+    freeGameMapResources(&gameWorld.map);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     TTF_Quit();

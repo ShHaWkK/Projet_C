@@ -1,8 +1,14 @@
+/**********************************************************************/
+/* File : trailer.h                                                   */
+/* Date : 14/01/2024                                                  */
+/* author : ShHaWkK                                                   */
+/**********************************************************************/
+
 #ifndef TRAILER_H
 #define TRAILER_H
 #define TRAILER_TEXT_MAX_LENGTH 1024
 
-#include "../include/include.h"
+#include "include.h"
 
 // Define the trailer structure
 typedef struct {
