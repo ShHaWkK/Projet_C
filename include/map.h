@@ -12,23 +12,27 @@
 //---------     Constants for the map dimensions    ---------//
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
+
 #define SKY_HEIGHT 150
+
 #define GROUND_HEIGHT 50
+
 #define MOUNTAIN_WIDTH 300
 #define MOUNTAIN_HEIGHT 200
+
 #define ENTRANCE_WIDTH 100
 #define ENTRANCE_HEIGHT 50
+
 #define BASE_WIDTH 400
-#define BASE_HEIGHT 100
 #define BASE_POS_X ((WINDOW_WIDTH - BASE_WIDTH) / 2)
-#define BASE_POS_Y (SKY_HEIGHT + GROUND_HEIGHT)
+
 #define MOUNTAIN_POS_X (WINDOW_WIDTH - MOUNTAIN_WIDTH)
-#define MOUNTAIN_POS_Y (SKY_HEIGHT - MOUNTAIN_HEIGHT)
+
 #define ENTRANCE_POS_X (MOUNTAIN_POS_X + (MOUNTAIN_WIDTH - ENTRANCE_WIDTH) / 2)
 #define ENTRANCE_POS_Y (MOUNTAIN_POS_Y + MOUNTAIN_HEIGHT - ENTRANCE_HEIGHT)
+
 #define NUM_TUNNELS 2
 #define OFFSET_Y 25
-#define MOUNTAIN_POS_X (WINDOW_WIDTH - MOUNTAIN_WIDTH)
 #define MOUNTAIN_POS_Y (SKY_HEIGHT - MOUNTAIN_HEIGHT + OFFSET_Y)
 #define GROUND_Y (SKY_HEIGHT + GROUND_HEIGHT)
 #define UNDERGROUND_Y (SKY_HEIGHT + GROUND_HEIGHT)
@@ -66,15 +70,16 @@ typedef struct {
     SDL_Texture* texture; // Texture of the player
 } Player;
 
-
+// Ajoutez cette structure quelque part en haut de votre fichier game.c
 typedef struct {
-    SDL_Rect rect;
-    SDL_Texture* texture;
-    int startY;
-    int endY;
-    int speed; // Vitesse de l'ascenseur
-    int movingUp; // Direction de l'ascenseur, 1 pour monter, 0 pour descendre
-} Elevator;
+    SDL_Rect rect; // Position et taille du bloc
+    int speed;     // Vitesse de déplacement
+    int movingUp;  // Direction du mouvement (1 pour monter, 0 pour descendre)
+    int minY;      // Position Y minimale
+    int maxY;      // Position Y maximale
+} MovingBlock;
+
+
 
 
 void initGameMap(GameMap* map, SDL_Renderer* renderer);
@@ -82,8 +87,7 @@ void renderGameMap(GameMap* map, SDL_Renderer* renderer);
 void freeGameMapResources(GameMap* map);
 void loadAllTextures(GameMap* map, SDL_Renderer* renderer);
 void freeAllTextures(GameMap* map);
-void initElevator(Elevator* elevator, int x, int startY, int endY, SDL_Texture* texture);
-void updateElevator(Elevator* elevator);
-void renderElevator(SDL_Renderer* renderer, Elevator* elevator);
-
+void updateMovingBlockPosition(MovingBlock* block);
+void initMovingBlock(MovingBlock* block, int x, int y, int w, int h, int speed, int minY, int maxY);
+void renderMovingBlock(SDL_Renderer* renderer, MovingBlock* block, SDL_Texture* texture);
 #endif // MAP_H
