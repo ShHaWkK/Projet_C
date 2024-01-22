@@ -32,3 +32,7 @@ We used several libraries:
 **->** Download the Folder :  sqlite-dll-win-x64-3440200.zip
 -  Release (.dll) : https://fr.dll-files.com/sqlite3.dll.html
 -  FindSQLite3.cmake : https://github.com/Kitware/CMake/blob/master/Modules/FindSQLite3.cmake
+
+> ###  Inno Setup 
+Sources : 
+Youtube : https://www.youtube.com/watch?v=ormsdIk_Uhw
