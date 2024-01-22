@@ -11,7 +11,7 @@
 Player player;
 SDL_Texture* baseTexture = NULL;
 SDL_Texture* tunnelTextures[NUM_TUNNELS];
-
+MovingBlock elevatorBlock;
 //------------      LoadTexture      ------------//
 // Fonction générique pour charger une texture
 SDL_Texture* loadTexture(const char* filePath, SDL_Renderer* renderer) {
@@ -58,11 +58,14 @@ void initGameMap(GameMap* map, SDL_Renderer* renderer) {
     map->mountain = (SDL_Rect) {MOUNTAIN_POS_X, MOUNTAIN_POS_Y, MOUNTAIN_WIDTH, MOUNTAIN_HEIGHT};
 
     loadAllTextures(map, renderer);
-    MovingBlock elevatorBlock;
-    initMovingBlock(&elevatorBlock, 100, 300, 32, 64, 2, 200, 400);
     updateMovingBlockPosition(&elevatorBlock);
+    int elevatorStartX = WINDOW_WIDTH - MOUNTAIN_WIDTH - (2 * SIZE_BLOCK);
+    int elevatorWidth = 2 * SIZE_BLOCK; // La largeur de l'ascenseur pour deux blocs
+    int elevatorHeight = SIZE_BLOCK; // La hauteur de l'ascenseur pour un bloc
 
-}
+    // Initialisation de l'ascenseur
+   // initMovingBlock(&elevatorBlock, elevatorStartX, 300, elevatorWidth, elevatorHeight, 2, minY, maxY);
+   }
 //------------                              renderGameMap                 ------------//
 
 void renderGameMap(GameMap* map, SDL_Renderer* renderer) {
