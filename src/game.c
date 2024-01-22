@@ -133,7 +133,6 @@ void RenderGameUI(SDL_Renderer* renderer) {
 }
 
 //-------------------- Function Game_Init ----------------------//
-MovingBlock elevatorBlock;
 void Game_Init() {
     Log_Init("game.log");
 
@@ -203,12 +202,15 @@ void Game_Init() {
 
     //initMap(renderer);
 //   initPlayer(renderer);
-    int elevatorWidth = 64;
+    int elevatorWidth = 72;
     int elevatorHeight = 64;
+    int minY = 150;
+    int maxY = 400;
     int elevatorStartX = WINDOW_WIDTH - elevatorWidth - (120 - 10);
     initGameMap(&gameWorld.map, renderer);
     // Initialisation de l'ascenseur après le chargement des textures
-    initMovingBlock(&elevatorBlock, elevatorStartX, 300, elevatorWidth, 64, 2, 200, 400);
+    initMovingBlock(&elevatorBlock, elevatorStartX, 300, elevatorWidth, elevatorHeight, 2, minY, maxY);
+
 }
 
 //--------------------Function Game_Run ---------------------//
