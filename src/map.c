@@ -115,9 +115,6 @@ void renderGameMap(GameMap* map, SDL_Renderer* renderer) {
             SDL_RenderCopy(renderer, map->baseTexture, NULL, &stoneBlockRect);
         }
     }
-    SDL_RenderCopy(renderer, elevator.texture, NULL, &elevator.rect);
-    renderElevator(renderer, &elevator);
-
 
 }
 
@@ -127,30 +124,38 @@ void freeGameMapResources(GameMap* map) {
     freeAllTextures(map);
 }
 
-//------------                                  Elevator                    ------------//
 
-void initElevator(Elevator* elevator, int x, int startY, int endY, SDL_Texture* texture) {
-    elevator->rect.x = x;
-    elevator->rect.y = startY;
-    elevator->rect.w = SIZE_BLOCK * 2;
-    elevator->rect.h = SIZE_BLOCK * 4;
-    elevator->startY = startY;
-    elevator->endY = endY;
-    elevator->texture = texture;
-    elevator->speed = 2;
-    elevator->movingUp = 1;
+//--------------------------    Elevator    ---------------------------------------//
+
+void initMovingBlock(MovingBlock* block, int x, int y, int w, int h, int speed, int minY, int maxY) {
+    block->rect.x = x;
+    block->rect.y = y;
+    block->rect.w = w;
+    block->rect.h = h;
+    block->speed = speed;
+    block->minY = minY;
+    block->maxY = maxY;
+    block->movingUp = 1;
+    // movingup est pour que ça commence d'abord par le dessus
+
 }
 
 
-// Implementation of renderElevator function
-void renderElevator(SDL_Renderer* renderer, Elevator* elevator) {
-    SDL_RenderCopy(renderer, elevator->texture, NULL, &elevator->rect);
-}
-void updateElevatorPosition(Elevator* elevator) {
-    // Déplacer l'ascenseur verticalement entre startY et endY
-    static int direction = 1;
-    elevator->rect.y += direction * 5; // Déplacez de 5 pixels par frame, ajustez selon vos besoins
-    if (elevator->rect.y <= elevator->startY || elevator->rect.y >= elevator->endY) {
-        direction *= -1;
+void updateMovingBlockPosition(MovingBlock* block) {
+    if (block->movingUp) {
+        block->rect.y -= block->speed;
+        if (block->rect.y <= block->minY) {
+            block->movingUp = 0; // Changement de direction vers le bas
+        }
+    } else {
+        block->rect.y += block->speed;
+        if (block->rect.y >= block->maxY) {
+            block->movingUp = 1; // Changement de direction vers le haut
+        }
     }
+}
+
+// Fonction de rendu de l'ascenseur
+void renderMovingBlock(SDL_Renderer* renderer, MovingBlock* block, SDL_Texture* texture) {
+    SDL_RenderCopy(renderer, texture, NULL, &block->rect);
 }
