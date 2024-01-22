@@ -4,8 +4,15 @@
 
 #ifndef C_PLAYERCONTROLLEUR_H
 #define C_PLAYERCONTROLLEUR_H
-
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 600
+#define PLAYER_WIDTH 50
+#define PLAYER_HEIGHT 50
+#define GRAVITY_SPEED 5
+#define GROUND_HEIGHT 50
+#define FLOOR_LEVEL (WINDOW_HEIGHT - GROUND_HEIGHT)
 #include "include.h"
+#include "map.h"
 
 typedef struct {
     int x, y;
@@ -17,12 +24,11 @@ typedef enum {
     PLAYER_STATE_ACTIVE,
 } PlayerState;
 
+
 void SetPlayerState(PlayerState state);
 PlayerState GetPlayerState(void);
 
 void InitPlayerObject(PlayerObject* player);
-void UpdatePlayerObject(PlayerObject* player, const Uint8* keystate);
 void RenderPlayerObject(SDL_Renderer* renderer, const PlayerObject* player);
-
-
+void UpdatePlayerObject(PlayerObject* player, const GameMap* map, const Uint8* keystate);
 #endif //C_PLAYERCONTROLLEUR_H
