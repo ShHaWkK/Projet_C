@@ -212,7 +212,7 @@ void Game_Init() {
     initGameMap(&gameWorld.map, renderer);
     // Initialisation de l'ascenseur après le chargement des textures
     initMovingBlock(&elevatorBlock, elevatorStartX, 300, elevatorWidth, elevatorHeight, 2, minY, maxY);
-
+    InitPlayerObject(&player);
 }
 
 
@@ -227,7 +227,8 @@ void Game_Run() {
     int windowHeight = 600;
     Trailer_Init(&trailer);
     trailer.isActive = 1;
-
+    PlayerObject player;
+    InitPlayerObject(&player);
     Uint32 lastTime = SDL_GetTicks();
 
 
@@ -245,7 +246,7 @@ void Game_Run() {
             }
 
 
-            // Gestion des événements clavier pour les champs de saisie
+            //  Gestion des événements clavier pour les champs de saisie
             switch (event.type) {
                 case SDL_QUIT:
                     Log(LOG_INFO, "Événement SDL_QUIT détecté.");
@@ -262,34 +263,26 @@ void Game_Run() {
                 default:
                     UI_HandleEvent(&event, &running);
                     break;
+
+            }
+        }
+
+
+        //  Gestion du trailer en dehors de la boucle des événements
+        if (currentGameState == GAME_STATE_TRAILER) {
+            Trailer_Update(&trailer, deltaTime);
+            if (!trailer.isActive) {
+                SetPlayerState(PLAYER_STATE_ACTIVE);
+                ChangeGameState(GAME_RUNNING);
             }
         }
         const Uint8* keystate = SDL_GetKeyboardState(NULL);
 
-
-        //a faire marcher
-
-
-
-       // SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-       // SDL_RenderClear(renderer);
-
-
-
-
-
-        // Gestion du trailer en dehors de la boucle des événements
-        if (currentGameState == GAME_STATE_TRAILER) {
-            Trailer_Update(&trailer, deltaTime); // Notez que nous passons deltaTime maintenant
-            if (!trailer.isActive) {
-                // Le trailer est terminé, passer à l'état suivant
-                ChangeGameState(GAME_RUNNING);
-            }
-        }
-        if (GetPlayerState() == PLAYER_STATE_TRAILER) {
+        if (GetPlayerState() == PLAYER_STATE_TRAILER)
+        {
             Trailer_Update(&trailer, deltaTime);
-            if (!trailer.isActive) {
-
+            if (!trailer.isActive)
+            {
                 SetPlayerState(PLAYER_STATE_ACTIVE);
             }
         }
@@ -300,6 +293,11 @@ void Game_Run() {
         }
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
+
+        if (currentGameState == GAME_RUNNING && GetPlayerState() == PLAYER_STATE_ACTIVE) {
+            UpdatePlayerObject(&player, keystate);
+            RenderPlayerObject(renderer, &player);
+        }
 
         switch (currentGameState) {
             case MENU:
