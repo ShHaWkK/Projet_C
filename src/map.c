@@ -8,7 +8,6 @@
 #include "../include/include.h"
 
 #define SIZE_BLOCK 32
-Player player;
 SDL_Texture* baseTexture = NULL;
 SDL_Texture* tunnelTextures[NUM_TUNNELS];
 MovingBlock elevatorBlock;
