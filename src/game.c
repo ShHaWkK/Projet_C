@@ -289,13 +289,13 @@ void Game_Run() {
 
 
         if (GetPlayerState() == PLAYER_STATE_ACTIVE) {
-            UpdatePlayerObject(&player, &gameWorld.map, keystate);
+            UpdatePlayerObject(&player, keystate, &gameWorld.map);
         }
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
         if (currentGameState == GAME_RUNNING && GetPlayerState() == PLAYER_STATE_ACTIVE) {
-            UpdatePlayerObject(&player, &gameWorld.map, keystate);
+            UpdatePlayerObject(&player, keystate, &gameWorld.map);
             RenderPlayerObject(renderer, &player);
         }
 
@@ -309,7 +309,7 @@ void Game_Run() {
                 renderGameMap(&gameWorld.map, renderer);
                 renderMovingBlock(renderer, &elevatorBlock, gameWorld.map.elevatorTexture);
                 RenderPlayerObject(renderer, &player);
-
+                UpdatePlayerObject(&player, keystate, &gameWorld.map);
                 // renderPlayer(renderer);
                 break;
             case GAME_STATE_CHARACTER_CREATION:
