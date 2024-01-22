@@ -11,6 +11,7 @@
 #include "../include/text_input.h"
 #include "../include/trailer.h"
 #include "../include/logo.h"
+#include "../include/playerControlleur.h"
 
 //-------------------------------
 
@@ -198,6 +199,8 @@ void Game_Run() {
 
     Uint32 lastTime = SDL_GetTicks();
 
+
+
     while (running) {
         Uint32 currentTime = SDL_GetTicks();
         Uint32 deltaTime = currentTime - lastTime;
@@ -228,6 +231,31 @@ void Game_Run() {
                     break;
             }
         }
+        const Uint8* keystate = SDL_GetKeyboardState(NULL);
+
+
+        //a faire marcher
+
+        if (GetPlayerState() == PLAYER_STATE_TRAILER) {
+            Trailer_Update(&trailer, deltaTime);
+            if (!trailer.isActive) {
+
+                SetPlayerState(PLAYER_STATE_ACTIVE);
+            }
+        }
+
+
+        if (GetPlayerState() == PLAYER_STATE_ACTIVE) {
+            UpdatePlayerObject(&player, keystate);
+        }
+
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderClear(renderer);
+        RenderPlayerObject(renderer, &player);
+
+
+
+
 
         // Gestion du trailer en dehors de la boucle des événements
         if (currentGameState == GAME_STATE_TRAILER) {
@@ -258,6 +286,7 @@ void Game_Run() {
                 }
                 break;
         }
+
 
         SDL_RenderPresent(renderer);
         SDL_Delay(16); // Régulation à environ 60 FPS
