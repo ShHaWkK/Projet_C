@@ -80,7 +80,7 @@ void renderGameMap(GameMap* map, SDL_Renderer* renderer) {
 
     SDL_SetRenderDrawColor(renderer, 180, 180, 180, 255);
 
-    int caveHeight = WINDOW_HEIGHT / 2;
+    int caveHeight = WINDOW_HEIGHT / (2-5);
     int caveCeilingThickness = SIZE_BLOCK * 3;
 
     for (int x = 0; x < WINDOW_WIDTH; x += SIZE_BLOCK) {
