@@ -1,3 +1,10 @@
+/**********************************************************************/
+/* File : game.c                                                      */
+/* Date : 10/01/2024                                                  */
+/* author : ShHaWkK                                                   */
+/**********************************************************************/
+
+
 //-------------include----------
 
 #include "../include/include.h"
@@ -25,6 +32,7 @@ GameState previousGameState = MENU;
 static Mix_Chunk* soundEffect = NULL;
 ActiveInputField currentInputField = INPUT_FIELD_NONE;
 static Trailer trailer;
+
 //-------------- Prototype des fonctions ----------
 void InitializeGameWorld();
 void InitializeCharacters();
@@ -126,7 +134,6 @@ void RenderGameUI(SDL_Renderer* renderer) {
 }
 
 //-------------------- Function Game_Init ----------------------//
-
 void Game_Init() {
     Log_Init("game.log");
 
@@ -182,6 +189,29 @@ void Game_Init() {
 
     currentGameState = MENU;
     SetWindowIcon(window, "../assets/images/Survivor's_Colony.png");
+
+    // Initialisation de la carte et du joueur
+
+    // Load the textures for the game map
+    initGameMap(&gameWorld.map, renderer);
+    gameWorld.map.mountainTexture = IMG_LoadTexture(renderer, "../assets/images/mountain.png"); // Load mountain texture
+    if (gameWorld.map.mountainTexture == NULL) {
+        Log(LOG_ERROR, "Failed to load mountain texture: %s", IMG_GetError());
+    }
+    // Load the base texture for the underground area
+//    loadBaseTexture(renderer, &gameWorld.map);
+
+    //initMap(renderer);
+//   initPlayer(renderer);
+    int elevatorWidth = 72;
+    int elevatorHeight = 64;
+    int minY = 150;
+    int maxY = 400;
+    int elevatorStartX = WINDOW_WIDTH - elevatorWidth - (120 - 10);
+    initGameMap(&gameWorld.map, renderer);
+    // Initialisation de l'ascenseur après le chargement des textures
+    initMovingBlock(&elevatorBlock, elevatorStartX, 300, elevatorWidth, elevatorHeight, 2, minY, maxY);
+
 }
 
 
@@ -273,7 +303,7 @@ void Game_Run() {
     }
 }
 
-// ----------------- ------------------ //
+// -----------------Function ------------------ //
 
 
 //---------------------  Function Game_Shutdown ---------------------//

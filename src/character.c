@@ -9,7 +9,7 @@
 #include "../include/database.h"
 #include "../include/Log.h"
 
-//Character player;
+Character player;
 Character CreateCharacter(const char* name) {
     Character character;
     strncpy(character.name, name, sizeof(character.name));
