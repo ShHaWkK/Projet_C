@@ -289,13 +289,13 @@ void Game_Run() {
 
 
         if (GetPlayerState() == PLAYER_STATE_ACTIVE) {
-            UpdatePlayerObject(&player, keystate);
+            UpdatePlayerObject(&player, &gameWorld.map, keystate);
         }
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
         if (currentGameState == GAME_RUNNING && GetPlayerState() == PLAYER_STATE_ACTIVE) {
-            UpdatePlayerObject(&player, keystate);
+            UpdatePlayerObject(&player, &gameWorld.map, keystate);
             RenderPlayerObject(renderer, &player);
         }
 
