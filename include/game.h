@@ -50,6 +50,7 @@ extern SDL_Rect nameInputRect;
 extern SDL_Rect surnameInputRect;
 extern ActiveInputField currentInputField;
 extern int inputActive;
+extern MovingBlock elevatorBlock;
 
 //--------  Function prototypes --------//
 

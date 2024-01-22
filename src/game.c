@@ -51,6 +51,7 @@ void GameState_CharacterCreation_Render(SDL_Renderer* renderer);
 //----------------------------------------------------------------
 extern int nameCursorPosition;
 extern int surnameCursorPosition;
+//----------------------------------------------------------------
 
 
 //--------------------Function StartNewSession ---------------------//
@@ -132,7 +133,7 @@ void RenderGameUI(SDL_Renderer* renderer) {
 }
 
 //-------------------- Function Game_Init ----------------------//
-
+MovingBlock elevatorBlock;
 void Game_Init() {
     Log_Init("game.log");
 
@@ -197,14 +198,17 @@ void Game_Init() {
     if (gameWorld.map.mountainTexture == NULL) {
         Log(LOG_ERROR, "Failed to load mountain texture: %s", IMG_GetError());
     }
-
     // Load the base texture for the underground area
 //    loadBaseTexture(renderer, &gameWorld.map);
 
     //initMap(renderer);
 //   initPlayer(renderer);
-
-
+    int elevatorWidth = 64;
+    int elevatorHeight = 64;
+    int elevatorStartX = WINDOW_WIDTH - elevatorWidth - (120 - 10);
+    initGameMap(&gameWorld.map, renderer);
+    // Initialisation de l'ascenseur après le chargement des textures
+    initMovingBlock(&elevatorBlock, elevatorStartX, 300, elevatorWidth, 64, 2, 200, 400);
 }
 
 //--------------------Function Game_Run ---------------------//
@@ -223,6 +227,7 @@ void Game_Run() {
     while (running) {
         Uint32 currentTime = SDL_GetTicks();
         Uint32 deltaTime = currentTime - lastTime;
+        updateMovingBlockPosition(&elevatorBlock);
         lastTime = currentTime;
 
         while (SDL_PollEvent(&event)) {
@@ -230,6 +235,7 @@ void Game_Run() {
             if (event.type == SDL_QUIT) {
                 running = 0;
             }
+
 
             // Gestion des événements clavier pour les champs de saisie
             switch (event.type) {
@@ -250,6 +256,7 @@ void Game_Run() {
                     break;
             }
         }
+        updateMovingBlockPosition(&elevatorBlock);
 
         // Gestion du trailer en dehors de la boucle des événements
         if (currentGameState == GAME_STATE_TRAILER) {
@@ -271,8 +278,10 @@ void Game_Run() {
                 UpdateCharacters();
                 RenderGameUI(renderer);
                 renderGameMap(&gameWorld.map, renderer);
+                renderMovingBlock(renderer, &elevatorBlock, gameWorld.map.elevatorTexture);
 
-               // renderPlayer(renderer);
+
+                // renderPlayer(renderer);
                 break;
             case GAME_STATE_CHARACTER_CREATION:
                 RenderCharacterCreationUI(renderer, font);
