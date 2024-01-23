@@ -12,7 +12,7 @@
 //---------     Constants for the map dimensions    ---------//
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
-
+#define NUM_SOLID_BLOCKS 32
 #define SKY_HEIGHT 150
 
 #define GROUND_HEIGHT 50
@@ -50,6 +50,7 @@ typedef struct {
 typedef struct {
     Tunnel tunnels[NUM_TUNNELS];
     SDL_Rect sky;
+    SDL_Rect solidBlocks[NUM_SOLID_BLOCKS];
     SDL_Rect ground;
     SDL_Rect mountain;
     SDL_Rect entrance;
