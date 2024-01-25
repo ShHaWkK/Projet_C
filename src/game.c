@@ -168,13 +168,13 @@ void Game_Init() {
         exit(1);
     }
 
-    font = TTF_OpenFont("fonts/Roboto-Black.ttf", 28);
+    font = TTF_OpenFont("./assets/fonts/Roboto-Black.ttf", 28);
     if (!font) {
         Log(LOG_ERROR, "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
         exit(1);
     }
 
-    Audio_Init("assets/sounds/Helldivers.mp3", "assets/sounds/click.wav");
+    Audio_Init("./assets/sounds/Helldivers.mp3", "./assets/sounds/click.wav");
     Audio_PlayMusic();
 
     int windowWidth = 800;
@@ -189,13 +189,13 @@ void Game_Init() {
     CompleteTask(&player);
 
     currentGameState = MENU;
-    SetWindowIcon(window, "../assets/images/Survivor's_Colony.png");
+    SetWindowIcon(window, "./assets/images/Survivor's_Colony2.png");
 
     // Initialisation de la carte et du joueur
 
     // Load the textures for the game map
     initGameMap(&gameWorld.map, renderer);
-    gameWorld.map.mountainTexture = IMG_LoadTexture(renderer, "../assets/images/mountain.png"); // Load mountain texture
+    gameWorld.map.mountainTexture = IMG_LoadTexture(renderer, "./assets/images/mountain.png"); // Load mountain texture
     if (gameWorld.map.mountainTexture == NULL) {
         Log(LOG_ERROR, "Failed to load mountain texture: %s", IMG_GetError());
     }
