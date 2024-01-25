@@ -8,6 +8,7 @@
 #include "../include/include.h"
 
 #define SIZE_BLOCK 32
+Player player;
 SDL_Texture* baseTexture = NULL;
 SDL_Texture* tunnelTextures[NUM_TUNNELS];
 MovingBlock elevatorBlock;
@@ -24,11 +25,12 @@ SDL_Texture* loadTexture(const char* filePath, SDL_Renderer* renderer) {
 
 void loadAllTextures(GameMap* map, SDL_Renderer* renderer)
 {
-    map->mountainTexture = loadTexture("../assets/images/mountain.png", renderer);
-    map->baseTexture = loadTexture("../assets/images/stone.png", renderer);
-    map->souterraineTexture = loadTexture("../assets/images/tunnel.png", renderer);
-    map->undergroundBaseTexture= loadTexture("../assets/images/souterrain.png",renderer);
-    map->elevatorTexture = loadTexture("../assets/images/bloc.png", renderer);
+
+    map->mountainTexture = loadTexture("./assets/images/mountain.png", renderer);
+    map->baseTexture = loadTexture("./assets/images/stone.png", renderer);
+    map->souterraineTexture = loadTexture("./assets/images/tunnel.png", renderer);
+    map->elevatorTexture = loadTexture("./assets/images/bloc.png", renderer);
+    SDL_Log("############################################### Il y a de la texture");
 }
 //------------      freeAllTextures      ------------//
 
@@ -63,8 +65,8 @@ void initGameMap(GameMap* map, SDL_Renderer* renderer) {
     int elevatorHeight = SIZE_BLOCK; // La hauteur de l'ascenseur pour un bloc
 
     // Initialisation de l'ascenseur
-   // initMovingBlock(&elevatorBlock, elevatorStartX, 300, elevatorWidth, elevatorHeight, 2, minY, maxY);
-   }
+    // initMovingBlock(&elevatorBlock, elevatorStartX, 300, elevatorWidth, elevatorHeight, 2, minY, maxY);
+}
 //------------                              renderGameMap                 ------------//
 
 void renderGameMap(GameMap* map, SDL_Renderer* renderer) {

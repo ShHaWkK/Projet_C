@@ -289,7 +289,7 @@ void SubmitForm(int* running) {
         return;
     }
 
-    char *sql = "INSERT INTO characters (name, surname) VALUES (?, ?);";
+    char *sql = "INSERT INTO SURVIVOR (name, surname) VALUES (?, ?);";
     sqlite3_stmt *stmt;
     sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
     sqlite3_bind_text(stmt, 1, playerName, -1, SQLITE_STATIC);
@@ -299,7 +299,7 @@ void SubmitForm(int* running) {
     if (rc != SQLITE_DONE) {
         fprintf(stderr, "SQL error: %s\n", sqlite3_errmsg(db));
     } else {
-        fprintf(stdout, "Character saved successfully\n");
+        fprintf(stdout, "SURVIVOR saved successfully\n");
         submitButton.isClickable = 0;
 
         // Changement d'état vers le trailer après l'enregistrement réussi
