@@ -42,10 +42,9 @@ add_executable(${PROJECT_NAME}
         src/text_input.c
         src/trailer.c
         src/logo.c
-        src/map.c
-        src/playerControlleur.c
-        src/colision.c
+        src/buildMenu.c
         #.h
+        include/buildMenu.h
         include/game.h
         include/ui.h
         include/audio.h
