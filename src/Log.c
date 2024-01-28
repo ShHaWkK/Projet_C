@@ -6,8 +6,12 @@
 
 
 #include "../include/Log.h"
+#include "../include/include.h"
+#include <string.h>
 
 static FILE* logFile = NULL;
+static char lastLoggedMessage[1024] = {0};
+LogLevel currentLogLevel = LOG_INFO;
 static LogLevel currentLogLevel = LOG_INFO;
 
 void Log_Init(const char* logFileName) {
@@ -22,24 +26,34 @@ void Log(LogLevel level, const char* format, ...) {
         return;
     }
 
-    // Get the current time and format it
+    // Obtenir la date et l'heure actuelles
+    time_t currentTime;
+    struct tm* timeInfo;
     char timeString[20];
     time_t currentTime = time(NULL);
     struct tm* timeInfo = localtime(&currentTime);
     strftime(timeString, sizeof(timeString), "%Y-%m-%d %H:%M:%S", timeInfo);
 
-    // Print the time and log level
-    const char* levelString = (level == LOG_INFO) ? "INFO" : (level == LOG_WARNING) ? "WARNING" : "ERROR";
-    fprintf(logFile, "[%s] [%s] ", timeString, levelString);
+    fprintf(logFile, "[%s] ", timeString);
 
-    // Print the formatted log message
-    va_list args;
-    va_start(args, format);
-    vfprintf(logFile, format, args);
-    va_end(args);
+    switch (level) {
+        case LOG_INFO:
+            fprintf(logFile, "[INFO] ");
+            break;
+        case LOG_WARNING:
+            fprintf(logFile, "[WARNING] ");
+            break;
+        case LOG_ERROR:
+            fprintf(logFile, "[ERROR] ");
+            break;
+    }
 
-    fprintf(logFile, "\n");
+    fprintf(logFile, "%s\n", newMessage);
     fflush(logFile);
+}
+
+void Log_SetLevel(LogLevel level) {
+    currentLogLevel = level;
 }
 
 void Log_Close() {
