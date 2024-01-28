@@ -289,7 +289,7 @@ void SubmitForm(int* running) {
         return;
     }
 
-    char *sql = "INSERT INTO characters (name, surname) VALUES (?, ?);";
+    char *sql = "INSERT INTO SURVIVOR (name, surname) VALUES (?, ?);";
     sqlite3_stmt *stmt;
     sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
     sqlite3_bind_text(stmt, 1, playerName, -1, SQLITE_STATIC);
