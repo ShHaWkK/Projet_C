@@ -12,7 +12,6 @@
 static FILE* logFile = NULL;
 static char lastLoggedMessage[1024] = {0};
 LogLevel currentLogLevel = LOG_INFO;
-static LogLevel currentLogLevel = LOG_INFO;
 
 void Log_Init(const char* logFileName) {
     logFile = fopen(logFileName, "a");
@@ -27,8 +26,6 @@ void Log(LogLevel level, const char* format, ...) {
     }
 
     // Obtenir la date et l'heure actuelles
-    time_t currentTime;
-    struct tm* timeInfo;
     char timeString[20];
     time_t currentTime = time(NULL);
     struct tm* timeInfo = localtime(&currentTime);
@@ -48,7 +45,6 @@ void Log(LogLevel level, const char* format, ...) {
             break;
     }
 
-    fprintf(logFile, "%s\n", newMessage);
     fflush(logFile);
 }
 
@@ -61,8 +57,4 @@ void Log_Close() {
         fclose(logFile);
         logFile = NULL;
     }
-}
-
-void Log_SetLevel(LogLevel level) {
-    currentLogLevel = level;
 }
