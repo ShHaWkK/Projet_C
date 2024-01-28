@@ -19,6 +19,7 @@
 #include "../include/trailer.h"
 #include "../include/logo.h"
 #include "../include/buildMenu.h"
+#include "../include/playerControlleur.h"
 
 
 //-------------------------------
