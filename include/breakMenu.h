@@ -6,6 +6,7 @@
 #define C_BREAKMENU_H
 #include "../include/include.h"
 
-void breakMenu(SDL_Renderer *renderer);
+void breakMenu(SDL_Renderer* renderer);
+
 
 #endif //C_BREAKMENU_H

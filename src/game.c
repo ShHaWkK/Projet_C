@@ -19,6 +19,7 @@
 #include "../include/trailer.h"
 #include "../include/logo.h"
 #include "../include/buildMenu.h"
+#include "../include/breakMenu.h"
 #include "../include/playerControlleur.h"
 
 
@@ -210,6 +211,7 @@ void Game_Init() {
     initGameMap(&gameWorld.map, renderer);
     // Initialisation de l'ascenseur après le chargement des textures
     initMovingBlock(&elevatorBlock, elevatorStartX, 300, elevatorWidth, elevatorHeight, 2, minY, maxY);
+    PlayerObject player;
     InitPlayerObject(&player);
 }
 
