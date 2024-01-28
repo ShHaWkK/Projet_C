@@ -10,7 +10,7 @@
 #include "../include/include.h"
 #include "../include/game.h"
 #include "../include/ui.h"
-#include "../include/character.h"
+#include "../include/survivor.h"
 #include "../include/Log.h"
 #include "../include/config.h"
 #include "../include/database.h"
@@ -18,8 +18,7 @@
 #include "../include/text_input.h"
 #include "../include/trailer.h"
 #include "../include/logo.h"
-#include "../include/playerControlleur.h"
-#include "../include/map.h"
+#include "../include/breakMenu.h"
 
 
 //-------------------------------
@@ -34,7 +33,8 @@ static Mix_Chunk* soundEffect = NULL;
 ActiveInputField currentInputField = INPUT_FIELD_NONE;
 static Trailer trailer;
 
-//-------------- Prototype des fonctions ----------
+//-------------- Prototype des fonctions --------------//
+
 void InitializeGameWorld();
 void InitializeCharacters();
 void UpdateGameWorld();
@@ -49,8 +49,7 @@ void GameState_GameRunning_Update();
 void GameState_GameRunning_Render(SDL_Renderer* renderer);
 void GameState_CharacterCreation_Update();
 void GameState_CharacterCreation_Render(SDL_Renderer* renderer);
-//--------------    Extern  --------------//
-
+//----------------------------------------------------------------
 extern int nameCursorPosition;
 extern int surnameCursorPosition;
 //----------------------------------------------------------------
@@ -89,7 +88,7 @@ void ChangeGameState(GameState newState)
     }
 }
 
-//--------------------- Function SomeActionThatChangesState ---------------------//
+//--------------------Function SomeActionThatChangesState ---------------------//
 
 
 void SomeActionThatChangesState() {
@@ -98,14 +97,14 @@ void SomeActionThatChangesState() {
 }
 
 
-//--------------------- Function InitializeNewGameSession ---------------------//
+//--------------------Function InitializeNewGameSession ---------------------//
 
 void InitializeNewGameSession()
 {
     //initialiser une nouvelle session de jeu
 }
 
-//---------------------  Function InitializeGameWorld ---------------------//
+//--------------------Function InitializeGameWorld ---------------------//
 
 void InitializeGameWorld()
 {
@@ -118,15 +117,15 @@ void UpdateGameWorld() {
     // Par exemple, gérer les cycles
 }
 */
-//---------------------  Function Game_HandleCharacterNameInput ---------------------//
+//--------------------Function Game_HandleCharacterNameInput ---------------------//
 
 void Game_HandleCharacterNameInput(const char* name) {
-    Character player = CreateCharacter(name); // Create a new character with the entered name
+    Survivor player;
     // Additional logic to set up the player character
     ChangeGameState(GAME_RUNNING); // Change the game state to running
 }
 
-//---------------------  Function RenderGameUI ---------------------//
+//--------------------Function RenderGameUI ---------------------//
 
 void RenderGameUI(SDL_Renderer* renderer) {
     Log(LOG_INFO, "Rendu de l'interface de jeu.");
@@ -134,7 +133,8 @@ void RenderGameUI(SDL_Renderer* renderer) {
     // Afficher les personnages, les ressources, le monde...
 }
 
-//-------------------- Function Game_Init ----------------------//
+//--------------------- Function Game_Init ---------------------//
+
 void Game_Init() {
     Log_Init("game.log");
 
@@ -183,11 +183,8 @@ void Game_Init() {
     UI_Init(renderer, font, windowWidth, windowHeight, soundEffect);
 
     Log(LOG_INFO, "Jeu initialisé avec succès.");
-    Character player = CreateCharacter("Player 1");
-    AssignTask(&player, "Collect Wood");
-    IncreaseHunger(&player);
-    CompleteTask(&player);
-
+    sqlite3* db;
+    db_open("survivor_colony.db", &db);
     currentGameState = MENU;
     SetWindowIcon(window, "../assets/images/Survivor's_Colony.png");
 
@@ -217,7 +214,7 @@ void Game_Init() {
 
 
 
-//--------------------- Function Game_Run ---------------------//
+//--------------------Function Game_Run ---------------------//
 
 void Game_Run() {
     int running = 1;
@@ -243,6 +240,11 @@ void Game_Run() {
             Log(LOG_INFO, "Événement détecté: Type %d", event.type);
             if (event.type == SDL_QUIT) {
                 running = 0;
+            }else if (event.type == SDL_KEYDOWN) {
+                // Si la touche pressée est Échap
+                if (event.key.keysym.sym == SDLK_ESCAPE && !trailer.isActive) {
+                    breakMenu(renderer);
+                }
             }
 
 
@@ -304,7 +306,7 @@ void Game_Run() {
                 UI_Render(renderer, font);
                 break;
             case GAME_RUNNING:
-                UpdateCharacters();
+                UpdateSurvivors();
                 RenderGameUI(renderer);
                 renderGameMap(&gameWorld.map, renderer);
                 renderMovingBlock(renderer, &elevatorBlock, gameWorld.map.elevatorTexture);
@@ -329,6 +331,7 @@ void Game_Run() {
 }
 
 // -----------------Function ------------------ //
+
 
 
 //---------------------  Function Game_Shutdown ---------------------//

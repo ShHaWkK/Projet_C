@@ -6,7 +6,9 @@ int main(int argc, char* argv[]) {
     //load_configuration("config.ini");
     //initialize_database();
     Game_Init();
+
     Game_Run();
+
     Game_Shutdown();
 
     return 0;
