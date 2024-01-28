@@ -40,6 +40,11 @@ add_executable(${PROJECT_NAME}
         src/audio.c
         src/database.c
         src/text_input.c
+        src/colision.c
+        src/playerControlleur.c
+        src/map.c
+        src/save.c
+        src/buildMenu.c
         src/trailer.c
         src/logo.c
         src/buildMenu.c
@@ -55,7 +60,6 @@ add_executable(${PROJECT_NAME}
         include/text_input.h
         include/trailer.h
         include/logo.h
-        assets/
         include/playerControlleur.h
         include/map.h
         include/colision.h
