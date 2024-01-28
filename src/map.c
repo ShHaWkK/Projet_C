@@ -77,8 +77,8 @@ void renderGameMap(GameMap* map, SDL_Renderer* renderer) {
     SDL_RenderCopy(renderer, map->mountainTexture, NULL, &map->mountain);
 
 
-    SDL_SetRenderDrawColor(renderer, 180, 180, 180, 255);
-
+    //SDL_SetRenderDrawColor(renderer, 180, 180, 180, 255);
+    SDL_SetRenderDrawColor(renderer, 128, 0, 128, 255);
     int caveHeight = WINDOW_HEIGHT / (2-5);
     int caveCeilingThickness = SIZE_BLOCK * 3;
 
