@@ -8,4 +8,4 @@
 
 int checkCollision(SDL_Rect* a, SDL_Rect* b);
 
-#endif // COLLISION_H
+#endif
