@@ -11,8 +11,11 @@
 static Mix_Music* bgMusic = NULL;
 static Mix_Chunk* buttonClickSound = NULL;
 
-void Audio_Init(const char* musicFilePath, const char* clickSoundFilePath) {
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+
+void Audio_Init(const char* musicFilePath, const char* clickSoundFilePath) 
+{
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) 
+    {
         Log(LOG_ERROR, "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
         exit(1);
     }
@@ -24,7 +27,8 @@ void Audio_Init(const char* musicFilePath, const char* clickSoundFilePath) {
     }
 
     buttonClickSound = Mix_LoadWAV(clickSoundFilePath);
-    if (!buttonClickSound) {
+    if (!buttonClickSound) 
+    {
         Log(LOG_ERROR, "Failed to load click sound effect! SDL_mixer Error: %s\n", Mix_GetError());
         exit(1);
     }
