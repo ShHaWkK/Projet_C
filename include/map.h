@@ -79,7 +79,23 @@ typedef struct {
     int maxY;      // Position Y maximale
 } MovingBlock;
 
+typedef struct {
+    TerrainType type;
+} Case;
 
+typedef enum {
+    CIEL = 0,
+    TERRE = 1,
+    MONTAGNE = 2,
+    BOIS = 3,
+    CAILLOU = 4,
+    BLE = 5
+} TerrainType;
+typedef struct {
+    int largeur;
+    int hauteur;
+    Case* cases;
+} Carte;
 
 
 void initGameMap(GameMap* map, SDL_Renderer* renderer);
