@@ -7,6 +7,34 @@
 #include "../include/map.h"
 #include "../include/include.h"
 
+void initCarte(Carte* carte, int largeur, int hauteur) {
+    carte->largeur = largeur;
+    carte->hauteur = hauteur;
+    carte->cases = malloc(largeur * hauteur * sizeof(Case));
+
+    for (int y = 0; y < hauteur; y++) {
+        for (int x = 0; x < largeur; x++) {
+            carte->cases[y * largeur + x].type = /* valeur initialisée */;
+        }
+    }
+}
+
+
+void renderCarte(Carte* carte, SDL_Renderer* renderer) {
+    for (int y = 0; y < carte->hauteur; y++) {
+        for (int x = 0; x < carte->largeur; x++) {
+            Case c = carte->cases[y * carte->largeur + x];
+            // Utilisez 'c.type' pour déterminer quelle texture dessiner
+        }
+    }
+}
+
+void libererCarte(Carte* carte) {
+    free(carte->cases);
+}
+
+
+/*
 #define SIZE_BLOCK 32
 SDL_Texture* baseTexture = NULL;
 SDL_Texture* tunnelTextures[NUM_TUNNELS];
@@ -179,4 +207,4 @@ void updateMovingBlockPosition(MovingBlock* block) {
 // Fonction de rendu de l'ascenseur
 void renderMovingBlock(SDL_Renderer* renderer, MovingBlock* block, SDL_Texture* texture) {
     SDL_RenderCopy(renderer, texture, NULL, &block->rect);
-}
+}*/
